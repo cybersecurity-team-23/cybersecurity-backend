@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.BookingBaboon.Domain.ReservationHandling;
+package rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling;
 
 public enum ReservationStatus {
     Pending,

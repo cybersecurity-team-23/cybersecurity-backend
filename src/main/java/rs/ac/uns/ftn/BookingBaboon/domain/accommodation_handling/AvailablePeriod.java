@@ -1,8 +1,8 @@
-package rs.ac.uns.ftn.BookingBaboon.Domain.AccommodationHandling;
+package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.Domain.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
 
 @Entity
 @Data
