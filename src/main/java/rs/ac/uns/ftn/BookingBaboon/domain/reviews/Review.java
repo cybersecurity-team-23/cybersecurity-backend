@@ -2,7 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.domain.reviews;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.domain.Users.User;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.io.Serializable;
 import java.util.Date;

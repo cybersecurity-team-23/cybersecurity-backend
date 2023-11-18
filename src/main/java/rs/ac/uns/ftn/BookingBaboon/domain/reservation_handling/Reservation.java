@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
-import rs.ac.uns.ftn.BookingBaboon.domain.Users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 
 @Entity
 @Data

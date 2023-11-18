@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.reports;
 import jakarta.persistence.*;
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.domain.Users.Host;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
 @Entity
 @Data

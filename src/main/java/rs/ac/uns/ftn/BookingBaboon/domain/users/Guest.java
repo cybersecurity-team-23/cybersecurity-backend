@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.BookingBaboon.domain.Users;
+package rs.ac.uns.ftn.BookingBaboon.domain.users;
 
 import jakarta.persistence.Entity;
 import lombok.Data;
