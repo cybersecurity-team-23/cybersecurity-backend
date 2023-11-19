@@ -7,11 +7,11 @@ import java.util.Collection;
 public interface IUserService {
     Collection<User> getAll();
 
-    User findUser(Long userId);
+    User get(Long userId);
 
-    User insert(User user);
+    User create(User user);
 
     User update(User user);
 
-    User delete(Long userId);
+    User remove(Long userId);
 }

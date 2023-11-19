@@ -21,12 +21,12 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User findUser(Long userId) {
+    public User get(Long userId) {
         return null;
     }
 
     @Override
-    public User insert(User user) {
+    public User create(User user) {
         return null;
     }
 
@@ -36,7 +36,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User delete(Long userId) {
+    public User remove(Long userId) {
         return null;
     }
 }

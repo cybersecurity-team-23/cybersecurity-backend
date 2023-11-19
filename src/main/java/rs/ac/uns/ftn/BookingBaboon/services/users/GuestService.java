@@ -21,12 +21,12 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Guest findGuest(Long guestId) {
+    public Guest get(Long guestId) {
         return null;
     }
 
     @Override
-    public Guest insert(Guest guest) {
+    public Guest create(Guest guest) {
         return null;
     }
 
@@ -36,7 +36,7 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Guest delete(Long guestId) {
+    public Guest remove(Long guestId) {
         return null;
     }
 }

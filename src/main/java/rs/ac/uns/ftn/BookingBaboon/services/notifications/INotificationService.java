@@ -7,11 +7,11 @@ import java.util.Collection;
 public interface INotificationService {
     Collection<Notification> getAll();
 
-    Notification findNotification(Long notificationId);
+    Notification get(Long notificationId);
 
-    Notification insert(Notification notification);
+    Notification create(Notification notification);
 
     Notification update(Notification notification);
 
-    Notification delete(Long notificationId);
+    Notification remove(Long notificationId);
 }

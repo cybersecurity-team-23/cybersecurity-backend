@@ -20,12 +20,12 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Notification findNotification(Long notificationId) {
+    public Notification get(Long notificationId) {
         return null;
     }
 
     @Override
-    public Notification insert(Notification notification) {
+    public Notification create(Notification notification) {
         return null;
     }
 
@@ -35,7 +35,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Notification delete(Long notificationId) {
+    public Notification remove(Long notificationId) {
         return null;
     }
 }

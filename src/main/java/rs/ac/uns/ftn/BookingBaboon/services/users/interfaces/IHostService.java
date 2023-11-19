@@ -7,12 +7,12 @@ import java.util.Collection;
 public interface IHostService {
     Collection<Host> getAll();
 
-    Host findHost(Long hostId);
+    Host get(Long hostId);
 
-    Host insert(Host host);
+    Host create(Host host);
 
     Host update(Host host);
 
-    Host delete(Long hostId);
+    Host remove(Long hostId);
 }
 

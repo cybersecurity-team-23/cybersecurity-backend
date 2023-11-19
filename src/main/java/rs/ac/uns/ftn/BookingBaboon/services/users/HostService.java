@@ -21,12 +21,12 @@ public class HostService implements IHostService {
     }
 
     @Override
-    public Host findHost(Long hostId) {
+    public Host get(Long hostId) {
         return null;
     }
 
     @Override
-    public Host insert(Host host) {
+    public Host create(Host host) {
         return null;
     }
 
@@ -36,7 +36,7 @@ public class HostService implements IHostService {
     }
 
     @Override
-    public Host delete(Long hostId) {
+    public Host remove(Long hostId) {
         return null;
     }
 }

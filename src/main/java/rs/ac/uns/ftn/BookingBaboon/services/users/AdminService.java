@@ -21,12 +21,12 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Admin findAdmin(Long adminId) {
+    public Admin get(Long adminId) {
         return null;
     }
 
     @Override
-    public Admin insert(Admin admin) {
+    public Admin create(Admin admin) {
         return null;
     }
 
@@ -36,7 +36,7 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Admin delete(Long adminId) {
+    public Admin remove(Long adminId) {
         return null;
     }
 }
