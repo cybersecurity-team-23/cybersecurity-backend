@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
 import java.util.Set;
 
@@ -15,6 +16,9 @@ public class Accommodation {
     private Long id;
     private String name;
     private String description;
+
+    @ManyToOne
+    private Host host;
 
     @Embedded
     private Location location;
