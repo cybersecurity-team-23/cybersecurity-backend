@@ -34,7 +34,14 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
-    public void remove(Long reservationId) {
+    public void remove(Long reservationId) {}
+    @Override
+    public Reservation cancel(Long id) {
+        return null;
+    }
 
+    @Override
+    public int getCancellationCountForUser(Long userId) {
+        return 0;
     }
 }

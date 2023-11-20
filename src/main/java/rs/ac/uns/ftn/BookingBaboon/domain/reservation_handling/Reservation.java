@@ -24,6 +24,8 @@ public class Reservation {
     @ManyToOne
     private Guest guest;
 
+    private Float price;
+
     private ReservationStatus status = ReservationStatus.Pending;
 
     public void Approve(){
