@@ -1,6 +1,6 @@
-package rs.ac.uns.ftn.BookingBaboon.services.reservation_handling.interfaces;
+package rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces;
 
-import rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 
 import java.util.Collection;
 

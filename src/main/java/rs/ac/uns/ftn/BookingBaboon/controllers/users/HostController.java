@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
@@ -58,7 +58,7 @@ public class HostController {
     }
 
     @PutMapping({"/reservations/{reservationId}/{isApproved}"})
-    public Reservation handleReservation(@PathVariable Long reservationId,@PathVariable boolean isApproved){
+    public Reservation handleReservation(@PathVariable Long reservationId, @PathVariable boolean isApproved){
         return service.handleReservation(reservationId,isApproved);
     }
 
