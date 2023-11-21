@@ -1,8 +1,6 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.reports;
 
-import jakarta.persistence.ManyToOne;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.ReportStatus;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
 
