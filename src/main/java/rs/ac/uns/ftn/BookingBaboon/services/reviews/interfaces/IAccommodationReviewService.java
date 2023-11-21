@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.AccommodationReview;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 
 import java.util.Collection;
 
@@ -12,5 +13,9 @@ public interface IAccommodationReviewService {
 
     AccommodationReview update(AccommodationReview accommodationReview);
 
-    AccommodationReview remove(AccommodationReview accommodationReview);
+    AccommodationReview remove(Long accommodationReviewId);
+
+    Guest getReviewer(Long id);
+
+    float getAverageRating(Long accommodationId);
 }

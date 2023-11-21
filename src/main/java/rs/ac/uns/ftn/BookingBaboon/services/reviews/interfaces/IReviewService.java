@@ -15,5 +15,5 @@ public interface IReviewService {
 
     Review update(Review review);
 
-    Review remove(Review review);
+    Review remove(Long reviewId);
 }
