@@ -1,10 +1,10 @@
-package rs.ac.uns.ftn.BookingBaboon.services.reservation_handling;
+package rs.ac.uns.ftn.BookingBaboon.services.reservation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
-import rs.ac.uns.ftn.BookingBaboon.services.reservation_handling.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
 import java.util.Collection;
 

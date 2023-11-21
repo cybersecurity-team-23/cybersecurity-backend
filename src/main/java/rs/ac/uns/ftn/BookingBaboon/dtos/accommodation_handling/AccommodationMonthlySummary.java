@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
+package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling;
 
 import lombok.Data;
 import java.util.Map;

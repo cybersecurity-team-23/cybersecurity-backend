@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling;
+package rs.ac.uns.ftn.BookingBaboon.domain.reservation;
 
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,6 +26,7 @@ public class Reservation {
 
     private Float price;
 
+    @Enumerated
     private ReservationStatus status = ReservationStatus.Pending;
 
     public void Approve(){

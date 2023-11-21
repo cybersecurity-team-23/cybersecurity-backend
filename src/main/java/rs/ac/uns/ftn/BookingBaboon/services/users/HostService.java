@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.reservation_handling.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IHostRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;

@@ -1,19 +1,21 @@
-package rs.ac.uns.ftn.BookingBaboon.controllers;
+package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationMonthlySummary;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.PeriodSummary;
-import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationMonthlySummary;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.PeriodSummary;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.ISummaryService;
 
 import java.util.Date;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/summary")
 public class SummaryController {
-    @Autowired
-    ISummaryService service;
+
+    private final ISummaryService service;
+    private final ModelMapper mapper;
 
     @GetMapping("/monthly/{accommodationId}")
     public AccommodationMonthlySummary getMonthlySummary(@PathVariable Long accommodationId) {
