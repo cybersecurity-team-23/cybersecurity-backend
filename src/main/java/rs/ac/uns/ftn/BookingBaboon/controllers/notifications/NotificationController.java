@@ -2,12 +2,17 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.notifications;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -17,33 +22,49 @@ public class NotificationController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<Notification> getNotifications() {
-        return this.service.getAll();
+    public ResponseEntity<Collection<NotificationResponse>> getNotifications() {
+        Collection<Notification> notifications = service.getAll();
+        Collection<NotificationResponse> notificationResponses =  notifications.stream()
+                .map(accommodation -> mapper.map(accommodation, NotificationResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(notificationResponses, HttpStatus.OK);
     }
 
     @GetMapping({"/{notificationId}"})
-    public NotificationResponse get(@PathVariable Long notificationId) {
-        return mapper.map(service.get(notificationId),NotificationResponse.class);
+    public ResponseEntity<NotificationResponse> get(@PathVariable Long notificationId) {
+        Notification notification = service.get(notificationId);
+        if(notification==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(notification,NotificationResponse.class), HttpStatus.OK);
     }
 
     @PostMapping({"/"})
-    public NotificationResponse create(@RequestBody Notification notification) {
-        return mapper.map(service.create(notification),NotificationResponse.class);
+    public ResponseEntity<NotificationResponse> create(@RequestBody NotificationRequest notification) {
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(notification, Notification.class)),NotificationResponse.class), HttpStatus.OK);
     }
 
     @PutMapping({"/"})
-    public NotificationResponse update(@RequestBody Notification notification) {
-        return mapper.map(service.update(notification),NotificationResponse.class);
+    public NotificationResponse update(@RequestBody NotificationRequest notification) {
+        return mapper.map(service.update(mapper.map(notification, Notification.class)),NotificationResponse.class);
     }
 
     @DeleteMapping({"/{notificationId}"})
-    public NotificationResponse remove(@PathVariable Long notificationId) {
-        return mapper.map(service.remove(notificationId),NotificationResponse.class);
+    public ResponseEntity<NotificationResponse> remove(@PathVariable Long notificationId) {
+        Notification notification = service.remove(notificationId);
+        if(notification==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(notification,NotificationResponse.class), HttpStatus.OK);
     }
 
     @GetMapping({"/{userId}"})
-    public NotificationResponse getByUserId(@PathVariable Long userId){
-        return mapper.map(service.getByUserId(userId),NotificationResponse.class);
+    public ResponseEntity<Collection<NotificationResponse>> getByUserId(@PathVariable Long userId){
+        Collection<Notification> notifications = service.getByUserId(userId);
+        Collection<NotificationResponse> notificationResponses =  notifications.stream()
+                .map(accommodation -> mapper.map(accommodation, NotificationResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(notificationResponses, HttpStatus.OK);
     }
 
 }

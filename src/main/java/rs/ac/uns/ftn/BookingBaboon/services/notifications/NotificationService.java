@@ -1,7 +1,6 @@
 package rs.ac.uns.ftn.BookingBaboon.services.notifications;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
 import rs.ac.uns.ftn.BookingBaboon.repositories.notifications.INotificationRepository;
@@ -41,7 +40,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Notification getByUserId(Long userId) {
-        return new Notification();
+    public Collection<Notification> getByUserId(Long userId) {
+        return new ArrayList<Notification>();
     }
 }

@@ -15,5 +15,5 @@ public interface INotificationService {
 
     Notification remove(Long notificationId);
 
-    Notification getByUserId(Long userId);
+    Collection<Notification> getByUserId(Long userId);
 }
