@@ -12,5 +12,5 @@ public interface IAccommodationReportService {
 
     AccommodationReport update(AccommodationReport accommodationReport);
 
-    AccommodationReport remove(AccommodationReport accommodationReport);
+    AccommodationReport remove(Long accommodationReportId);
 }

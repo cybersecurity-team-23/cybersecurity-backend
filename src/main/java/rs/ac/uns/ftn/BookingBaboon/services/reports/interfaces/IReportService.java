@@ -13,5 +13,5 @@ public interface IReportService {
 
     Report update(Report report);
 
-    Report remove(Report report);
+    Report remove(Long reportId);
 }
