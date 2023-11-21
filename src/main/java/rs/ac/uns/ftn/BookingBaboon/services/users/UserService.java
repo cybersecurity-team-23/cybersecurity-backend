@@ -7,6 +7,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @RequiredArgsConstructor
@@ -17,26 +18,41 @@ public class UserService implements IUserService {
 
     @Override
     public Collection<User> getAll() {
-        return null;
+        return new ArrayList<User>();
     }
 
     @Override
     public User get(Long userId) {
-        return null;
+        return new User();
     }
 
     @Override
     public User create(User user) {
-        return null;
+        return new User();
     }
 
     @Override
     public User update(User user) {
-        return null;
+        return new User();
     }
 
     @Override
     public User remove(Long userId) {
-        return null;
+        return new User();
+    }
+
+    @Override
+    public User login(String username, String password) {
+        return new User();
+    }
+
+    @Override
+    public User activate(Long userId) {
+        return new User();
+    }
+
+    @Override
+    public User changePassword(Long userId, String password) {
+        return new User();
     }
 }

@@ -14,4 +14,10 @@ public interface IUserService {
     User update(User user);
 
     User remove(Long userId);
+
+    User login(String username, String password);
+
+    User activate(Long userId);
+
+    User changePassword(Long userId, String password);
 }

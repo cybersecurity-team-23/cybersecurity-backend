@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.util.Collection;
 
@@ -14,4 +15,6 @@ public interface IAdminService {
     Admin update(Admin admin);
 
     Admin remove(Long adminId);
+
+    User blockUser(Long userId);
 }
