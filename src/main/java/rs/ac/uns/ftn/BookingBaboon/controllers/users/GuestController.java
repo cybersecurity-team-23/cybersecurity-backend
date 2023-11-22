@@ -2,16 +2,25 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestProfile;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestProfile;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,47 +30,69 @@ public class GuestController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<Guest> getGuests() {
-        return this.service.getAll();
+    public ResponseEntity<Collection<GuestResponse>> getGuests() {
+        Collection<Guest> guests = service.getAll();
+        Collection<GuestResponse> guestResponses =  guests.stream()
+                .map(guest -> mapper.map(guest, GuestResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(guestResponses, HttpStatus.OK);
     }
 
     @GetMapping({"/{guestId}"})
-    public GuestResponse get(@PathVariable Long guestId) {
-        return mapper.map(service.get(guestId), GuestResponse.class);
+    public ResponseEntity<GuestResponse> get(@PathVariable Long guestId) {
+        Guest guest = service.get(guestId);
+        if(guest==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(guest, GuestResponse.class), HttpStatus.OK);
     }
 
     @PostMapping({"/"})
-    public GuestResponse create(@RequestBody Guest guest) {
-        return mapper.map(service.create(guest), GuestResponse.class);
+    public ResponseEntity<GuestResponse> create(@RequestBody GuestRequest guest) {
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(guest, Guest.class)),GuestResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public GuestResponse update(@RequestBody Guest guest) {
-        return mapper.map(service.update(guest), GuestResponse.class);
+    public ResponseEntity<GuestResponse> update(@RequestBody GuestRequest guest) {
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(guest, Guest.class)),GuestResponse.class),HttpStatus.OK);
     }
 
     @DeleteMapping({"/{guestId}"})
-    public GuestResponse remove(@PathVariable Long guestId) {
-        return mapper.map(service.remove(guestId), GuestResponse.class);
+    public ResponseEntity<GuestResponse> remove(@PathVariable Long guestId) {
+        Guest guest = service.remove(guestId);
+        if(guest==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(guest,GuestResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"{guestId}/profile"})
-    public GuestProfile getProfile(@PathVariable Long guestId){
-        return mapper.map(service.getProfile(guestId),GuestProfile.class);
+    @GetMapping({"/profile/{guestId}"})
+    public ResponseEntity<GuestProfile> getProfile(@PathVariable Long guestId) {
+        Guest guest = service.get(guestId);
+        if(guest==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(guest, GuestProfile.class), HttpStatus.OK);
     }
 
     @GetMapping({"{guestId}/favorite-accommodations"})
-    public Collection<Accommodation> getFavorites(@PathVariable Long guestId){
-        return service.getFavorites(guestId);
+    public ResponseEntity<Collection<AccommodationResponse>> getFavorites(@PathVariable Long guestId){
+        Collection<Accommodation> accommodations = service.getFavorites(guestId);
+
+        Collection<AccommodationResponse> accommodationResponses = accommodations.stream()
+                .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(accommodationResponses,HttpStatus.OK);
     }
 
     @PutMapping({"{guestId}/favorite-accommodations/{accommodationId}"})
-    public Accommodation addFavorite(@PathVariable Long guestId, @PathVariable Long accommodationId){
-        return service.addFavorite(guestId,accommodationId);
+    public ResponseEntity<AccommodationResponse> addFavorite(@PathVariable Long guestId, @PathVariable Long accommodationId){
+        return new ResponseEntity<>(mapper.map(service.addFavorite(guestId,accommodationId),AccommodationResponse.class),HttpStatus.OK);
     }
 
     @PutMapping({"/{guestId}/toggle-notifications/{notificationType}"})
-    public GuestNotificationSettings toggleNotifications (@PathVariable Long guestId, @PathVariable NotificationType notificationType){
-        return mapper.map(service.toggleNotificaitons(guestId, notificationType),GuestNotificationSettings.class);
+    public ResponseEntity<GuestNotificationSettings> toggleNotifications (@PathVariable Long guestId, @PathVariable NotificationType notificationType){
+        return new ResponseEntity<> (mapper.map(service.toggleNotificaitons(guestId, notificationType), GuestNotificationSettings.class), HttpStatus.OK);
     }
 }

@@ -1,16 +1,31 @@
 package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.boot.model.internal.CollectionSecondPass;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
+import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.Report;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -20,46 +35,75 @@ public class AdminController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<Admin> getAdmins() {
-        return this.service.getAll();
+    public ResponseEntity<Collection<AdminResponse>> getAdmins() {
+        Collection<Admin> admins = service.getAll();
+        Collection<AdminResponse> adminResponses =  admins.stream()
+                .map(admin -> mapper.map(admin, AdminResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(adminResponses, HttpStatus.OK);
     }
 
-    @GetMapping({"/{hostId}"})
-    public AdminResponse get(@PathVariable Long hostId) {
-        return mapper.map(service.get(hostId),AdminResponse.class);
+    @GetMapping({"/{adminId}"})
+    public ResponseEntity<AdminResponse> get(@PathVariable Long adminId) {
+        Admin admin = service.get(adminId);
+        if(admin==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(admin, AdminResponse.class), HttpStatus.OK);
     }
 
     @PostMapping({"/"})
-    public AdminResponse create(@RequestBody Admin host) {
-        return mapper.map(service.create(host),AdminResponse.class);
+    public ResponseEntity<AdminResponse> create(@RequestBody AdminRequest admin) {
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(admin, Admin.class)),AdminResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public AdminResponse update(@RequestBody Admin host) {
-        return mapper.map(service.update(host),AdminResponse.class);
+    public ResponseEntity<AdminResponse> update(@RequestBody AdminRequest admin) {
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(admin, Admin.class)),AdminResponse.class),HttpStatus.OK);
     }
 
-    @DeleteMapping({"/{hostId}"})
-    public AdminResponse remove(@PathVariable Long hostId) {
-        return mapper.map(service.remove(hostId),AdminResponse.class);
+    @DeleteMapping({"/{adminId}"})
+    public ResponseEntity<AdminResponse> remove(@PathVariable Long adminId) {
+        Admin admin = service.remove(adminId);
+        if(admin==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(admin,AdminResponse.class), HttpStatus.OK);
     }
 
-    //TODO replace with dto
-//    GET /reports
     @GetMapping({"/reports"})
-    public Collection<Report> getReports(){
-        return new ArrayList<Report>();
+    public ResponseEntity<Collection<GuestReportResponse>> getReports(){
+        Collection<GuestReport> reports = service.getAllReports();
+        Collection<GuestReportResponse> reportResponses =  reports.stream()
+                .map(report -> mapper.map(report, GuestReportResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(reportResponses, HttpStatus.OK);
     }
 
-    //TODO implement missing endpoints
-//    GET /approveChanges
+    @GetMapping({"/accommodationChanges"})
+    public ResponseEntity<Collection<AccommodationResponse>> getAccommodationChanges(){
+        Collection<AccommodationChangeRequest> accommodationChangeRequests = service.getAllAccommodationChanges();
+        Collection<AccommodationResponse> accommodationResponse =  accommodationChangeRequests.stream()
+                .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(accommodationResponse, HttpStatus.OK);
+    }
 
-
-//    PUT /accommodations/{accommodationId}?approve={bool}
-
+    @PutMapping({"/accommodations/{accommodationId}"})
+    public ResponseEntity<AccommodationResponse> handleAccommodationChange(@PathVariable Long accommodationId, @RequestParam(name = "approve") boolean approve){
+        if (approve){
+            return new ResponseEntity<>(mapper.map(service.approveAccommodationChange(accommodationId),AccommodationResponse.class),HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(mapper.map(service.denyAccommodationChange(accommodationId),AccommodationResponse.class),HttpStatus.OK);
+        }
+    }
 
     @PutMapping({"/block/{userId}"})
-    public UserBlockResponse blockUser(@PathVariable Long userId){
-        return mapper.map(service.blockUser(userId),UserBlockResponse.class);
+    public ResponseEntity<UserBlockResponse> blockUser(@PathVariable Long userId){
+        User user = service.blockUser(userId);
+        if(user==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(user, UserBlockResponse.class), HttpStatus.OK);
     }
 }

@@ -24,7 +24,7 @@ public class NotificationController {
     public ResponseEntity<Collection<NotificationResponse>> getNotifications() {
         Collection<Notification> notifications = service.getAll();
         Collection<NotificationResponse> notificationResponses =  notifications.stream()
-                .map(accommodation -> mapper.map(accommodation, NotificationResponse.class))
+                .map(user -> mapper.map(user, NotificationResponse.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(notificationResponses, HttpStatus.OK);
     }
@@ -40,7 +40,7 @@ public class NotificationController {
 
     @PostMapping({"/"})
     public ResponseEntity<NotificationResponse> create(@RequestBody NotificationRequest notification) {
-        return new ResponseEntity<>(mapper.map(service.create(mapper.map(notification, Notification.class)),NotificationResponse.class), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(notification, Notification.class)),NotificationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})

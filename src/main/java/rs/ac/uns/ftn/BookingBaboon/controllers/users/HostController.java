@@ -2,18 +2,23 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostProfile;
-import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,43 +28,59 @@ public class HostController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<Host> getHosts() {
-        return this.service.getAll();
+    public ResponseEntity<Collection<HostResponse>> getHosts() {
+        Collection<Host> hosts = service.getAll();
+        Collection<HostResponse> hostResponses =  hosts.stream()
+                .map(host -> mapper.map(host, HostResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(hostResponses, HttpStatus.OK);
     }
 
     @GetMapping({"/{hostId}"})
-    public HostResponse get(@PathVariable Long hostId) {
-        return mapper.map(service.get(hostId), HostResponse.class);
+    public ResponseEntity<HostResponse> get(@PathVariable Long hostId) {
+        Host host = service.get(hostId);
+        if(host==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(host, HostResponse.class), HttpStatus.OK);
     }
 
     @PostMapping({"/"})
-    public HostResponse create(@RequestBody Host host) {
-        return mapper.map(service.create(host), HostResponse.class);
+    public ResponseEntity<HostResponse> create(@RequestBody HostRequest host) {
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(host, Host.class)),HostResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public HostResponse update(@RequestBody Host host) {
-        return mapper.map(service.update(host), HostResponse.class);
+    public ResponseEntity<HostResponse> update(@RequestBody HostRequest host) {
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(host, Host.class)),HostResponse.class),HttpStatus.OK);
     }
 
     @DeleteMapping({"/{hostId}"})
-    public HostResponse remove(@PathVariable Long hostId) {
-        return mapper.map(service.remove(hostId), HostResponse.class);
+    public ResponseEntity<HostResponse> remove(@PathVariable Long hostId) {
+        Host host = service.remove(hostId);
+        if(host==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(host,HostResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"{hostId}/profile"})
-    public HostProfile getProfile(@PathVariable Long hostId){
-        return mapper.map(service.getProfile(hostId),HostProfile.class);
+    @GetMapping({"/profile/{hostId}"})
+    public ResponseEntity<HostProfile> getProfile(@PathVariable Long hostId) {
+        Host host = service.get(hostId);
+        if(host==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(host, HostProfile.class), HttpStatus.OK);
     }
 
     @PutMapping({"/{hostId}/toggle-notifications/{notificationType}"})
-    public HostNotificationSettings toggleNotifications (@PathVariable Long hostId, @PathVariable NotificationType notificationType){
-        return mapper.map(service.toggleNotificaitons(hostId, notificationType),HostNotificationSettings.class);
+    public ResponseEntity<HostNotificationSettings> toggleNotifications (@PathVariable Long hostId, @PathVariable NotificationType notificationType){
+        return new ResponseEntity<> (mapper.map(service.toggleNotificaitons(hostId, notificationType),HostNotificationSettings.class), HttpStatus.OK);
     }
 
-    @PutMapping({"/reservations/{reservationId}/{isApproved}"})
-    public Reservation handleReservation(@PathVariable Long reservationId, @PathVariable boolean isApproved){
-        return service.handleReservation(reservationId,isApproved);
+    @PutMapping({"/reservations/{reservationId}"})
+    public ResponseEntity<Reservation> handleReservation(@PathVariable Long reservationId, @RequestParam(name="isApproved") boolean isApproved){
+        return new ResponseEntity<> (service.handleReservation(reservationId,isApproved),HttpStatus.OK);
     }
 
 }
