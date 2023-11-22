@@ -33,6 +33,7 @@ public class Accommodation {
     private Integer maxGuests;
     private Boolean pricingPerPerson;
     private AccommodationType type;
+    private boolean isAutomaticallyAccepted;
 
     public void AddAmenity(Amenity amenity){
         amenities.add(amenity);

@@ -2,11 +2,9 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.reservation;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 
 import java.util.Collection;

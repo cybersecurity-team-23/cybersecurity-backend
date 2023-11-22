@@ -3,8 +3,8 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationMonthlySummary;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.PeriodSummary;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.AccommodationMonthlySummary;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.PeriodSummary;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.ISummaryService;
 
 import java.util.Date;

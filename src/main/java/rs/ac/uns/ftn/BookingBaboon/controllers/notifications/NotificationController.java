@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;

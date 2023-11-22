@@ -1,12 +1,10 @@
-package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling;
+package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation;
 
-import jakarta.persistence.*;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Location;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostRequest;
 
 import java.util.Set;
@@ -24,4 +22,5 @@ public class AccommodationRequest {
     private Integer maxGuests;
     private Boolean pricingPerPerson;
     private AccommodationType type;
+    private boolean isAutomaticallyAccepted;
 }

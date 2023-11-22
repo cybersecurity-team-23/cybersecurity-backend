@@ -2,13 +2,10 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AmenityRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AmenityResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
 
 import java.util.Collection;

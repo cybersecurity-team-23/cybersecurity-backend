@@ -1,6 +1,6 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.reviews;
 
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 
 import java.util.Date;
