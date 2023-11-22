@@ -1,18 +1,18 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.reports;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.ReportStatus;
-import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
 
 import java.util.Date;
 
-public class AccommodationReportResponse {
+public class GuestReportResponse {
     private Long id;
     private UserResponse reportee;
     private Date createdOn;
     private ReportStatus status;
     private String message;
-    private AccommodationResponse reportedAccommodation;
+    private GuestResponse reportedGuest;
 
     public Long getId() {
         return id;
@@ -54,11 +54,11 @@ public class AccommodationReportResponse {
         this.message = message;
     }
 
-    public AccommodationResponse getReportedAccommodation() {
-        return reportedAccommodation;
+    public GuestResponse getReportedGuest() {
+        return reportedGuest;
     }
 
-    public void setReportedAccommodation(AccommodationResponse reportedAccommodation) {
-        this.reportedAccommodation = reportedAccommodation;
+    public void setReportedGuest(GuestResponse reportedGuest) {
+        this.reportedGuest = reportedGuest;
     }
 }

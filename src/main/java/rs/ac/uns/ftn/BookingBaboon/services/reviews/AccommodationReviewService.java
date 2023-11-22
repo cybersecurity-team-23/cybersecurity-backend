@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.AccommodationReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reviews.IAccommodationReviewRepository;
-import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IAccommodationReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
 import java.util.ArrayList;
