@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityRequest;
@@ -20,31 +22,35 @@ public class AmenityController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<AmenityResponse> getAll() {
+    public ResponseEntity<Collection<AmenityResponse>> getAll() {
         Collection<Amenity> amenities = service.getAll();
 
-        return amenities.stream()
+        return new ResponseEntity<>(amenities.stream()
                 .map(amenity -> mapper.map(amenity, AmenityResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public AmenityResponse get(@PathVariable Long id) {
-        return mapper.map(service.get(id), AmenityResponse.class);
+    public ResponseEntity<AmenityResponse> get(@PathVariable Long id) {
+        Amenity amenity = service.get(id);
+        return new ResponseEntity<>(mapper.map(amenity, AmenityResponse.class), HttpStatus.OK);
     }
 
     @PostMapping
-    public AmenityResponse create(@RequestBody AmenityRequest amenity) {
-        return mapper.map(service.get(amenity.getId()), AmenityResponse.class);
+    public ResponseEntity<AmenityResponse> create(@RequestBody AmenityRequest amenity) {
+        Amenity result = service.get(amenity.getId());
+        return new ResponseEntity<>(mapper.map(result, AmenityResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public AmenityResponse update(@RequestBody AmenityRequest amenity){
-        return mapper.map(service.get(amenity.getId()), AmenityResponse.class);
+    public ResponseEntity<AmenityResponse> update(@RequestBody AmenityRequest amenity) {
+        Amenity result = service.get(amenity.getId());
+        return new ResponseEntity<>(mapper.map(result, AmenityResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         service.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

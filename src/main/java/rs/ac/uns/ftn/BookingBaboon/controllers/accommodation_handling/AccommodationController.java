@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
@@ -20,36 +22,40 @@ public class AccommodationController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<AccommodationResponse> getAll() {
+    public ResponseEntity<Collection<AccommodationResponse>> getAll() {
         Collection<Accommodation> accommodations = service.getAll();
 
-        return accommodations.stream()
+        return new ResponseEntity<>(accommodations.stream()
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public AccommodationResponse get(@PathVariable Long id) {
-        return mapper.map(service.get(id), AccommodationResponse.class) ;
+    public ResponseEntity<AccommodationResponse> get(@PathVariable Long id) {
+        Accommodation accommodation = service.get(id);
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
 
     @PostMapping
-    public AccommodationResponse create(@RequestBody AccommodationRequest accommodation) {
-        return mapper.map(service.get(accommodation.getId()), AccommodationResponse.class);
+    public ResponseEntity<AccommodationResponse> create(@RequestBody AccommodationRequest accommodation) {
+        Accommodation result = service.get(accommodation.getId());
+        return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public AccommodationResponse update(@RequestBody AccommodationRequest accommodation){
-        return mapper.map(service.get(accommodation.getId()), AccommodationResponse.class);
+    public ResponseEntity<AccommodationResponse> update(@RequestBody AccommodationRequest accommodation) {
+        Accommodation result = service.get(accommodation.getId());
+        return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         service.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping("/filter")
-    public Collection<AccommodationResponse> search(
+    public ResponseEntity<Collection<AccommodationResponse>> search(
             @RequestParam(name = "destination", required = false) String destination,
             @RequestParam(name = "checkin", required = false) String checkin,
             @RequestParam(name = "checkout", required = false) String checkout,
@@ -59,11 +65,12 @@ public class AccommodationController {
             @RequestParam(name = "amenity", required = false) String amenity,
             @RequestParam(name = "property-type", required = false) String propertyType,
             @RequestParam(name = "min-rating", required = false) Integer minRating) {
+
         Collection<Accommodation> accommodations = service.getAll();
 
-        return accommodations.stream()
+        return new ResponseEntity<>(accommodations.stream()
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
 }

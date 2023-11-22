@@ -1,7 +1,8 @@
 package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.AccommodationMonthlySummary;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.PeriodSummary;
@@ -15,18 +16,19 @@ import java.util.Date;
 public class SummaryController {
 
     private final ISummaryService service;
-    private final ModelMapper mapper;
 
     @GetMapping("/monthly/{accommodationId}")
-    public AccommodationMonthlySummary getMonthlySummary(@PathVariable Long accommodationId) {
-        return service.getMonthlySummary(accommodationId);
+    public ResponseEntity<AccommodationMonthlySummary> getMonthlySummary(@PathVariable Long accommodationId) {
+        AccommodationMonthlySummary monthlySummary = service.getMonthlySummary(accommodationId);
+        return new ResponseEntity<>(monthlySummary, HttpStatus.OK);
     }
 
     @GetMapping("/period")
-    public PeriodSummary getPeriodSummary(
+    public ResponseEntity<PeriodSummary> getPeriodSummary(
             @RequestParam(name = "host-id") String hostId,
             @RequestParam(name = "start-date") Date startDate,
             @RequestParam(name = "end-date") Date endDate) {
-        return service.getPeriodSummary(hostId, startDate, endDate);
+        PeriodSummary periodSummary = service.getPeriodSummary(hostId, startDate, endDate);
+        return new ResponseEntity<>(periodSummary, HttpStatus.OK);
     }
 }

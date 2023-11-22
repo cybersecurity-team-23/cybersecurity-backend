@@ -2,6 +2,8 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodRequest;
@@ -20,31 +22,35 @@ public class AvailablePeriodController {
     private final ModelMapper mapper;
 
     @GetMapping
-    public Collection<AvailablePeriodResponse> getAll() {
+    public ResponseEntity<Collection<AvailablePeriodResponse>> getAll() {
         Collection<AvailablePeriod> availablePeriods = service.getAll();
 
-        return availablePeriods.stream()
+        return new ResponseEntity<>(availablePeriods.stream()
                 .map(availablePeriod -> mapper.map(availablePeriod, AvailablePeriodResponse.class))
-                .collect(Collectors.toList());
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public AvailablePeriodResponse get(@PathVariable Long id) {
-        return mapper.map(service.get(id), AvailablePeriodResponse.class);
+    public ResponseEntity<AvailablePeriodResponse> get(@PathVariable Long id) {
+        AvailablePeriod availablePeriod = service.get(id);
+        return new ResponseEntity<>(mapper.map(availablePeriod, AvailablePeriodResponse.class), HttpStatus.OK);
     }
 
     @PostMapping
-    public AvailablePeriodResponse create(@RequestBody AvailablePeriodRequest availablePeriod) {
-        return mapper.map(service.get(availablePeriod.getId()), AvailablePeriodResponse.class);
+    public ResponseEntity<AvailablePeriodResponse> create(@RequestBody AvailablePeriodRequest availablePeriod) {
+        AvailablePeriod result = service.get(availablePeriod.getId());
+        return new ResponseEntity<>(mapper.map(result, AvailablePeriodResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
-    public AvailablePeriodResponse update(@RequestBody AvailablePeriodRequest availablePeriod){
-        return mapper.map(service.get(availablePeriod.getId()), AvailablePeriodResponse.class);
+    public ResponseEntity<AvailablePeriodResponse> update(@RequestBody AvailablePeriodRequest availablePeriod) {
+        AvailablePeriod result = service.get(availablePeriod.getId());
+        return new ResponseEntity<>(mapper.map(result, AvailablePeriodResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public void remove(@PathVariable Long id) {
+    public ResponseEntity<Void> remove(@PathVariable Long id) {
         service.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

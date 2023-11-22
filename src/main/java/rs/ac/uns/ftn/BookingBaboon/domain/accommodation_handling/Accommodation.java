@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
