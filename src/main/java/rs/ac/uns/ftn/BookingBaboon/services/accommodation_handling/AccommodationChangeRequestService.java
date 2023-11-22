@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationCh
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationChangeRequestRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationChangeRequestService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -16,22 +17,22 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
 
     @Override
     public Collection<AccommodationChangeRequest> getAll() {
-        return null;
+        return new ArrayList<AccommodationChangeRequest>();
     }
 
     @Override
     public AccommodationChangeRequest get(Long accommodationId) {
-        return null;
+        return new AccommodationChangeRequest();
     }
 
     @Override
     public AccommodationChangeRequest create(AccommodationChangeRequest accommodation) {
-        return null;
+        return new AccommodationChangeRequest();
     }
 
     @Override
     public AccommodationChangeRequest update(AccommodationChangeRequest accommodation) {
-        return null;
+        return new AccommodationChangeRequest();
     }
 
     @Override

@@ -11,11 +11,11 @@ import java.util.Date;
 public class SummaryService implements ISummaryService {
     @Override
     public PeriodSummary getPeriodSummary(String hostId, Date startDate, Date endDate) {
-        return null;
+        return new PeriodSummary();
     }
 
     @Override
     public AccommodationMonthlySummary getMonthlySummary(Long id) {
-        return null;
+        return new AccommodationMonthlySummary();
     }
 }

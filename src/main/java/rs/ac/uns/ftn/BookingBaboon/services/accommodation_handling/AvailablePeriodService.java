@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAvailablePeriodRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -16,22 +17,22 @@ public class AvailablePeriodService implements IAvailablePeriodService {
 
     @Override
     public Collection<AvailablePeriod> getAll() {
-        return null;
+        return new ArrayList<AvailablePeriod>();
     }
 
     @Override
     public AvailablePeriod get(Long availablePeriodId) {
-        return null;
+        return new AvailablePeriod();
     }
 
     @Override
     public AvailablePeriod create(AvailablePeriod availablePeriod) {
-        return null;
+        return new AvailablePeriod();
     }
 
     @Override
     public AvailablePeriod update(AvailablePeriod availablePeriod) {
-        return null;
+        return new AvailablePeriod();
     }
 
     @Override

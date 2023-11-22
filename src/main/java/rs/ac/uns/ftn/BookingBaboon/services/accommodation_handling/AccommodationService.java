@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -17,22 +18,22 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Collection<Accommodation> getAll() {
-        return null;
+        return new ArrayList<Accommodation>();
     }
 
     @Override
     public Accommodation get(Long accommodationId) {
-        return null;
+        return new Accommodation();
     }
 
     @Override
     public Accommodation create(Accommodation accommodation) {
-        return null;
+        return new Accommodation();
     }
 
     @Override
     public Accommodation update(Accommodation accommodation) {
-        return null;
+        return new Accommodation();
     }
 
     @Override

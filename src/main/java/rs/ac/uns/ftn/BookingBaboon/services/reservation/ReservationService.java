@@ -6,7 +6,9 @@ import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Service
 public class ReservationService implements IReservationService {
@@ -15,29 +17,29 @@ public class ReservationService implements IReservationService {
 
     @Override
     public Collection<Reservation> getAll() {
-        return null;
+        return new ArrayList<Reservation>();
     }
 
     @Override
     public Reservation get(Long reservationId) {
-        return null;
+        return new Reservation();
     }
 
     @Override
     public Reservation create(Reservation reservation) {
-        return null;
+        return new Reservation();
     }
 
     @Override
     public Reservation update(Reservation reservation) {
-        return null;
+        return new Reservation();
     }
 
     @Override
     public void remove(Long reservationId) {}
     @Override
     public Reservation cancel(Long id) {
-        return null;
+        return new Reservation();
     }
 
     @Override

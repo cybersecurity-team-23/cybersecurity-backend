@@ -6,6 +6,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAmenityRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Service
@@ -15,22 +16,22 @@ public class AmenityService implements IAmenityService {
 
     @Override
     public Collection<Amenity> getAll() {
-        return null;
+        return new ArrayList<Amenity>();
     }
 
     @Override
     public Amenity get(Long amenityId) {
-        return null;
+        return new Amenity();
     }
 
     @Override
     public Amenity create(Amenity amenity) {
-        return null;
+        return new Amenity();
     }
 
     @Override
     public Amenity update(Amenity amenity) {
-        return null;
+        return new Amenity();
     }
 
     @Override
