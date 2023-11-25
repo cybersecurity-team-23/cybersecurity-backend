@@ -42,7 +42,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User login(String username, String password) {
+    public User login(String email, String password) {
         return new User();
     }
 
