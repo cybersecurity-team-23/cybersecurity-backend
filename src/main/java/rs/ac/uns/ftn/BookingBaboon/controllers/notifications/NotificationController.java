@@ -57,7 +57,7 @@ public class NotificationController {
         return new ResponseEntity<>( mapper.map(notification,NotificationResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"/{userId}"})
+    @GetMapping({"/user/{userId}"})
     public ResponseEntity<Collection<NotificationResponse>> getByUserId(@PathVariable Long userId){
         Collection<Notification> notifications = service.getByUserId(userId);
         Collection<NotificationResponse> notificationResponses =  notifications.stream()
