@@ -16,7 +16,7 @@ public class User {
 
     private String password;
 
-    private boolean isBlocked;
+    private boolean isBlocked = false;
 
     private String email;
 

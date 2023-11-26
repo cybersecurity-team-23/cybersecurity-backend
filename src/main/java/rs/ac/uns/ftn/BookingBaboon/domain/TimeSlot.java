@@ -8,10 +8,10 @@ import java.util.Date;
 @Embeddable
 @Data
 public class TimeSlot {
-    private Date start;
-    private Date end;
+    private Date startDate;
+    private Date endDate;
 
     public boolean Overlaps(TimeSlot other) {
-        return this.start.before(other.end) && this.end.after(other.start);
+        return this.startDate.before(other.endDate) && this.endDate.after(other.startDate);
     }
 }
