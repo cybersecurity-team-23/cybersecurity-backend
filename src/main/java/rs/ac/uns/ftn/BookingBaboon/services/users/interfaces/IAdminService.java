@@ -1,7 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -23,7 +23,7 @@ public interface IAdminService {
 
     Set<GuestReport> getAllReports();
 
-    Set<AccommodationChangeRequest> getAllAccommodationChanges();
+    Set<AccommodationModification> getAllAccommodationChanges();
 
     Accommodation approveAccommodationChange(Long accommodationId);
 

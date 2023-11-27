@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.users;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -55,8 +55,8 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Set<AccommodationChangeRequest> getAllAccommodationChanges() {
-        return new HashSet<AccommodationChangeRequest>();
+    public Set<AccommodationModification> getAllAccommodationChanges() {
+        return new HashSet<AccommodationModification>();
     }
 
     @Override

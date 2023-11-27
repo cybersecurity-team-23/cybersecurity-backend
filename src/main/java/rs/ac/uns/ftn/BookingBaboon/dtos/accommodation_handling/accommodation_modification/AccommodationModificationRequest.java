@@ -1,4 +1,4 @@
-package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_change_request;
+package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_modification;
 
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Set;
 
 @Data
-public class AccommodationChangeRequestResponse {
+public class AccommodationModificationRequest {
     private Long id;
     private Accommodation accommodation;
     private String name;

@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.amenity.AmenityResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/amenity")
+@RequestMapping("/api/v1/amenities")
 public class AmenityController {
 
     private final IAmenityService service;
@@ -37,14 +39,14 @@ public class AmenityController {
     }
 
     @PostMapping
-    public ResponseEntity<AmenityResponse> create(@RequestBody AmenityRequest amenity) {
-        Amenity result = service.get(amenity.getId());
+    public ResponseEntity<AmenityResponse> create(@RequestBody AmenityCreateRequest amenity) {
+        Amenity result = service.create(mapper.map(amenity, Amenity.class));
         return new ResponseEntity<>(mapper.map(result, AmenityResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<AmenityResponse> update(@RequestBody AmenityRequest amenity) {
-        Amenity result = service.get(amenity.getId());
+        Amenity result = service.update(mapper.map(amenity, Amenity.class));
         return new ResponseEntity<>(mapper.map(result, AmenityResponse.class), HttpStatus.OK);
     }
 

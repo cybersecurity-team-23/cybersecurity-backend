@@ -3,32 +3,31 @@ package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
-import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationChangeRequestRepository;
-import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationChangeRequestService;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
+import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationModificationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationModificationService;
 
 import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class AccommodationChangeRequestService implements IAccommodationChangeRequestService {
-    private final IAccommodationChangeRequestRepository repository;
+public class AccommodationModificationService implements IAccommodationModificationService {
+    private final IAccommodationModificationRepository repository;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public HashSet<AccommodationChangeRequest> getAll() {
-        return new HashSet<AccommodationChangeRequest>(repository.findAll());
+    public HashSet<AccommodationModification> getAll() {
+        return new HashSet<AccommodationModification>(repository.findAll());
     }
 
     @Override
-    public AccommodationChangeRequest get(Long requestId) {
-        Optional<AccommodationChangeRequest> found = repository.findById(requestId);
+    public AccommodationModification get(Long requestId) {
+        Optional<AccommodationModification> found = repository.findById(requestId);
         if (found.isEmpty()) {
             String value = bundle.getString("accommodationChangeRequest.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -37,7 +36,7 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     }
 
     @Override
-    public AccommodationChangeRequest create(AccommodationChangeRequest reservation) {
+    public AccommodationModification create(AccommodationModification reservation) {
         try {
             repository.save(reservation);
             repository.flush();
@@ -53,7 +52,7 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     }
 
     @Override
-    public AccommodationChangeRequest update(AccommodationChangeRequest reservation) {
+    public AccommodationModification update(AccommodationModification reservation) {
         try {
             get(reservation.getId()); // this will throw AccommodationChangeRequestNotFoundException if reservation is not found
             repository.save(reservation);
@@ -79,8 +78,8 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     }
 
     @Override
-    public AccommodationChangeRequest remove(Long requestId) {
-        AccommodationChangeRequest found = get(requestId);
+    public AccommodationModification remove(Long requestId) {
+        AccommodationModification found = get(requestId);
         repository.delete(found);
         repository.flush();
         return found;
