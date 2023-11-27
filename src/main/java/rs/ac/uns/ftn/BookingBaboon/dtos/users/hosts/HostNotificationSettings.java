@@ -10,7 +10,7 @@ public class HostNotificationSettings {
 
     private Long id;
 
-    private String username;
+    private String email;
 
     private Set<NotificationType> ignoredNotifications;
 

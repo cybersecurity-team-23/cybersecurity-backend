@@ -5,18 +5,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.*;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostProfile;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -46,12 +42,12 @@ public class HostController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<HostResponse> create(@RequestBody HostRequest host) {
+    public ResponseEntity<HostResponse> create(@RequestBody HostCreateRequest host) {
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(host, Host.class)),HostResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<HostResponse> update(@RequestBody HostRequest host) {
+    public ResponseEntity<HostResponse> update(@RequestBody HostUpdateRequest host) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(host, Host.class)),HostResponse.class),HttpStatus.OK);
     }
 
@@ -66,7 +62,7 @@ public class HostController {
 
     @GetMapping({"/profile/{hostId}"})
     public ResponseEntity<HostProfile> getProfile(@PathVariable Long hostId) {
-        Host host = service.get(hostId);
+        Host host = service.getProfile(hostId);
         if(host==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

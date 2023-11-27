@@ -3,7 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.dtos.users.guests;
 import lombok.Data;
 
 @Data
-public class GuestProfile {
+public class GuestUpdateRequest {
 
     private Long id;
 
@@ -16,5 +16,4 @@ public class GuestProfile {
     private String address;
 
     private String phoneNumber;
-
 }

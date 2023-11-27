@@ -1,11 +1,10 @@
-package rs.ac.uns.ftn.BookingBaboon.dtos.users.guests;
+package rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts;
 
 import lombok.Data;
 
 @Data
-public class GuestProfile {
-
-    private Long id;
+public class HostCreateRequest {
+    private String password;
 
     private String email;
 
@@ -16,5 +15,4 @@ public class GuestProfile {
     private String address;
 
     private String phoneNumber;
-
 }

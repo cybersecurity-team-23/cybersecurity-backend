@@ -1,9 +1,9 @@
-package rs.ac.uns.ftn.BookingBaboon.dtos.users.guests;
+package rs.ac.uns.ftn.BookingBaboon.dtos.users.admins;
 
 import lombok.Data;
 
 @Data
-public class GuestProfile {
+public class AdminUpdateRequest {
 
     private Long id;
 
@@ -16,5 +16,4 @@ public class GuestProfile {
     private String address;
 
     private String phoneNumber;
-
 }

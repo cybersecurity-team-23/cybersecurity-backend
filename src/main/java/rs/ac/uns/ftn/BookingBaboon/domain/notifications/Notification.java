@@ -21,7 +21,7 @@ public class Notification {
 
     private Date timeCreated;
 
-    private boolean isRead;
+    private boolean isRead = false;
 
     @ManyToOne
     private User user;

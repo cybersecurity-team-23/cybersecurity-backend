@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class HostRequest {
-    private String username;
+    private String email;
 }

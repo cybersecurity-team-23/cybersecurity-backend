@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
@@ -46,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<UserResponse> update(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest user) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(user, User.class)),UserResponse.class),HttpStatus.OK);
     }
 

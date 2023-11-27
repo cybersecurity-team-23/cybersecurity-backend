@@ -1,10 +1,10 @@
-package rs.ac.uns.ftn.BookingBaboon.dtos.users.guests;
+package rs.ac.uns.ftn.BookingBaboon.dtos.users;
 
+import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
-public class GuestProfile {
-
+public class UserUpdateRequest {
     private Long id;
 
     private String email;
@@ -16,5 +16,4 @@ public class GuestProfile {
     private String address;
 
     private String phoneNumber;
-
 }
