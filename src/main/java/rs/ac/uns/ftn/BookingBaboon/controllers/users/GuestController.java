@@ -46,7 +46,7 @@ public class GuestController {
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<GuestResponse> update(@RequestBody GuestRequest guest) {
+    public ResponseEntity<GuestResponse> update(@RequestBody GuestUpdateRequest guest) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(guest, Guest.class)),GuestResponse.class),HttpStatus.OK);
     }
 

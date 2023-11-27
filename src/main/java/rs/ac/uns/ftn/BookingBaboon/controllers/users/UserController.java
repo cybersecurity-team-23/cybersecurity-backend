@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<UserResponse> update(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest user) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(user, User.class)),UserResponse.class),HttpStatus.OK);
     }
 

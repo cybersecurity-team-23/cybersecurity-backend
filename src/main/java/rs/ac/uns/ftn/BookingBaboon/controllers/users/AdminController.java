@@ -49,7 +49,7 @@ public class AdminController {
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<AdminResponse> update(@RequestBody AdminRequest admin) {
+    public ResponseEntity<AdminResponse> update(@RequestBody AdminUpdateRequest admin) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(admin, Admin.class)),AdminResponse.class),HttpStatus.OK);
     }
 

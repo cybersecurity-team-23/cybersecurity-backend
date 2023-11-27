@@ -47,7 +47,7 @@ public class HostController {
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<HostResponse> update(@RequestBody HostRequest host) {
+    public ResponseEntity<HostResponse> update(@RequestBody HostUpdateRequest host) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(host, Host.class)),HostResponse.class),HttpStatus.OK);
     }
 
