@@ -9,5 +9,6 @@ public interface IAvailablePeriodService {
     public AvailablePeriod get(Long availablePeriodId);
     public AvailablePeriod create(AvailablePeriod availablePeriod);
     public AvailablePeriod update(AvailablePeriod availablePeriod);
-    public void remove(Long availablePeriodId);
+    public AvailablePeriod remove(Long availablePeriodId);
+    public void removeAll();
 }

@@ -10,5 +10,6 @@ public interface IAmenityService {
     public Amenity get(Long amenityId);
     public Amenity create(Amenity amenity);
     public Amenity update(Amenity amenity);
-    public void remove(Long amenityId);
+    public Amenity remove(Long amenityId);
+    public void removeAll();
 }

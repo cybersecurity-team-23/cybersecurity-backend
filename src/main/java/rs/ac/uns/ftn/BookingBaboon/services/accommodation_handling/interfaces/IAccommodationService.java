@@ -9,5 +9,6 @@ public interface IAccommodationService {
     public Accommodation get(Long accommodationId);
     public Accommodation create(Accommodation accommodation);
     public Accommodation update(Accommodation accommodation);
-    public void remove(Long accommodationId);
+    public Accommodation remove(Long accommodationId);
+    public void removeAll();
 }

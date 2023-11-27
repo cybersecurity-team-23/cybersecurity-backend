@@ -9,5 +9,6 @@ public interface IAccommodationChangeRequestService {
     public AccommodationChangeRequest get(Long Id);
     public AccommodationChangeRequest create(AccommodationChangeRequest request);
     public AccommodationChangeRequest update(AccommodationChangeRequest request);
-    public void remove(Long Id);
+    public AccommodationChangeRequest remove(Long Id);
+    public void removeAll();
 }

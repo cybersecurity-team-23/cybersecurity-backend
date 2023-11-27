@@ -9,7 +9,8 @@ public interface IReservationService {
     public Reservation get(Long reservationId);
     public Reservation create(Reservation reservation);
     public Reservation update(Reservation reservation);
-    public void remove(Long reservationId);
+    public Reservation remove(Long reservationId);
+    public void removeAll();
     public Reservation cancel(Long id);
     public int getCancellationCountForUser(Long userId);
 }
