@@ -5,6 +5,8 @@ import lombok.Data;
 @Data
 public class HostResponse {
 
-    private String username;
+    private Long id;
+
+    private String email;
 
 }

@@ -18,6 +18,7 @@ public class User {
 
     private boolean isBlocked = false;
 
+    @Column(unique = true)
     private String email;
 
     private String firstName;

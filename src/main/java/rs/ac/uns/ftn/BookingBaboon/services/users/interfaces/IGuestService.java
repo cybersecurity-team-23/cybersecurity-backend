@@ -1,20 +1,20 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
+import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 
 import java.util.Set;
 
 public interface IGuestService {
     Set<Guest> getAll();
 
-    Guest get(Long guestId);
+    Guest get(Long guestId) throws ResponseStatusException;
 
-    Guest create(Guest guest);
+    Guest create(Guest guest) throws ResponseStatusException;
 
-    Guest update(Guest guest);
+    Guest update(Guest guest) throws ResponseStatusException;
 
     Guest remove(Long guestId);
 
@@ -24,5 +24,7 @@ public interface IGuestService {
 
     Accommodation addFavorite(Long guestId, Long accommodationId);
 
-    Guest toggleNotificaitons(Long guestId, NotificationType notificationType);
+    Guest toggleNotifications(Long guestId, NotificationType notificationType);
+
+    void removeAll();
 }

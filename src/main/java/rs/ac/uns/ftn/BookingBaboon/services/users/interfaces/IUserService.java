@@ -1,5 +1,6 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
+import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.util.Set;
@@ -7,11 +8,11 @@ import java.util.Set;
 public interface IUserService {
     Set<User> getAll();
 
-    User get(Long userId);
+    User get(Long userId) throws ResponseStatusException;
 
-    User create(User user);
+    User create(User user) throws ResponseStatusException;
 
-    User update(User user);
+    User update(User user) throws ResponseStatusException;
 
     User remove(Long userId);
 
@@ -20,4 +21,6 @@ public interface IUserService {
     User activate(Long userId);
 
     User changePassword(Long userId, String password);
+
+    void removeAll();
 }

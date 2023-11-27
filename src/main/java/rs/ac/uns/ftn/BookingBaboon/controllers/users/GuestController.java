@@ -8,15 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestProfile;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestProfile;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostNotificationSettings;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.*;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
 import java.util.Collection;
@@ -48,7 +41,7 @@ public class GuestController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<GuestResponse> create(@RequestBody GuestRequest guest) {
+    public ResponseEntity<GuestResponse> create(@RequestBody GuestCreateRequest guest) {
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(guest, Guest.class)),GuestResponse.class), HttpStatus.CREATED);
     }
 
@@ -93,6 +86,6 @@ public class GuestController {
 
     @PutMapping({"/{guestId}/toggle-notifications/{notificationType}"})
     public ResponseEntity<GuestNotificationSettings> toggleNotifications (@PathVariable Long guestId, @PathVariable NotificationType notificationType){
-        return new ResponseEntity<> (mapper.map(service.toggleNotificaitons(guestId, notificationType), GuestNotificationSettings.class), HttpStatus.OK);
+        return new ResponseEntity<> (mapper.map(service.toggleNotifications(guestId, notificationType), GuestNotificationSettings.class), HttpStatus.OK);
     }
 }

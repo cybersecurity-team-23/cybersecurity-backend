@@ -1,29 +1,20 @@
 package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.boot.model.internal.CollectionSecondPass;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
-import rs.ac.uns.ftn.BookingBaboon.domain.reports.Report;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
-import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -53,7 +44,7 @@ public class AdminController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<AdminResponse> create(@RequestBody AdminRequest admin) {
+    public ResponseEntity<AdminResponse> create(@RequestBody AdminCreateRequest admin) {
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(admin, Admin.class)),AdminResponse.class), HttpStatus.CREATED);
     }
 

@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
