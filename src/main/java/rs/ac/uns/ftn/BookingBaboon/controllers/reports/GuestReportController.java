@@ -6,71 +6,69 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportUpdateRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/guest-reports")
+@RequestMapping("/api/v1/guest-reports")
 public class GuestReportController {
 
-    private final IGuestReportService guestReportService;
+    private final IGuestReportService service;
     private final ModelMapper mapper;
 
 
     // Get all guest reports
     @GetMapping
-    public ResponseEntity<Collection<GuestReport>> getAllGuestReports() {
-        Collection<GuestReport> guestReports = guestReportService.getAll();
-        return new ResponseEntity<>(guestReports, HttpStatus.OK);
+    public ResponseEntity<Collection<GuestReportResponse>> getGuests() {
+        Collection<GuestReport> guestReports = service.getAll();
+        Collection<GuestReportResponse> guestReportResponses =  guestReports.stream()
+                .map(guestReport -> mapper.map(guestReport, GuestReportResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(guestReportResponses, HttpStatus.OK);
     }
 
     // Get a guest report by ID
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<GuestReportResponse> get(@PathVariable Long id) {
-        GuestReportResponse guestReportResponse = mapper.map(guestReportService.get(id), GuestReportResponse.class);
-
-        if (guestReportResponse == null) {
+    @GetMapping({"/{guestReportId}"})
+    public ResponseEntity<GuestReportResponse> get(@PathVariable Long guestReportId) {
+        GuestReport guestReport = service.get(guestReportId);
+        if(guestReport==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(guestReportResponse, HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(guestReport, GuestReportResponse.class), HttpStatus.OK);
     }
 
     // Create a new guest report
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<GuestReportResponse> create(@RequestBody GuestReportRequest guestReportRequest) {
+    @PostMapping({"/"})
+    public ResponseEntity<GuestReportResponse> create(@RequestBody GuestReportCreateRequest guestReport) {
 
-        GuestReportResponse createdGuestReportResponse = mapper.map(guestReportService.get(guestReportRequest.getId()), GuestReportResponse.class);
-
-        return new ResponseEntity<>(createdGuestReportResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(guestReport, GuestReport.class)), GuestReportResponse.class), HttpStatus.CREATED);
     }
 
     // Update an existing guest report
-    @PutMapping("/{id}")
-    public ResponseEntity<GuestReportResponse> update(@PathVariable Long id, @RequestBody GuestReportRequest guestReportRequest) {
+    @PutMapping({"/"})
+    public ResponseEntity<GuestReportResponse> update(@RequestBody GuestReportUpdateRequest guestReport) {
 
-        if (guestReportService.get(id) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        GuestReport updatedGuestReport = guestReportService.update(mapper.map(guestReportRequest, GuestReport.class));
-        GuestReportResponse updatedGuestReportResponse = mapper.map(updatedGuestReport, GuestReportResponse.class);
-
-        return new ResponseEntity<>(updatedGuestReportResponse, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(guestReport, GuestReport.class)),GuestReportResponse.class),HttpStatus.OK);
     }
 
     // Delete a guest report by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
+    @DeleteMapping("/{guestReportId}")
+    public ResponseEntity<GuestReportResponse> remove(@PathVariable Long guestReportId) {
 
-        if (guestReportService.get(id) == null) {
+        GuestReport guestReport = service.remove(guestReportId);
+        if(guestReport==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        guestReportService.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(guestReport,GuestReportResponse.class), HttpStatus.OK);
     }
 }

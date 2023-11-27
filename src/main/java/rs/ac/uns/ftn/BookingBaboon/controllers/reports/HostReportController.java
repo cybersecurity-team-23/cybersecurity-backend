@@ -6,71 +6,63 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.HostReport;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reports.HostReportRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reports.HostReportResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reports.*;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/host-reports")
+@RequestMapping("/api/v1/host-reports")
 public class HostReportController {
 
-    private final IHostReportService hostReportService;
+    private final IHostReportService service;
     private final ModelMapper mapper;
 
 
     // Get all host reports
     @GetMapping
-    public ResponseEntity<Collection<HostReport>> getAllHostReports() {
-        Collection<HostReport> hostReports = hostReportService.getAll();
-        return new ResponseEntity<>(hostReports, HttpStatus.OK);
+    public ResponseEntity<Collection<HostReportResponse>> getHosts() {
+        Collection<HostReport> hostReports = service.getAll();
+        Collection<HostReportResponse> hostReportResponses =  hostReports.stream()
+                .map(hostReport -> mapper.map(hostReport, HostReportResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(hostReportResponses, HttpStatus.OK);
     }
 
     // Get a host report by ID
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<HostReportResponse> get(@PathVariable Long id) {
-        HostReportResponse hostReportResponse = mapper.map(hostReportService.get(id), HostReportResponse.class);
-
-        if (hostReportResponse == null) {
+    @GetMapping({"/{hostReportId}"})
+    public ResponseEntity<HostReportResponse> get(@PathVariable Long hostReportId) {
+        HostReport hostReport = service.get(hostReportId);
+        if(hostReport==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(hostReportResponse, HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(hostReport, HostReportResponse.class), HttpStatus.OK);
     }
 
     // Create a new host report
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<HostReportResponse> create(@RequestBody HostReportRequest hostReportRequest) {
+    @PostMapping({"/"})
+    public ResponseEntity<HostReportResponse> create(@RequestBody HostReportCreateRequest hostReport) {
 
-        HostReportResponse createdHostReportResponse = mapper.map(hostReportService.get(hostReportRequest.getId()), HostReportResponse.class);
-
-        return new ResponseEntity<>(createdHostReportResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(hostReport, HostReport.class)), HostReportResponse.class), HttpStatus.CREATED);
     }
 
     // Update an existing host report
-    @PutMapping("/{id}")
-    public ResponseEntity<HostReportResponse> update(@PathVariable Long id, @RequestBody HostReportRequest hostReportRequest) {
+    @PutMapping({"/"})
+    public ResponseEntity<HostReportResponse> update(@RequestBody HostReportUpdateRequest hostReport) {
 
-        if (hostReportService.get(id) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        HostReport updatedHostReport = hostReportService.update(mapper.map(hostReportRequest, HostReport.class));
-        HostReportResponse updatedHostReportResponse = mapper.map(updatedHostReport, HostReportResponse.class);
-
-        return new ResponseEntity<>(updatedHostReportResponse, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(hostReport, HostReport.class)),HostReportResponse.class),HttpStatus.OK);
     }
 
     // Delete a host report by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
+    @DeleteMapping("/{hostReportId}")
+    public ResponseEntity<HostReportResponse> remove(@PathVariable Long hostReportId) {
 
-        if (hostReportService.get(id) == null) {
+        HostReport hostReport = service.remove(hostReportId);
+        if(hostReport==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        hostReportService.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(hostReport,HostReportResponse.class), HttpStatus.OK);
     }
 }
