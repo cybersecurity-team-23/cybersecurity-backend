@@ -16,18 +16,18 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class ReservationService implements IReservationService {
-    private final IReservationRepository reservationRepository;
+    private final IReservationRepository repository;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Collection<Reservation> getAll() {
-        return reservationRepository.findAll();
+    public HashSet<Reservation> getAll() {
+        return new HashSet<Reservation>(repository.findAll());
     }
 
     @Override
     public Reservation get(Long reservationId) {
-        Optional<Reservation> found = reservationRepository.findById(reservationId);
+        Optional<Reservation> found = repository.findById(reservationId);
         if (found.isEmpty()) {
             String value = bundle.getString("reservation.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -38,8 +38,8 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation create(Reservation reservation) {
         try {
-            reservationRepository.save(reservation);
-            reservationRepository.flush();
+            repository.save(reservation);
+            repository.flush();
             return reservation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -55,8 +55,8 @@ public class ReservationService implements IReservationService {
     public Reservation update(Reservation reservation) {
         try {
             get(reservation.getId()); // this will throw ReservationNotFoundException if reservation is not found
-            reservationRepository.save(reservation);
-            reservationRepository.flush();
+            repository.save(reservation);
+            repository.flush();
             return reservation;
         } catch (RuntimeException ex) {
             Throwable e = ex;
@@ -80,15 +80,15 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation remove(Long reservationId) {
         Reservation found = get(reservationId);
-        reservationRepository.delete(found);
-        reservationRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        reservationRepository.deleteAll();
-        reservationRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
     @Override
     public Reservation cancel(Long reservationId) {

@@ -17,17 +17,17 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AccommodationService implements IAccommodationService {
-    private final IAccommodationRepository accommodationRepository;
+    private final IAccommodationRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Collection<Accommodation> getAll() {
-        return accommodationRepository.findAll();
+    public HashSet<Accommodation> getAll() {
+        return new HashSet<Accommodation>(repository.findAll());
     }
 
     @Override
     public Accommodation get(Long accommodationId) {
-        Optional<Accommodation> found = accommodationRepository.findById(accommodationId);
+        Optional<Accommodation> found = repository.findById(accommodationId);
         if (found.isEmpty()) {
             String value = bundle.getString("accommodation.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -38,8 +38,8 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation create(Accommodation accommodation) {
         try {
-            accommodationRepository.save(accommodation);
-            accommodationRepository.flush();
+            repository.save(accommodation);
+            repository.flush();
             return accommodation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -55,8 +55,8 @@ public class AccommodationService implements IAccommodationService {
     public Accommodation update(Accommodation accommodation) {
         try {
             get(accommodation.getId()); // this will throw AccommodationNotFoundException if accommodation is not found
-            accommodationRepository.save(accommodation);
-            accommodationRepository.flush();
+            repository.save(accommodation);
+            repository.flush();
             return accommodation;
         } catch (RuntimeException ex) {
             Throwable e = ex;
@@ -80,15 +80,15 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation remove(Long accommodationId) {
         Accommodation found = get(accommodationId);
-        accommodationRepository.delete(found);
-        accommodationRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        accommodationRepository.deleteAll();
-        accommodationRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
 
 }

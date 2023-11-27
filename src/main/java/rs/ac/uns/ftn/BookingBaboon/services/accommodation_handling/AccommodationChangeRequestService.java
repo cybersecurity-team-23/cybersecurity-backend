@@ -17,18 +17,18 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AccommodationChangeRequestService implements IAccommodationChangeRequestService {
-    private final IAccommodationChangeRequestRepository requestRepository;
+    private final IAccommodationChangeRequestRepository repository;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Collection<AccommodationChangeRequest> getAll() {
-        return requestRepository.findAll();
+    public HashSet<AccommodationChangeRequest> getAll() {
+        return new HashSet<AccommodationChangeRequest>(repository.findAll());
     }
 
     @Override
     public AccommodationChangeRequest get(Long requestId) {
-        Optional<AccommodationChangeRequest> found = requestRepository.findById(requestId);
+        Optional<AccommodationChangeRequest> found = repository.findById(requestId);
         if (found.isEmpty()) {
             String value = bundle.getString("accommodationChangeRequest.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -39,8 +39,8 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     @Override
     public AccommodationChangeRequest create(AccommodationChangeRequest reservation) {
         try {
-            requestRepository.save(reservation);
-            requestRepository.flush();
+            repository.save(reservation);
+            repository.flush();
             return reservation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -56,8 +56,8 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     public AccommodationChangeRequest update(AccommodationChangeRequest reservation) {
         try {
             get(reservation.getId()); // this will throw AccommodationChangeRequestNotFoundException if reservation is not found
-            requestRepository.save(reservation);
-            requestRepository.flush();
+            repository.save(reservation);
+            repository.flush();
             return reservation;
         } catch (RuntimeException ex) {
             Throwable e = ex;
@@ -81,15 +81,15 @@ public class AccommodationChangeRequestService implements IAccommodationChangeRe
     @Override
     public AccommodationChangeRequest remove(Long requestId) {
         AccommodationChangeRequest found = get(requestId);
-        requestRepository.delete(found);
-        requestRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        requestRepository.deleteAll();
-        requestRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
 
 
