@@ -36,11 +36,11 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Accommodation create(Accommodation reservation) {
+    public Accommodation create(Accommodation accommodation) {
         try {
-            accommodationRepository.save(reservation);
+            accommodationRepository.save(accommodation);
             accommodationRepository.flush();
-            return reservation;
+            return accommodation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
             StringBuilder sb = new StringBuilder(1000);
@@ -52,12 +52,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Accommodation update(Accommodation reservation) {
+    public Accommodation update(Accommodation accommodation) {
         try {
-            get(reservation.getId()); // this will throw AccommodationNotFoundException if reservation is not found
-            accommodationRepository.save(reservation);
+            get(accommodation.getId()); // this will throw AccommodationNotFoundException if accommodation is not found
+            accommodationRepository.save(accommodation);
             accommodationRepository.flush();
-            return reservation;
+            return accommodation;
         } catch (RuntimeException ex) {
             Throwable e = ex;
             Throwable c = null;

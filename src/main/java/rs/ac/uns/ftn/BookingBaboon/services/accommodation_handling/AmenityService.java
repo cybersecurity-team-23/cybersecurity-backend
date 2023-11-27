@@ -35,11 +35,11 @@ public class AmenityService implements IAmenityService {
     }
 
     @Override
-    public Amenity create(Amenity reservation) {
+    public Amenity create(Amenity amenity) {
         try {
-            amenityRepository.save(reservation);
+            amenityRepository.save(amenity);
             amenityRepository.flush();
-            return reservation;
+            return amenity;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
             StringBuilder sb = new StringBuilder(1000);
@@ -51,12 +51,12 @@ public class AmenityService implements IAmenityService {
     }
 
     @Override
-    public Amenity update(Amenity reservation) {
+    public Amenity update(Amenity amenity) {
         try {
-            get(reservation.getId()); // this will throw AmenityNotFoundException if reservation is not found
-            amenityRepository.save(reservation);
+            get(amenity.getId()); // this will throw AmenityNotFoundException if amenity is not found
+            amenityRepository.save(amenity);
             amenityRepository.flush();
-            return reservation;
+            return amenity;
         } catch (RuntimeException ex) {
             Throwable e = ex;
             Throwable c = null;
