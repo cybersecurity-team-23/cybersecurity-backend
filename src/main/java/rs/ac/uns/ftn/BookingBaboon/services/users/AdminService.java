@@ -10,8 +10,8 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IAdminRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -20,8 +20,8 @@ public class AdminService implements IAdminService {
     private final IAdminRepository repository;
 
     @Override
-    public Collection<Admin> getAll() {
-        return new ArrayList<Admin>();
+    public Set<Admin> getAll() {
+        return new HashSet<Admin>();
     }
 
     @Override
@@ -50,13 +50,13 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Collection<GuestReport> getAllReports() {
-        return new ArrayList<GuestReport>();
+    public Set<GuestReport> getAllReports() {
+        return new HashSet<GuestReport>();
     }
 
     @Override
-    public Collection<AccommodationChangeRequest> getAllAccommodationChanges() {
-        return new ArrayList<AccommodationChangeRequest>();
+    public Set<AccommodationChangeRequest> getAllAccommodationChanges() {
+        return new HashSet<AccommodationChangeRequest>();
     }
 
     @Override

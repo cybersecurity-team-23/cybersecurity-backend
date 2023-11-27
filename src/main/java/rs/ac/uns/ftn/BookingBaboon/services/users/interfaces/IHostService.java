@@ -4,10 +4,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface IHostService {
-    Collection<Host> getAll();
+    Set<Host> getAll();
 
     Host get(Long hostId);
 

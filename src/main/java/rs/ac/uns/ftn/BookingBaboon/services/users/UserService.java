@@ -8,7 +8,8 @@ import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -17,8 +18,8 @@ public class UserService implements IUserService {
     private final IUserRepository repository;
 
     @Override
-    public Collection<User> getAll() {
-        return new ArrayList<User>();
+    public Set<User> getAll() {
+        return new HashSet<User>();
     }
 
     @Override
