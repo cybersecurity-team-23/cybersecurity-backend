@@ -6,10 +6,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface IAdminService {
-    Collection<Admin> getAll();
+    Set<Admin> getAll();
 
     Admin get(Long adminId);
 
@@ -21,9 +21,9 @@ public interface IAdminService {
 
     User blockUser(Long userId);
 
-    Collection<GuestReport> getAllReports();
+    Set<GuestReport> getAllReports();
 
-    Collection<AccommodationChangeRequest> getAllAccommodationChanges();
+    Set<AccommodationChangeRequest> getAllAccommodationChanges();
 
     Accommodation approveAccommodationChange(Long accommodationId);
 

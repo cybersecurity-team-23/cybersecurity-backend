@@ -9,7 +9,8 @@ import rs.ac.uns.ftn.BookingBaboon.repositories.users.IHostRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -18,8 +19,8 @@ public class HostService implements IHostService {
     private final IHostRepository repository;
 
     @Override
-    public Collection<Host> getAll() {
-        return new ArrayList<Host>();
+    public Set<Host> getAll() {
+        return new HashSet<Host>();
     }
 
     @Override

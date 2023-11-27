@@ -2,10 +2,10 @@ package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface IUserService {
-    Collection<User> getAll();
+    Set<User> getAll();
 
     User get(Long userId);
 

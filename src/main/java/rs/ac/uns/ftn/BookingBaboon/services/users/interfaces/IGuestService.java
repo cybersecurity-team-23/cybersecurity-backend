@@ -5,10 +5,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface IGuestService {
-    Collection<Guest> getAll();
+    Set<Guest> getAll();
 
     Guest get(Long guestId);
 
@@ -20,7 +20,7 @@ public interface IGuestService {
 
     Guest getProfile(Long guestId);
 
-    Collection<Accommodation> getFavorites(Long guestId);
+    Set<Accommodation> getFavorites(Long guestId);
 
     Accommodation addFavorite(Long guestId, Long accommodationId);
 

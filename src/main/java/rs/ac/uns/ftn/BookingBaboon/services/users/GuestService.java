@@ -10,7 +10,8 @@ import rs.ac.uns.ftn.BookingBaboon.repositories.users.IGuestRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -19,8 +20,8 @@ public class GuestService implements IGuestService {
     private final IGuestRepository repository;
 
     @Override
-    public Collection<Guest> getAll() {
-        return new ArrayList<Guest>();
+    public Set<Guest> getAll() {
+        return new HashSet<Guest>();
     }
 
     @Override
@@ -49,8 +50,8 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Collection<Accommodation> getFavorites(Long guestId) {
-        return new ArrayList<Accommodation>();
+    public Set<Accommodation> getFavorites(Long guestId) {
+        return new HashSet<Accommodation>();
     }
 
     @Override
