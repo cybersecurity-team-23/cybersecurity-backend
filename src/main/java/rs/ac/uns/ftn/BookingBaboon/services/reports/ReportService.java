@@ -8,6 +8,8 @@ import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IReportService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -16,7 +18,7 @@ public class ReportService implements IReportService {
     private final IReportRepository reportRepository;
     @Override
     public Collection<Report> getAll() {
-        return new ArrayList<Report>();
+        return new ArrayList<>();
     }
 
     @Override

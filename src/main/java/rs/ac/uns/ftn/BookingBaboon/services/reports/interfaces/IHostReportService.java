@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.HostReport;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface IHostReportService {
     Collection<HostReport> getAll();
