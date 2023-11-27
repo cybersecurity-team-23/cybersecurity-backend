@@ -6,8 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.notifications.NotificationUpdateRequest;
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 
 import java.util.Collection;
@@ -39,12 +41,12 @@ public class NotificationController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<NotificationResponse> create(@RequestBody NotificationRequest notification) {
+    public ResponseEntity<NotificationResponse> create(@RequestBody NotificationCreateRequest notification) {
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(notification, Notification.class)),NotificationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public NotificationResponse update(@RequestBody NotificationRequest notification) {
+    public NotificationResponse update(@RequestBody NotificationUpdateRequest notification) {
         return mapper.map(service.update(mapper.map(notification, Notification.class)),NotificationResponse.class);
     }
 
