@@ -7,6 +7,8 @@ import rs.ac.uns.ftn.BookingBaboon.repositories.notifications.INotificationRepos
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -15,8 +17,8 @@ public class NotificationService implements INotificationService {
     private final INotificationRepository repository;
 
     @Override
-    public Collection<Notification> getAll() {
-        return new ArrayList<Notification>();
+    public Set<Notification> getAll() {
+        return new HashSet<Notification>();
     }
 
     @Override
@@ -40,7 +42,7 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Collection<Notification> getByUserId(Long userId) {
-        return new ArrayList<Notification>();
+    public Set<Notification> getByUserId(Long userId) {
+        return new HashSet<Notification>();
     }
 }

@@ -2,10 +2,10 @@ package rs.ac.uns.ftn.BookingBaboon.services.notifications;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
 
-import java.util.Collection;
+import java.util.Set;
 
 public interface INotificationService {
-    Collection<Notification> getAll();
+    Set<Notification> getAll();
 
     Notification get(Long notificationId);
 
@@ -15,5 +15,5 @@ public interface INotificationService {
 
     Notification remove(Long notificationId);
 
-    Collection<Notification> getByUserId(Long userId);
+    Set<Notification> getByUserId(Long userId);
 }
