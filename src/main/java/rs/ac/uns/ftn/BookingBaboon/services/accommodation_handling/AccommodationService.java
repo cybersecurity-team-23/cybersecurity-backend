@@ -17,17 +17,17 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AccommodationService implements IAccommodationService {
-    private final IAccommodationRepository accommodationRepository;
+    private final IAccommodationRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Collection<Accommodation> getAll() {
-        return accommodationRepository.findAll();
+    public HashSet<Accommodation> getAll() {
+        return new HashSet<Accommodation>(repository.findAll());
     }
 
     @Override
     public Accommodation get(Long accommodationId) {
-        Optional<Accommodation> found = accommodationRepository.findById(accommodationId);
+        Optional<Accommodation> found = repository.findById(accommodationId);
         if (found.isEmpty()) {
             String value = bundle.getString("accommodation.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -36,11 +36,11 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Accommodation create(Accommodation reservation) {
+    public Accommodation create(Accommodation accommodation) {
         try {
-            accommodationRepository.save(reservation);
-            accommodationRepository.flush();
-            return reservation;
+            repository.save(accommodation);
+            repository.flush();
+            return accommodation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
             StringBuilder sb = new StringBuilder(1000);
@@ -52,12 +52,12 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public Accommodation update(Accommodation reservation) {
+    public Accommodation update(Accommodation accommodation) {
         try {
-            get(reservation.getId()); // this will throw AccommodationNotFoundException if reservation is not found
-            accommodationRepository.save(reservation);
-            accommodationRepository.flush();
-            return reservation;
+            get(accommodation.getId()); // this will throw AccommodationNotFoundException if accommodation is not found
+            repository.save(accommodation);
+            repository.flush();
+            return accommodation;
         } catch (RuntimeException ex) {
             Throwable e = ex;
             Throwable c = null;
@@ -80,15 +80,15 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation remove(Long accommodationId) {
         Accommodation found = get(accommodationId);
-        accommodationRepository.delete(found);
-        accommodationRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        accommodationRepository.deleteAll();
-        accommodationRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
 
 }

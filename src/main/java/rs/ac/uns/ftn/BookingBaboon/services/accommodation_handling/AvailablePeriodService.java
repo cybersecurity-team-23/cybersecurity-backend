@@ -18,17 +18,17 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AvailablePeriodService implements IAvailablePeriodService {
-    private final IAvailablePeriodRepository availablePeriodRepository;
+    private final IAvailablePeriodRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Collection<AvailablePeriod> getAll() {
-        return availablePeriodRepository.findAll();
+    public HashSet<AvailablePeriod> getAll() {
+        return new HashSet<AvailablePeriod>(repository.findAll());
     }
 
     @Override
     public AvailablePeriod get(Long availablePeriodId) {
-        Optional<AvailablePeriod> found = availablePeriodRepository.findById(availablePeriodId);
+        Optional<AvailablePeriod> found = repository.findById(availablePeriodId);
         if (found.isEmpty()) {
             String value = bundle.getString("availablePeriod.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -39,8 +39,8 @@ public class AvailablePeriodService implements IAvailablePeriodService {
     @Override
     public AvailablePeriod create(AvailablePeriod availablePeriod) {
         try {
-            availablePeriodRepository.save(availablePeriod);
-            availablePeriodRepository.flush();
+            repository.save(availablePeriod);
+            repository.flush();
             return availablePeriod;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -56,8 +56,8 @@ public class AvailablePeriodService implements IAvailablePeriodService {
     public AvailablePeriod update(AvailablePeriod availablePeriod) {
         try {
             get(availablePeriod.getId()); // this will throw AvailablePeriodNotFoundException if availablePeriod is not found
-            availablePeriodRepository.save(availablePeriod);
-            availablePeriodRepository.flush();
+            repository.save(availablePeriod);
+            repository.flush();
             return availablePeriod;
         } catch (RuntimeException ex) {
             Throwable e = ex;
@@ -81,14 +81,14 @@ public class AvailablePeriodService implements IAvailablePeriodService {
     @Override
     public AvailablePeriod remove(Long availablePeriodId) {
         AvailablePeriod found = get(availablePeriodId);
-        availablePeriodRepository.delete(found);
-        availablePeriodRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        availablePeriodRepository.deleteAll();
-        availablePeriodRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
 }

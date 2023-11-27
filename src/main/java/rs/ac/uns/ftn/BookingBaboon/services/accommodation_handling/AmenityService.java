@@ -17,16 +17,16 @@ import java.util.*;
 @RequiredArgsConstructor
 @Service
 public class AmenityService implements IAmenityService {
-    private final IAmenityRepository amenityRepository;
+    private final IAmenityRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
     @Override
-    public Collection<Amenity> getAll() {
-        return amenityRepository.findAll();
+    public HashSet<Amenity> getAll() {
+        return new HashSet<>(repository.findAll());
     }
 
     @Override
     public Amenity get(Long amenityId) {
-        Optional<Amenity> found = amenityRepository.findById(amenityId);
+        Optional<Amenity> found = repository.findById(amenityId);
         if (found.isEmpty()) {
             String value = bundle.getString("amenity.notFound");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
@@ -35,11 +35,11 @@ public class AmenityService implements IAmenityService {
     }
 
     @Override
-    public Amenity create(Amenity reservation) {
+    public Amenity create(Amenity amenity) {
         try {
-            amenityRepository.save(reservation);
-            amenityRepository.flush();
-            return reservation;
+            repository.save(amenity);
+            repository.flush();
+            return amenity;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
             StringBuilder sb = new StringBuilder(1000);
@@ -51,12 +51,12 @@ public class AmenityService implements IAmenityService {
     }
 
     @Override
-    public Amenity update(Amenity reservation) {
+    public Amenity update(Amenity amenity) {
         try {
-            get(reservation.getId()); // this will throw AmenityNotFoundException if reservation is not found
-            amenityRepository.save(reservation);
-            amenityRepository.flush();
-            return reservation;
+            get(amenity.getId()); // this will throw AmenityNotFoundException if amenity is not found
+            repository.save(amenity);
+            repository.flush();
+            return amenity;
         } catch (RuntimeException ex) {
             Throwable e = ex;
             Throwable c = null;
@@ -79,14 +79,14 @@ public class AmenityService implements IAmenityService {
     @Override
     public Amenity remove(Long amenityId) {
         Amenity found = get(amenityId);
-        amenityRepository.delete(found);
-        amenityRepository.flush();
+        repository.delete(found);
+        repository.flush();
         return found;
     }
 
     @Override
     public void removeAll() {
-        amenityRepository.deleteAll();
-        amenityRepository.flush();
+        repository.deleteAll();
+        repository.flush();
     }
 }
