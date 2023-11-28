@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/accommodation")
+@RequestMapping("/api/v1/accommodations")
 public class AccommodationController {
 
     private final IAccommodationService service;
@@ -37,14 +39,14 @@ public class AccommodationController {
     }
 
     @PostMapping
-    public ResponseEntity<AccommodationResponse> create(@RequestBody AccommodationRequest accommodation) {
-        Accommodation result = service.get(accommodation.getId());
+    public ResponseEntity<AccommodationResponse> create(@RequestBody AccommodationCreateRequest accommodation) {
+        Accommodation result = service.create(mapper.map(accommodation, Accommodation.class));
         return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<AccommodationResponse> update(@RequestBody AccommodationRequest accommodation) {
-        Accommodation result = service.get(accommodation.getId());
+        Accommodation result = service.update(mapper.map(accommodation, Accommodation.class));
         return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.OK);
     }
 

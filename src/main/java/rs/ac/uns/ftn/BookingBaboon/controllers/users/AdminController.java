@@ -5,12 +5,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationChangeRequest;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
@@ -73,8 +75,8 @@ public class AdminController {
 
     @GetMapping({"/accommodationChanges"})
     public ResponseEntity<Collection<AccommodationResponse>> getAccommodationChanges(){
-        Collection<AccommodationChangeRequest> accommodationChangeRequests = service.getAllAccommodationChanges();
-        Collection<AccommodationResponse> accommodationResponse =  accommodationChangeRequests.stream()
+        Collection<AccommodationModification> accommodationModifications = service.getAllAccommodationChanges();
+        Collection<AccommodationResponse> accommodationResponse =  accommodationModifications.stream()
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
                 .collect(Collectors.toList());
         return new ResponseEntity<>(accommodationResponse, HttpStatus.OK);

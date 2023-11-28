@@ -2,8 +2,10 @@ package rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.util.Collection;
+import java.util.Set;
 
 public interface IHostReviewService {
 
@@ -17,5 +19,7 @@ public interface IHostReviewService {
 
     HostReview remove(Long hostReviewid);
 
-    Guest getReviewer(Long id);
+    User getReviewer(Long id);
+
+    float getAverageRating(Long id);
 }

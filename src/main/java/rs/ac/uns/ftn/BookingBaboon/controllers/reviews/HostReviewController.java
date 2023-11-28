@@ -6,73 +6,67 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.HostReviewRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.HostReviewResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/host-reviews")
+@RequestMapping("/api/v1/host-reviews")
 public class HostReviewController {
 
     private final IHostReviewService service;
+    private final IHostService hostService;
     private final ModelMapper mapper;
 
 
     // Get all host reviews
     @GetMapping
-    public ResponseEntity<Collection<HostReview>> getAllHostReviews() {
+    public ResponseEntity<Collection<HostReviewResponse>> getHosts() {
         Collection<HostReview> hostReviews = service.getAll();
-        return new ResponseEntity<>(hostReviews, HttpStatus.OK);
+        Collection<HostReviewResponse> hostReviewResponses =  hostReviews.stream()
+                .map(hostReview -> mapper.map(hostReview, HostReviewResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(hostReviewResponses, HttpStatus.OK);
     }
 
     // Get a host review by ID
-    @GetMapping(value = "/{id}")
-    public ResponseEntity<HostReviewResponse> get(@PathVariable Long id) {
-        HostReviewResponse hostReviewResponse = mapper.map(service.get(id), HostReviewResponse.class);
-
-        if (hostReviewResponse == null) {
+    @GetMapping({"/{hostReviewId}"})
+    public ResponseEntity<HostReviewResponse> get(@PathVariable Long hostReviewId) {
+        HostReview hostReview = service.get(hostReviewId);
+        if(hostReview==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(hostReviewResponse, HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(hostReview, HostReviewResponse.class), HttpStatus.OK);
     }
 
     // Create a new host review
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<HostReviewResponse> create(@RequestBody HostReviewRequest hostReviewRequest) {
+    @PostMapping({"/"})
+    public ResponseEntity<HostReviewResponse> create(@RequestBody HostReviewCreateRequest hostReview) {
 
-        HostReviewResponse createdResponse = mapper.map(service.get(hostReviewRequest.getId()), HostReviewResponse.class);
-
-        return new ResponseEntity<>(createdResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.map(service.create(mapper.map(hostReview, HostReview.class)), HostReviewResponse.class), HttpStatus.CREATED);
     }
 
     // Update an existing host review
-    @PutMapping("/{id}")
-    public ResponseEntity<HostReviewResponse> update(@PathVariable Long id, @RequestBody HostReviewRequest hostReviewRequest) {
+    @PutMapping({"/"})
+    public ResponseEntity<HostReviewResponse> update(@RequestBody HostReviewUpdateRequest hostReview) {
 
-        if (service.get(id) == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
-        HostReview updatedHostReview = service.update(mapper.map(hostReviewRequest, HostReview.class));
-        HostReviewResponse updatedHostReviewResponse = mapper.map(updatedHostReview, HostReviewResponse.class);
-
-        return new ResponseEntity<>(updatedHostReviewResponse, HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(service.update(mapper.map(hostReview, HostReview.class)),HostReviewResponse.class),HttpStatus.OK);
     }
 
     // Delete a host review by ID
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> remove(@PathVariable Long id) {
+    @DeleteMapping("/{hostReviewId}")
+    public ResponseEntity<HostReviewResponse> remove(@PathVariable Long hostReviewId) {
 
-        if (service.get(id) == null) {
+        HostReview hostReview = service.remove(hostReviewId);
+        if(hostReview==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        service.remove(id);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>( mapper.map(hostReview,HostReviewResponse.class), HttpStatus.OK);
     }
 
     @GetMapping("/{hostId}/reviewer")
@@ -85,5 +79,17 @@ public class HostReviewController {
         GuestResponse guestResponse = mapper.map(service.getReviewer(hostId), GuestResponse.class);
 
         return new ResponseEntity<>(guestResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/average-rating/{hostId}")
+    public ResponseEntity<Float> getAverageRating(@PathVariable Long hostId) {
+
+        if (hostService.get(hostId) == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        float averageRating = service.getAverageRating(hostId);
+
+        return new ResponseEntity<>(averageRating, HttpStatus.OK);
     }
 }

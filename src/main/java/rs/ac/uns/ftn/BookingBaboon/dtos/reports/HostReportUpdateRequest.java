@@ -3,14 +3,15 @@ package rs.ac.uns.ftn.BookingBaboon.dtos.reports;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.ReportStatus;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserReferenceRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestReferenceRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostReferenceRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostRequest;
 
 import java.util.Date;
+
 @Data
-public class HostReportResponse {
+public class HostReportUpdateRequest {
     private Long id;
     private UserReferenceRequest reportee;
     private Date createdOn;
