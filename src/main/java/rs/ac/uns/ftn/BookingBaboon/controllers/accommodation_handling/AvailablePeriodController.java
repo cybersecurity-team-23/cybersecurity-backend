@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/available-period")
+@RequestMapping("/api/v1/available-periods")
 public class AvailablePeriodController {
 
     private final IAvailablePeriodService service;
@@ -37,14 +39,14 @@ public class AvailablePeriodController {
     }
 
     @PostMapping
-    public ResponseEntity<AvailablePeriodResponse> create(@RequestBody AvailablePeriodRequest availablePeriod) {
-        AvailablePeriod result = service.get(availablePeriod.getId());
+    public ResponseEntity<AvailablePeriodResponse> create(@RequestBody AvailablePeriodCreateRequest availablePeriod) {
+        AvailablePeriod result = service.create(mapper.map(availablePeriod, AvailablePeriod.class));
         return new ResponseEntity<>(mapper.map(result, AvailablePeriodResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<AvailablePeriodResponse> update(@RequestBody AvailablePeriodRequest availablePeriod) {
-        AvailablePeriod result = service.get(availablePeriod.getId());
+        AvailablePeriod result = service.update(mapper.map(availablePeriod, AvailablePeriod.class));
         return new ResponseEntity<>(mapper.map(result, AvailablePeriodResponse.class), HttpStatus.OK);
     }
 

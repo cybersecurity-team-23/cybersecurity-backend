@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/reservation")
+@RequestMapping("/api/v1/reservations")
 public class ReservationController {
     private final IReservationService service;
     private final ModelMapper mapper;
@@ -36,14 +37,14 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationRequest reservation) {
-        Reservation result = service.get(reservation.getId());
+    public ResponseEntity<ReservationResponse> create(@RequestBody ReservationCreateRequest reservation) {
+        Reservation result = service.create(mapper.map(reservation, Reservation.class));
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping
     public ResponseEntity<ReservationResponse> update(@RequestBody ReservationRequest reservation) {
-        Reservation result = service.get(reservation.getId());
+        Reservation result = service.update(mapper.map(reservation, Reservation.class));
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
     }
 

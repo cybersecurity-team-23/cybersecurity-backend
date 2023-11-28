@@ -12,7 +12,7 @@ import java.util.Date;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/summary")
+@RequestMapping("/api/v1/summary")
 public class SummaryController {
 
     private final ISummaryService service;

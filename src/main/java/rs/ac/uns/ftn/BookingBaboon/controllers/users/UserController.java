@@ -6,11 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserRequest;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserProfile;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.Collection;
@@ -43,12 +40,12 @@ public class UserController {
     }
 
     @PostMapping({"/"})
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> create(@RequestBody UserCreateRequest user) {
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(user, User.class)),UserResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping({"/"})
-    public ResponseEntity<UserResponse> update(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> update(@RequestBody UserUpdateRequest user) {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(user, User.class)),UserResponse.class),HttpStatus.OK);
     }
 

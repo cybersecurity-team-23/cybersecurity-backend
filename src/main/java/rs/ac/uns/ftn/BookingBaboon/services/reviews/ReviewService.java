@@ -9,14 +9,16 @@ import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IReviewService;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
 public class ReviewService implements IReviewService {
     private final IReviewRepository reviewRepository;
     @Override
-    public Collection<Review> getAll() {
-        return new ArrayList<Review>();
+    public Set<Review> getAll() {
+        return new HashSet<>();
     }
 
     @Override

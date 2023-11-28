@@ -2,7 +2,6 @@ package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 
 import java.util.Date;
 import java.util.Set;
@@ -11,7 +10,7 @@ import java.util.Set;
 @Data
 @Table(name = "accommodation_change_requests")
 @TableGenerator(name="accommodation_change_request_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="accommodation_change_request", valueColumnName="value_pk")
-public class AccommodationChangeRequest {
+public class AccommodationModification {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "accommodation_change_request_id_generator")
     private Long id;

@@ -6,11 +6,12 @@ import jakarta.persistence.TableGenerator;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Data
 @Table(name = "hosts")
 public class Host extends User {
-    private Set<NotificationType> ignoredNotifications;
+    private Set<NotificationType> ignoredNotifications = new HashSet<NotificationType>();
 }
