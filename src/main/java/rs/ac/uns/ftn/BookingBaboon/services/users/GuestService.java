@@ -27,8 +27,8 @@ public class GuestService implements IGuestService {
 
 
     @Override
-    public Set<Guest> getAll() {
-        return new HashSet<Guest>(repository.findAll());
+    public Collection<Guest> getAll() {
+        return new ArrayList<>(repository.findAll());
     }
 
     @Override
@@ -103,8 +103,8 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Set<Accommodation> getFavorites(Long guestId) {
-        return new HashSet<Accommodation>();
+    public Collection<Accommodation> getFavorites(Long guestId) {
+        return new ArrayList<Accommodation>();
     }
 
     @Override

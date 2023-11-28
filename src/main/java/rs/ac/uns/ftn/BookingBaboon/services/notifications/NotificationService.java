@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.notifications;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,8 +22,8 @@ public class NotificationService implements INotificationService {
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Set<Notification> getAll() {
-        return new HashSet<Notification>(repository.findAll());
+    public Collection<Notification> getAll() {
+        return new ArrayList<Notification>(repository.findAll());
     }
 
     @Override
@@ -86,8 +87,8 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public Set<Notification> getByUserId(Long userId) {
-        return new HashSet<Notification>();
+    public Collection<Notification> getByUserId(Long userId) {
+        return new ArrayList<Notification>();
     }
 
     @Override

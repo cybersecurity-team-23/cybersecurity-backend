@@ -5,10 +5,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface IHostService {
-    Set<Host> getAll();
+    Collection<Host> getAll();
 
     Host get(Long hostId) throws ResponseStatusException;
 

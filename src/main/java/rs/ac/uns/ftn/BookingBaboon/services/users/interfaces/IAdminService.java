@@ -7,10 +7,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface IAdminService {
-    Set<Admin> getAll();
+    Collection<Admin> getAll();
 
     Admin get(Long adminId) throws ResponseStatusException;
 
@@ -22,9 +22,9 @@ public interface IAdminService {
 
     User blockUser(Long userId);
 
-    Set<GuestReport> getAllReports();
+    Collection<GuestReport> getAllReports();
 
-    Set<AccommodationChangeRequest> getAllAccommodationChanges();
+    Collection<AccommodationChangeRequest> getAllAccommodationChanges();
 
     Accommodation approveAccommodationChange(Long accommodationId);
 

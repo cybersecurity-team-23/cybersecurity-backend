@@ -24,8 +24,8 @@ public class HostService implements IHostService {
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Set<Host> getAll() {
-        return new HashSet<Host>(repository.findAll());
+    public Collection<Host> getAll() {
+        return new ArrayList<Host>(repository.findAll());
     }
 
     @Override

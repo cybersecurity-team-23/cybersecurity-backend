@@ -5,10 +5,10 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface IGuestService {
-    Set<Guest> getAll();
+    Collection<Guest> getAll();
 
     Guest get(Long guestId) throws ResponseStatusException;
 
@@ -20,7 +20,7 @@ public interface IGuestService {
 
     Guest getProfile(Long guestId);
 
-    Set<Accommodation> getFavorites(Long guestId);
+    Collection<Accommodation> getFavorites(Long guestId);
 
     Accommodation addFavorite(Long guestId, Long accommodationId);
 

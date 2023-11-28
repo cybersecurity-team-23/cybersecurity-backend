@@ -21,8 +21,8 @@ public class UserService implements IUserService {
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
-    public Set<User> getAll() {
-        return new HashSet<User>(repository.findAll());
+    public Collection<User> getAll() {
+        return new ArrayList<User>(repository.findAll());
     }
 
     @Override

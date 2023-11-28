@@ -3,10 +3,10 @@ package rs.ac.uns.ftn.BookingBaboon.services.notifications;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface INotificationService {
-    Set<Notification> getAll();
+    Collection<Notification> getAll();
 
     Notification get(Long notificationId) throws ResponseStatusException;
 
@@ -16,7 +16,7 @@ public interface INotificationService {
 
     Notification remove(Long notificationId);
 
-    Set<Notification> getByUserId(Long userId);
+    Collection<Notification> getByUserId(Long userId);
 
     void removeAll();
 }

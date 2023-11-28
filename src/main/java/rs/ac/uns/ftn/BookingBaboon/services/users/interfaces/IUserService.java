@@ -3,10 +3,11 @@ package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
+import java.util.Collection;
 import java.util.Set;
 
 public interface IUserService {
-    Set<User> getAll();
+    Collection<User> getAll();
 
     User get(Long userId) throws ResponseStatusException;
 

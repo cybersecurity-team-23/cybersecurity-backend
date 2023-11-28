@@ -15,10 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IAdminRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -30,8 +27,8 @@ public class AdminService implements IAdminService {
 
 
     @Override
-    public Set<Admin> getAll() {
-        return new HashSet<Admin>(repository.findAll());
+    public Collection<Admin> getAll() {
+        return new ArrayList<Admin>(repository.findAll());
     }
 
     @Override
@@ -106,13 +103,13 @@ public class AdminService implements IAdminService {
     }
 
     @Override
-    public Set<GuestReport> getAllReports() {
-        return new HashSet<GuestReport>();
+    public Collection<GuestReport> getAllReports() {
+        return new ArrayList<GuestReport>();
     }
 
     @Override
-    public Set<AccommodationChangeRequest> getAllAccommodationChanges() {
-        return new HashSet<AccommodationChangeRequest>();
+    public Collection<AccommodationChangeRequest> getAllAccommodationChanges() {
+        return new ArrayList<AccommodationChangeRequest>();
     }
 
 
