@@ -33,6 +33,11 @@ public class ReservationController {
     @GetMapping("/{id}")
     public ResponseEntity<ReservationResponse> get(@PathVariable Long id) {
         Reservation reservation = service.get(id);
+
+        if (reservation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(mapper.map(reservation, ReservationResponse.class), HttpStatus.OK);
     }
 
@@ -45,17 +50,33 @@ public class ReservationController {
     @PutMapping
     public ResponseEntity<ReservationResponse> update(@RequestBody ReservationRequest reservation) {
         Reservation result = service.update(mapper.map(reservation, Reservation.class));
+
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        service.remove(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Reservation reservation =  service.get(id);
+        if (reservation != null) {
+            service.remove(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/{id}/cancel")
     public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id) {
+        Reservation reservation = service.get(id);
+
+        if (reservation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         Reservation result = service.cancel(id);
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
     }

@@ -10,6 +10,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IS
 
 import java.util.Date;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/summary")

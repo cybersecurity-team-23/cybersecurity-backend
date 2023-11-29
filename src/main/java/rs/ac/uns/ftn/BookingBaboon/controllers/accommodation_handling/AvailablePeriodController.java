@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/available-periods")
@@ -35,6 +36,11 @@ public class AvailablePeriodController {
     @GetMapping("/{id}")
     public ResponseEntity<AvailablePeriodResponse> get(@PathVariable Long id) {
         AvailablePeriod availablePeriod = service.get(id);
+
+        if (availablePeriod == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(mapper.map(availablePeriod, AvailablePeriodResponse.class), HttpStatus.OK);
     }
 
@@ -47,12 +53,22 @@ public class AvailablePeriodController {
     @PutMapping
     public ResponseEntity<AvailablePeriodResponse> update(@RequestBody AvailablePeriodRequest availablePeriod) {
         AvailablePeriod result = service.update(mapper.map(availablePeriod, AvailablePeriod.class));
+
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(mapper.map(result, AvailablePeriodResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        service.remove(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        AvailablePeriod availablePeriod = service.get(id);
+        if (availablePeriod != null) {
+            service.remove(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

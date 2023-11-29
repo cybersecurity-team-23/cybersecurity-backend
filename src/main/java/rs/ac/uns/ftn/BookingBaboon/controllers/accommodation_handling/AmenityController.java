@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/amenities")
@@ -35,6 +36,11 @@ public class AmenityController {
     @GetMapping("/{id}")
     public ResponseEntity<AmenityResponse> get(@PathVariable Long id) {
         Amenity amenity = service.get(id);
+
+        if (amenity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(mapper.map(amenity, AmenityResponse.class), HttpStatus.OK);
     }
 
@@ -47,12 +53,22 @@ public class AmenityController {
     @PutMapping
     public ResponseEntity<AmenityResponse> update(@RequestBody AmenityRequest amenity) {
         Amenity result = service.update(mapper.map(amenity, Amenity.class));
+
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(mapper.map(result, AmenityResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        service.remove(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Amenity amenity = service.get(id);
+        if (amenity != null) {
+            service.remove(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }

@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/accommodations")
@@ -35,6 +36,11 @@ public class AccommodationController {
     @GetMapping("/{id}")
     public ResponseEntity<AccommodationResponse> get(@PathVariable Long id) {
         Accommodation accommodation = service.get(id);
+
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
 
@@ -47,13 +53,23 @@ public class AccommodationController {
     @PutMapping
     public ResponseEntity<AccommodationResponse> update(@RequestBody AccommodationRequest accommodation) {
         Accommodation result = service.update(mapper.map(accommodation, Accommodation.class));
+
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> remove(@PathVariable Long id) {
-        service.remove(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        Accommodation accommodation = service.get(id);
+        if (accommodation != null) {
+            service.remove(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @GetMapping("/filter")
