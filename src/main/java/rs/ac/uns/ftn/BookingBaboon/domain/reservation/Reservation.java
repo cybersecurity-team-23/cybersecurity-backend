@@ -2,10 +2,12 @@ package rs.ac.uns.ftn.BookingBaboon.domain.reservation;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 
+@CrossOrigin
 @Entity
 @Data
 @Table(name = "reservations")
