@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/users")
@@ -68,8 +69,8 @@ public class UserController {
     }
 
     @PostMapping({"/login"})
-    public ResponseEntity<UserResponse> login(@RequestBody String email, @RequestBody String password){
-        User user = service.login(email,password);
+    public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request){
+        User user = service.login(request.getEmail(), request.getPassword());
         if(user==null){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
