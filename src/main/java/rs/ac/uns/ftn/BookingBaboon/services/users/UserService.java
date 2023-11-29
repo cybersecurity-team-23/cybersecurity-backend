@@ -93,7 +93,11 @@ public class UserService implements IUserService {
 
     @Override
     public User login(String email, String password) {
-        return new User();
+        User found = repository.findByEmail(email);
+        if(found!=null && found.getPassword().equals(password)){
+            return found;
+        }
+        return null;
     }
 
     @Override
