@@ -16,7 +16,7 @@ public class User {
 
     private String password;
 
-    private boolean isBlocked = false;
+    private UserStatus status = UserStatus.Inactive;
 
     @Column(unique = true)
     private String email;
