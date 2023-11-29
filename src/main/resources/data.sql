@@ -110,7 +110,7 @@ ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.accommodations (
     id, description, is_automatically_accepted, address, city, country,
-    max_guests, min_guests, name, pricing_per_person, type, host_id
+    max_guests, min_guests, name, is_pricing_per_person, type, host_id
 ) VALUES
       (1, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true, 1, 1),
       (2, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true, 2, 2),
