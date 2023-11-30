@@ -16,6 +16,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationRev
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/accommodation-reviews")

@@ -20,6 +20,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/admin")
