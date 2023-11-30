@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportServic
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/host-reports")

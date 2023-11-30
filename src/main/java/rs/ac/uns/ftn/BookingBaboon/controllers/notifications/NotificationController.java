@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/notifications")
