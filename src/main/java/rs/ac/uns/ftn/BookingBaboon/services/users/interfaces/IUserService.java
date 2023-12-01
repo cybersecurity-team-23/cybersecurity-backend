@@ -6,7 +6,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import java.util.Collection;
 import java.util.Set;
 
-public interface IUserService {
+public interface IUserService{
     Collection<User> getAll();
 
     User get(Long userId) throws ResponseStatusException;
@@ -24,4 +24,6 @@ public interface IUserService {
     User changePassword(Long userId, String password);
 
     void removeAll();
+
+    User getByEmail(String email);
 }

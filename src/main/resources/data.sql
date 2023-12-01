@@ -1,16 +1,16 @@
 INSERT INTO public.users (
-    id, address, email, first_name, status, last_name, password, phone_number
+    id, address, email, first_name, status, last_name, password, phone_number, role
 ) VALUES
-      (1, '123 Main St', 'john.doe@example.com', 'John', 1, 'Doe', 'password123', '+3815551234'),
-      (2, '456 Oak St', 'jane.smith@example.com', 'Jane', 1, 'Smith', 'securepass', '+3815555678'),
-      (3, '789 Pine St', 'bob.johnson@example.com', 'Bob', 1, 'Johnson', 'pass123', '+3815559876'),
-      (4, '321 Elm St', 'alice.williams@example.com', 'Alice', 1, 'Williams', 'alicespass', '+3815554321'),
-      (5, '654 Birch St', 'charlie.brown@example.com', 'Charlie', 1, 'Brown', 'charliespass', '+3815558765'),
-      (6, '987 Cedar St', 'eva.miller@example.com', 'Eva', 1, 'Miller', 'evasspass', '+3815552109'),
-      (7, '135 Maple St', 'david.davis@example.com', 'David', 1, 'Davis', 'davidspass', '+3815553456'),
-      (8, '246 Pine St', 'grace.jones@example.com', 'Grace', 1, 'Jones', 'gracesspass', '+3815557890'),
-      (9, '579 Oak St', 'frank.white@example.com', 'Frank', 1, 'White', 'franksspass', '+3815559034'),
-      (10, '802 Walnut St', 'helen.martin@example.com', 'Helen', 1, 'Martin', 'helenspass', '+3815551230')
+      (1, '123 Main St', 'john.doe@example.com', 'John', 1, 'Doe', 'password123', '+3815551234', 2),
+      (2, '456 Oak St', 'jane.smith@example.com', 'Jane', 1, 'Smith', 'securepass', '+3815555678', 2),
+      (3, '789 Pine St', 'bob.johnson@example.com', 'Bob', 1, 'Johnson', 'pass123', '+3815559876', 2),
+      (4, '321 Elm St', 'alice.williams@example.com', 'Alice', 1, 'Williams', 'alicespass', '+3815554321', 2),
+      (5, '654 Birch St', 'charlie.brown@example.com', 'Charlie', 1, 'Brown', 'charliespass', '+3815558765', 1),
+      (6, '987 Cedar St', 'eva.miller@example.com', 'Eva', 1, 'Miller', 'evasspass', '+3815552109', 1 ),
+      (7, '135 Maple St', 'david.davis@example.com', 'David', 1, 'Davis', 'davidspass', '+3815553456', 1),
+      (8, '246 Pine St', 'grace.jones@example.com', 'Grace', 1, 'Jones', 'gracesspass', '+3815557890', 1),
+      (9, '579 Oak St', 'frank.white@example.com', 'Frank', 1, 'White', 'franksspass', '+3815559034', 1),
+      (10, '802 Walnut St', 'helen.martin@example.com', 'Helen', 1, 'Martin', 'helenspass', '+3815551230', 3)
     ON CONFLICT (id) DO NOTHING ;
 
 INSERT INTO public.hosts (id) VALUES

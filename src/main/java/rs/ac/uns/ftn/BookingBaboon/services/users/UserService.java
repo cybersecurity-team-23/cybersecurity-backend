@@ -5,6 +5,10 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -15,7 +19,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
-public class UserService implements IUserService {
+public class UserService implements IUserService, UserDetailsService {
 
     private final IUserRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
@@ -92,6 +96,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public User getByEmail(String email) {
+        return repository.findByEmail(email);
+    }
+
+    @Override
     public User login(String email, String password) {
         User found = repository.findByEmail(email);
         if(found!=null && found.getPassword().equals(password)){
@@ -110,5 +119,20 @@ public class UserService implements IUserService {
         return new User();
     }
 
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = repository.findByEmail(username);
+
+        if (user != null) {
+            return org.springframework.security.core.userdetails.User
+                    .withUsername(username)
+                    .password(user.getPassword())
+                    .authorities(user.getRole().toString())
+                    .build();
+        }
+
+        throw new UsernameNotFoundException("User not found with this username: " + username);
+    }
 
 }

@@ -9,4 +9,5 @@ public class HostResponse {
 
     private String email;
 
+    private String jwt;
 }

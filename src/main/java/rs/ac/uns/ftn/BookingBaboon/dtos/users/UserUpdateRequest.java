@@ -16,4 +16,6 @@ public class UserUpdateRequest {
     private String address;
 
     private String phoneNumber;
+
+    private String jwt;
 }
