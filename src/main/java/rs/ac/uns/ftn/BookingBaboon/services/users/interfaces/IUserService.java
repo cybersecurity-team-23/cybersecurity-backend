@@ -1,5 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
@@ -26,4 +28,6 @@ public interface IUserService{
     void removeAll();
 
     User getByEmail(String email);
+
+    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 }
