@@ -4,12 +4,16 @@ import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -30,6 +34,7 @@ public class UserController {
     private final ModelMapper mapper;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
+    private final SecurityContext sc = SecurityContextHolder.getContext();
 
     @GetMapping
     public ResponseEntity<Collection<UserResponse>> getUsers() {
@@ -83,17 +88,28 @@ public class UserController {
                 request.getPassword());
         Authentication auth = authenticationManager.authenticate(authReq);
 
-        SecurityContext sc = SecurityContextHolder.getContext();
         sc.setAuthentication(auth);
 
         User user = service.getByEmail(request.getEmail());
-        String token = jwtTokenUtil.generateToken(user.getEmail());
+        UserDetails userDetails = service.loadUserByUsername(user.getEmail());
+        String token = jwtTokenUtil.generateToken(userDetails);
         user.setJwt(token);
 
-//        if(user==null){
-//            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//        }
         return new ResponseEntity<>( mapper.map(user, UserResponse.class), HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity logout() {
+
+        Authentication auth = sc.getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken)){
+            SecurityContextHolder.clearContext();
+
+            return new ResponseEntity<>("You successfully logged out!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("You failed to log out!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping({"{userId}/activate"})
