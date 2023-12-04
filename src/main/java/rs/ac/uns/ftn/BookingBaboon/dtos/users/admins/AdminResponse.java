@@ -9,4 +9,5 @@ public class AdminResponse {
 
     private String email;
 
+    private String jwt;
 }

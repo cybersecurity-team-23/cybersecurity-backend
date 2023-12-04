@@ -1,10 +1,21 @@
 package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
+import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
@@ -21,6 +32,9 @@ public class UserController {
 
     private final IUserService service;
     private final ModelMapper mapper;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
+    private final SecurityContext sc = SecurityContextHolder.getContext();
 
     @GetMapping
     public ResponseEntity<Collection<UserResponse>> getUsers() {
@@ -70,11 +84,32 @@ public class UserController {
 
     @PostMapping({"/login"})
     public ResponseEntity<UserResponse> login(@RequestBody UserLoginRequest request){
-        User user = service.login(request.getEmail(), request.getPassword());
-        if(user==null){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(request.getEmail(),
+                request.getPassword());
+        Authentication auth = authenticationManager.authenticate(authReq);
+
+        sc.setAuthentication(auth);
+
+        User user = service.getByEmail(request.getEmail());
+        UserDetails userDetails = service.loadUserByUsername(user.getEmail());
+        String token = jwtTokenUtil.generateToken(userDetails);
+        user.setJwt(token);
+
         return new ResponseEntity<>( mapper.map(user, UserResponse.class), HttpStatus.OK);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity logout() {
+
+        Authentication auth = sc.getAuthentication();
+
+        if (!(auth instanceof AnonymousAuthenticationToken)){
+            SecurityContextHolder.clearContext();
+
+            return new ResponseEntity<>("You successfully logged out!", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("You failed to log out!", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping({"{userId}/activate"})
