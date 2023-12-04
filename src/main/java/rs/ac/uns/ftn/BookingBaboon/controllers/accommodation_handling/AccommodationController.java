@@ -6,13 +6,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -72,19 +82,42 @@ public class AccommodationController {
         }
     }
 
+//    @GetMapping("/filter")
+//    public ResponseEntity<Collection<AccommodationResponse>> search(
+//            @RequestParam(name = "city", required = false) String city,
+//            @RequestParam(name = "checkin", required = false) String checkin,
+//            @RequestParam(name = "checkout", required = false) String checkout,
+//            @RequestParam(name = "guest-num", required = false) Integer guestNum,
+//            @RequestParam(name = "min-price", required = false) Double minPrice,
+//            @RequestParam(name = "max-price", required = false) Double maxPrice,
+//            @RequestParam(name = "amenity", required = false) String amenity,
+//            @RequestParam(name = "property-type", required = false) String propertyType,
+//            @RequestParam(name = "min-rating", required = false) Integer minRating) {
+//
+//        AccommodationFilter filter = new AccommodationFilter();
+//
+//        Collection<Accommodation> accommodations = service.getAll();
+//
+//        return new ResponseEntity<>(accommodations.stream()
+//                .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
+//                .collect(Collectors.toList()), HttpStatus.OK);
+//    }
+
     @GetMapping("/filter")
     public ResponseEntity<Collection<AccommodationResponse>> search(
-            @RequestParam(name = "destination", required = false) String destination,
+            @RequestParam(name = "city", required = false) String city,
             @RequestParam(name = "checkin", required = false) String checkin,
             @RequestParam(name = "checkout", required = false) String checkout,
             @RequestParam(name = "guest-num", required = false) Integer guestNum,
             @RequestParam(name = "min-price", required = false) Double minPrice,
             @RequestParam(name = "max-price", required = false) Double maxPrice,
-            @RequestParam(name = "amenity", required = false) String amenity,
+            @RequestParam(name = "amenities", required = false) String amenities,
             @RequestParam(name = "property-type", required = false) String propertyType,
-            @RequestParam(name = "min-rating", required = false) Integer minRating) {
+            @RequestParam(name = "min-rating", required = false) Double minRating) {
 
-        Collection<Accommodation> accommodations = service.getAll();
+        AccommodationFilter filter = service.parseFilter(city,checkin,checkout,guestNum,minPrice,maxPrice,amenities,propertyType,minRating);
+
+        Collection<Accommodation> accommodations = service.search(filter);
 
         return new ResponseEntity<>(accommodations.stream()
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))

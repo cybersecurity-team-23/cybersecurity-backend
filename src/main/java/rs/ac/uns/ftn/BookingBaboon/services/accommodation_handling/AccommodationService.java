@@ -3,21 +3,32 @@ package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @RequiredArgsConstructor
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
+    private final IAmenityService amenityService;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
@@ -89,6 +100,79 @@ public class AccommodationService implements IAccommodationService {
     public void removeAll() {
         repository.deleteAll();
         repository.flush();
+    }
+
+    public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyType, String amenities, Double minRating){
+        AccommodationFilter filter = new AccommodationFilter();
+        filter.setCity(city);
+        filter.setCheckin(parseDate(checkin));
+        filter.setCheckout(parseDate(checkout));
+        filter.setGuestNum(guestNum);
+        filter.setMinPrice(minPrice);
+        filter.setMaxPrice(maxPrice);
+        filter.setAmenities(parseAmenities(amenities));
+        filter.setType(parseAccommodationType(propertyType));
+        filter.setMinRating(minRating);
+
+        return filter;
+    }
+
+    private Date parseDate(String date){
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            if (date != null) {
+                return dateFormat.parse(date);
+            }
+        } catch (ParseException e) {
+            // Handle the exception or log it
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+        return null;
+    }
+
+    //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
+    private Set<Amenity> parseAmenities(String amenityString) {
+        if (amenityString == null || amenityString.isEmpty()) {
+            return null;
+        }
+
+        String decodedAmenities = URLDecoder.decode(amenityString, StandardCharsets.UTF_8);
+
+        String[] amenityNames = decodedAmenities.split(",");
+
+        Set<Amenity> amenities = new HashSet<>();
+        for (String amenityName : amenityNames) {
+            Amenity existingAmenity = amenityService.findByName(amenityName);
+            if (existingAmenity != null) {
+                amenities.add(existingAmenity);
+            }
+        }
+
+        return amenities;
+    }
+
+    // Helper method to parse AccommodationType from a string
+    private AccommodationType parseAccommodationType(String typeString) {
+        if (typeString == null || typeString.isEmpty()) {
+            return null;
+        }
+        return AccommodationType.valueOf(typeString); // Assuming the enum has the same name as the strings
+    }
+
+    @Override
+    public Collection<Accommodation> search(AccommodationFilter filter){
+        return repository.findAccommodationsByFilter(
+                filter
+//                filter.getCity(),
+//                filter.getCheckin(),
+//                filter.getCheckout(),
+//                filter.getGuestNum(),
+//                filter.getMinPrice(),
+//                filter.getMaxPrice(),
+//                filter.getType(),
+//                filter.getAmenities(),
+//                filter.getMinRating()
+        );
     }
 
 }
