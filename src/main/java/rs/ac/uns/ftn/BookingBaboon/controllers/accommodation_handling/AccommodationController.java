@@ -115,7 +115,7 @@ public class AccommodationController {
             @RequestParam(name = "property-type", required = false) String propertyType,
             @RequestParam(name = "min-rating", required = false) Double minRating) {
 
-        AccommodationFilter filter = service.parseFilter(city,checkin,checkout,guestNum,minPrice,maxPrice,amenities,propertyType,minRating);
+        AccommodationFilter filter = service.parseFilter(city,checkin,checkout,guestNum,minPrice,maxPrice,propertyType,amenities,minRating);
 
         Collection<Accommodation> accommodations = service.search(filter);
 

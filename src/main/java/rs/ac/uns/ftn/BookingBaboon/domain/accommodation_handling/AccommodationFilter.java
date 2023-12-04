@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,7 +15,7 @@ public class AccommodationFilter {
     Integer guestNum;
     Double minPrice;
     Double maxPrice;
-    Set<Amenity> amenities;
+    List<String> amenities;
     AccommodationType type;
     Double minRating;
 }

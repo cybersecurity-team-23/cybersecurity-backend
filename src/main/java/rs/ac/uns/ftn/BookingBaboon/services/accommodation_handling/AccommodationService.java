@@ -131,7 +131,7 @@ public class AccommodationService implements IAccommodationService {
     }
 
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
-    private Set<Amenity> parseAmenities(String amenityString) {
+    private List<String> parseAmenities(String amenityString) {
         if (amenityString == null || amenityString.isEmpty()) {
             return null;
         }
@@ -140,18 +140,14 @@ public class AccommodationService implements IAccommodationService {
 
         String[] amenityNames = decodedAmenities.split(",");
 
-        Set<Amenity> amenities = new HashSet<>();
+        List<String> amenities = new ArrayList<>();
         for (String amenityName : amenityNames) {
-            Amenity existingAmenity = amenityService.findByName(amenityName);
-            if (existingAmenity != null) {
-                amenities.add(existingAmenity);
-            }
+            amenities.add(amenityName);
         }
 
         return amenities;
     }
 
-    // Helper method to parse AccommodationType from a string
     private AccommodationType parseAccommodationType(String typeString) {
         if (typeString == null || typeString.isEmpty()) {
             return null;
@@ -161,18 +157,7 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Collection<Accommodation> search(AccommodationFilter filter){
-        return repository.findAccommodationsByFilter(
-                filter
-//                filter.getCity(),
-//                filter.getCheckin(),
-//                filter.getCheckout(),
-//                filter.getGuestNum(),
-//                filter.getMinPrice(),
-//                filter.getMaxPrice(),
-//                filter.getType(),
-//                filter.getAmenities(),
-//                filter.getMinRating()
-        );
+        return repository.findAccommodationsByFilter(filter);
     }
 
 }
