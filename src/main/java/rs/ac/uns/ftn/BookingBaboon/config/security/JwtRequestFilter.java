@@ -54,8 +54,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 } catch (io.jsonwebtoken.MalformedJwtException e) {
                     System.out.println("Bad JWT Token.");
                 }
-            } else {
-                logger.warn("JWT Token does not exist.");
             }
         }
         chain.doFilter(request, response);
