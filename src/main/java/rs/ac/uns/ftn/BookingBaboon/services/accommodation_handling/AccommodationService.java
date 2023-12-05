@@ -5,23 +5,20 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
+import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
-import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -117,17 +114,17 @@ public class AccommodationService implements IAccommodationService {
         return filter;
     }
 
-    private Date parseDate(String date){
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            if (date != null) {
-                return dateFormat.parse(date);
+    private LocalDate parseDate(String date){
+            DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try {
+                if (date != null) {
+                    return LocalDate.parse(date, DATE_FORMATTER);
+                }
+            } catch (DateTimeParseException e) {
+                // Handle the exception or log it
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
             }
-        } catch (ParseException e) {
-            // Handle the exception or log it
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
-        }
-        return null;
+            return null;
     }
 
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
@@ -157,7 +154,126 @@ public class AccommodationService implements IAccommodationService {
 
     @Override
     public Collection<Accommodation> search(AccommodationFilter filter){
-        return repository.findAccommodationsByFilter(filter);
+        List<Accommodation> filteredAccommodations = repository.findAccommodationsByFilter(filter);
+        if (filter.getCheckin() != null && filter.getCheckout() != null){
+            filteredAccommodations = filterByAvailability(filteredAccommodations, filter);
+        }
+        if (filter.getMinPrice() != null || filter.getMaxPrice() != null){
+            filteredAccommodations = filterByPrice(filteredAccommodations, filter);
+        }
+
+        return filteredAccommodations;
+    }
+
+    private List<Accommodation> filterByPrice(List<Accommodation> accommodations, AccommodationFilter filter) {
+        List<Accommodation> filteredAccommodations = new ArrayList<>();
+        TimeSlot desiredPeriod = new TimeSlot(filter.getCheckin(), filter.getCheckout());
+
+        for(Accommodation accommodation: accommodations){
+            float totalPrice = getTotalPrice(accommodation, desiredPeriod);
+            if(filter.getMinPrice() != null && filter.getMinPrice() > totalPrice){
+                continue;
+            }
+            if(filter.getMaxPrice() != null && filter.getMaxPrice() < totalPrice){
+                continue;
+            }
+            filteredAccommodations.add(accommodation);
+        }
+
+        return filteredAccommodations;
+    }
+
+    public float getTotalPrice(Accommodation accommodation, TimeSlot desiredPeriod) {
+        List<AvailablePeriod> availablePeriods = repository.findAvailablePeriodsSortedByStartDate(accommodation.getId());
+        float totalPrice = 0;
+
+        int startIndex = findFirstOverlappingPeriodIndex(availablePeriods, desiredPeriod);
+        int endIndex = findSuccessivePeriodIndex(availablePeriods, startIndex, desiredPeriod);
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            long numberOfNights = availablePeriods.get(i).getTimeSlot().countOverlappingDays(desiredPeriod);
+
+            if(i == endIndex){
+                totalPrice += availablePeriods.get(i).getPricePerNight() * (numberOfNights-1);
+            } else {
+                totalPrice += availablePeriods.get(i).getPricePerNight() * numberOfNights;
+            }
+
+        }
+
+        return totalPrice;
+    }
+
+    private int findFirstOverlappingPeriodIndex(List<AvailablePeriod> availablePeriods, TimeSlot desiredPeriod) {
+        for (int i = 0; i < availablePeriods.size(); i++) {
+            TimeSlot currentTimeSlot = availablePeriods.get(i).getTimeSlot();
+            if (!desiredPeriod.getStartDate().isBefore(currentTimeSlot.getStartDate()) &&
+                    currentTimeSlot.overlaps(desiredPeriod)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int findSuccessivePeriodIndex(List<AvailablePeriod> availablePeriods, int startIndex, TimeSlot desiredPeriod) {
+        int endIndex = startIndex;
+
+        while (endIndex < availablePeriods.size() - 1 &&
+                desiredPeriod.getEndDate().isAfter(availablePeriods.get(endIndex).getTimeSlot().getEndDate())) {
+            if (!availablePeriods.get(endIndex).getTimeSlot().isSuccessive(availablePeriods.get(endIndex + 1).getTimeSlot())) {
+                break;
+            }
+            endIndex++;
+        }
+
+        return endIndex;
+    }
+
+    public List<Accommodation> filterByAvailability(List<Accommodation> accommodations, AccommodationFilter filter) {
+
+        List<Accommodation> filteredAccommodations = new ArrayList<>();
+
+        for (Accommodation accommodation : accommodations) {
+            if (hasAvailability(accommodation, filter)) {
+                filteredAccommodations.add(accommodation);
+            }
+        }
+
+        return filteredAccommodations;
+    }
+
+    private boolean hasAvailability(Accommodation accommodation, AccommodationFilter filter) {
+        List<AvailablePeriod> availablePeriods = repository.findAvailablePeriodsSortedByStartDate(accommodation.getId());
+        TimeSlot desiredPeriod = new TimeSlot(filter.getCheckin(), filter.getCheckout());
+
+        // Find the first available period that overlaps with the desired period
+        TimeSlot currentTimeSlot;
+        int foundIndex = -1;
+        for (int i = 0; i < availablePeriods.size(); i++) {
+            currentTimeSlot = availablePeriods.get(i).getTimeSlot();
+            if(!desiredPeriod.getStartDate().isBefore(currentTimeSlot.getStartDate()) &&
+                    currentTimeSlot.overlaps(desiredPeriod)){
+                foundIndex = i;
+                break;
+            }
+        }
+
+        if(foundIndex == -1){
+            return false;
+        }
+
+        //If found check successive periods
+        int currentIndex = foundIndex;
+
+        while(currentIndex < availablePeriods.size()-1 && desiredPeriod.getEndDate().isAfter(availablePeriods.get(currentIndex).getTimeSlot().getEndDate())){
+            if(!availablePeriods.get(currentIndex).getTimeSlot().isSuccessive(availablePeriods.get(currentIndex+1).getTimeSlot())){
+                return false;
+            }
+            currentIndex++;
+        }
+
+        return true;
     }
 
 }
+

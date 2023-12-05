@@ -4,10 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 
 import java.util.*;
 
@@ -24,7 +21,7 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "(:#{#filter.minRating} IS NULL OR (SELECT AVG(r.rating) FROM AccommodationReview r WHERE r.reviewedAccommodation.id = a.id) >= :#{#filter.minRating}) AND" +
             "(:#{#filter.amenities} IS NULL OR (SELECT COUNT(DISTINCT amenity.name) FROM a.amenities amenity WHERE amenity.name IN :#{#filter.amenities}) = :#{#filter.amenities?.size()})"
     )
-    Set<Accommodation> findAccommodationsByFilter(
+    List<Accommodation> findAccommodationsByFilter(
             @Param("filter") AccommodationFilter filter
 //            @Param("city") String city,                   +
 //            @Param("checkin") Date checkin,
@@ -36,5 +33,8 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
 //            @Param("amenities") Set<Amenity> amenities,   +
 //            @Param("minRating") Double minRating          +
     );
+
+    @Query("SELECT ap FROM Accommodation a JOIN a.availablePeriods ap WHERE a.id = :accommodationId ORDER BY ap.timeSlot.startDate")
+    List<AvailablePeriod> findAvailablePeriodsSortedByStartDate(@Param("accommodationId") Long accommodationId);
 
 }

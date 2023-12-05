@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Data
 @Table(name = "amenities")
 @TableGenerator(name="amenity_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="amenity", valueColumnName="value_pk")
-public class Amenity implements Serializable {
+public class Amenity {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "amenity_id_generator")
     private Long id;
