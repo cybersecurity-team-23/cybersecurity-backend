@@ -5,6 +5,10 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
@@ -13,6 +17,8 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IGuestRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
 import java.util.*;
@@ -22,6 +28,12 @@ import java.util.*;
 public class GuestService implements IGuestService {
 
     private final IGuestRepository repository;
+
+    private final IEmailService emailService;
+
+    private final ITokenService tokenService;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -44,8 +56,10 @@ public class GuestService implements IGuestService {
     @Override
     public Guest create(Guest guest) throws ResponseStatusException{
         try {
+            guest.setPassword(encoder.encode(guest.getPassword()));
             repository.save(guest);
             repository.flush();
+            emailService.sendActivationEmail(guest);
             return guest;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -86,6 +100,7 @@ public class GuestService implements IGuestService {
     @Override
     public Guest remove(Long guestId) {
         Guest found = get(guestId);
+        tokenService.delete(found);
         repository.delete(found);
         repository.flush();
         return found;

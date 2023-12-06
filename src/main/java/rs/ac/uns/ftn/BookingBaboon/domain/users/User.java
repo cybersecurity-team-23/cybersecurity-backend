@@ -34,4 +34,11 @@ public class User{
     @Transient
     private String jwt;
 
+    public void activate() {
+        this.status = UserStatus.Active;
+    }
+
+    public boolean isActive() {
+        return this.status == UserStatus.Active;
+    }
 }

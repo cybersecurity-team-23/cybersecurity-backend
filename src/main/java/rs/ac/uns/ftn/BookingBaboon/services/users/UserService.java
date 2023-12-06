@@ -5,16 +5,21 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.tokens.EmailVerificationToken;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
+import java.beans.Encoder;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -22,6 +27,11 @@ import java.util.*;
 public class UserService implements IUserService, UserDetailsService {
 
     private final IUserRepository repository;
+
+    private final ITokenService tokenService;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
+
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
@@ -42,6 +52,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public User create(User user) throws ResponseStatusException {
         try {
+            user.setPassword(encoder.encode(user.getPassword()));
             repository.save(user);
             repository.flush();
             return user;
@@ -84,6 +95,7 @@ public class UserService implements IUserService, UserDetailsService {
     @Override
     public User remove(Long userId) {
         User found = get(userId);
+        tokenService.delete(found);
         repository.delete(found);
         repository.flush();
         return found;
@@ -110,9 +122,25 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public User activate(Long userId) {
-        return new User();
+    public User activate(String token) {
+
+        EmailVerificationToken verificationToken = tokenService.getVerificationToken(token);
+        if (verificationToken == null) {
+            return null;
+        }
+
+        User user = verificationToken.getUser();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            return null;
+        }
+
+        user.activate();
+        tokenService.delete(token);
+        repository.save(user);
+        return user;
     }
+
 
     @Override
     public User changePassword(Long userId, String password) {

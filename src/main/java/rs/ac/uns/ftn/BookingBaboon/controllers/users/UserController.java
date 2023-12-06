@@ -91,6 +91,11 @@ public class UserController {
         sc.setAuthentication(auth);
 
         User user = service.getByEmail(request.getEmail());
+
+        if (!user.isActive()){
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
         UserDetails userDetails = service.loadUserByUsername(user.getEmail());
         String token = jwtTokenUtil.generateToken(userDetails);
         user.setJwt(token);
@@ -112,9 +117,14 @@ public class UserController {
         }
     }
 
-    @PutMapping({"{userId}/activate"})
-    public ResponseEntity<UserResponse> activate(@PathVariable Long userId){
-        return new ResponseEntity<>(mapper.map(service.activate(userId), UserResponse.class), HttpStatus.OK);
+    @GetMapping({"/activate"})
+    public ResponseEntity<UserResponse> activate(@RequestParam("token") String verificationToken){
+        User user = service.activate(verificationToken);
+        if (user == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
     @PutMapping("{userId}/change-password")

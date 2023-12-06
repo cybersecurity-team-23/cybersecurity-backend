@@ -5,12 +5,17 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IHostRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
+import rs.ac.uns.ftn.BookingBaboon.services.tokens.TokenService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
 
 import java.util.*;
@@ -20,6 +25,12 @@ import java.util.*;
 public class HostService implements IHostService {
 
     private final IHostRepository repository;
+
+    private final IEmailService emailService;
+
+    private final ITokenService tokenService;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -40,8 +51,10 @@ public class HostService implements IHostService {
     @Override
     public Host create(Host host) throws ResponseStatusException {
         try {
+            host.setPassword(encoder.encode(host.getPassword()));
             repository.save(host);
             repository.flush();
+            emailService.sendActivationEmail(host);
             return host;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -82,6 +95,7 @@ public class HostService implements IHostService {
     @Override
     public Host remove(Long hostId) {
         Host found = get(hostId);
+        tokenService.delete(found);
         repository.delete(found);
         repository.flush();
         return found;

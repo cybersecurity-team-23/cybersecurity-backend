@@ -3,10 +3,10 @@ package rs.ac.uns.ftn.BookingBaboon.services.users.interfaces;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.tokens.EmailVerificationToken;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.util.Collection;
-import java.util.Set;
 
 public interface IUserService{
     Collection<User> getAll();
@@ -21,7 +21,7 @@ public interface IUserService{
 
     User login(String username, String password);
 
-    User activate(Long userId);
+    User activate(String verificationToken);
 
     User changePassword(Long userId, String password);
 
