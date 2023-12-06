@@ -7,9 +7,11 @@ import java.util.HashSet;
 
 public interface IAccommodationService {
     public HashSet<Accommodation> getAll();
+    public HashSet<Accommodation> getAllByHost(Long hostId);
     public Accommodation get(Long accommodationId);
     public Accommodation create(Accommodation accommodation);
     public Accommodation update(Accommodation accommodation);
     public Accommodation remove(Long accommodationId);
     public void removeAll();
+    public void removeAllByHost(Long hostId);
 }

@@ -16,8 +16,11 @@ public interface IAccommodationReviewService {
     AccommodationReview update(AccommodationReview accommodationReview);
 
     AccommodationReview remove(Long accommodationReviewId);
+    void removeFromAccommodation(Long accommodationId);
 
     User getReviewer(Long id);
 
     float getAverageRating(Long accommodationId);
+
+    void removeAllByUser(Long userId);
 }

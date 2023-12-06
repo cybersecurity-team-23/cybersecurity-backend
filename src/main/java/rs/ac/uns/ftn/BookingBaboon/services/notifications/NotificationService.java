@@ -96,4 +96,13 @@ public class NotificationService implements INotificationService {
         repository.deleteAll();
         repository.flush();
     }
+
+    @Override
+    public void removeAllByUser(Long userId) {
+        for(Notification notification : getAll()) {
+            if (notification.getUser().getId().equals(userId)) {
+                remove(notification.getId());
+            }
+        }
+    }
 }

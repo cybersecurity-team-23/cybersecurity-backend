@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
 import java.util.*;
 
@@ -18,11 +19,24 @@ import java.util.*;
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
+    private final IAccommodationReviewService accommodationReviewService;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
     public HashSet<Accommodation> getAll() {
         return new HashSet<Accommodation>(repository.findAll());
+    }
+
+    @Override
+    public HashSet<Accommodation> getAllByHost(Long hostId) {
+        HashSet<Accommodation> accommodations = getAll();
+        HashSet<Accommodation> accommodationsByHost = new HashSet<>();
+        for(Accommodation accommodation : accommodations) {
+            if (accommodation.getHost().getId().equals(hostId)) {
+                accommodationsByHost.add(accommodation);
+            }
+        }
+        return accommodationsByHost;
     }
 
     @Override
@@ -89,6 +103,15 @@ public class AccommodationService implements IAccommodationService {
     public void removeAll() {
         repository.deleteAll();
         repository.flush();
+    }
+
+    @Override
+    public void removeAllByHost(Long hostId) {
+        for(Accommodation accommodation : getAllByHost(hostId)) {
+            accommodationReviewService.removeFromAccommodation(accommodation.getId());
+            repository.delete(accommodation);
+            repository.flush();
+        }
     }
 
 }

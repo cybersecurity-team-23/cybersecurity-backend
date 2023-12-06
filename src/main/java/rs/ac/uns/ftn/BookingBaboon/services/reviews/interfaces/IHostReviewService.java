@@ -18,8 +18,11 @@ public interface IHostReviewService {
     HostReview update(HostReview hostReview);
 
     HostReview remove(Long hostReviewid);
+    void removeByHost(Long hostId);
 
     User getReviewer(Long id);
 
     float getAverageRating(Long id);
+
+    void removeAllByUser(Long userId);
 }
