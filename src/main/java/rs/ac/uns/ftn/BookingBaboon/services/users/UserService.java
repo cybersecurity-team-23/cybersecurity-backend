@@ -9,9 +9,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.PasswordChangeRequest;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
@@ -24,6 +27,7 @@ public class UserService implements IUserService, UserDetailsService {
     private final IUserRepository repository;
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
     public Collection<User> getAll() {
         return new ArrayList<User>(repository.findAll());
@@ -115,8 +119,18 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public User changePassword(Long userId, String password) {
-        return new User();
+    public User changePassword(Long userId, PasswordChangeRequest request) {
+        User user = get(userId);
+
+        request.setNewPassword(encoder.encode(request.getNewPassword()));
+
+        if (encoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            user.setPassword(request.getNewPassword());
+            repository.save(user);
+            repository.flush();
+            return user;
+        }
+        return null;
     }
 
 
