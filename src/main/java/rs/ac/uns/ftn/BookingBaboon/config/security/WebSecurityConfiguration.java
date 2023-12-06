@@ -46,7 +46,6 @@ public class WebSecurityConfiguration{
     @Bean
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = new BCryptPasswordEncoder();// PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        System.out.println(encoder.encode("password123"));
         return encoder;
     }
 
