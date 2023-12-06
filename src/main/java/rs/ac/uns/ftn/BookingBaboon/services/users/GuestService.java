@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IGuestRepository;
@@ -74,8 +75,13 @@ public class GuestService implements IGuestService {
     @Override
     public Guest update(Guest guest) throws ResponseStatusException{
         try {
-            get(guest.getId());
-            repository.save(guest);
+            Guest updatedGuest = get(guest.getId());
+            updatedGuest.setFirstName(guest.getFirstName());
+            updatedGuest.setLastName(guest.getLastName());
+            updatedGuest.setEmail(guest.getEmail());
+            updatedGuest.setAddress(guest.getAddress());
+            updatedGuest.setPhoneNumber(guest.getPhoneNumber());
+            repository.save(updatedGuest);
             repository.flush();
             return guest;
         } catch (RuntimeException ex) {
@@ -113,8 +119,13 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Guest getProfile(Long guestId) {
-        return new Guest();
+    public Guest getProfile(String guestEmail) {
+        Guest found = repository.findByEmail(guestEmail);
+        if (found == null) {
+            String value = bundle.getString("host.notFound");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
+        }
+        return found;
     }
 
     @Override

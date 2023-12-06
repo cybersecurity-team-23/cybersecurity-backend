@@ -6,4 +6,5 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 
 @Repository
 public interface IGuestRepository extends JpaRepository<Guest, Long> {
+    public Guest findByEmail(String email);
 }

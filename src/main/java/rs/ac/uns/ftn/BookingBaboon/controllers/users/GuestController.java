@@ -60,9 +60,9 @@ public class GuestController {
         return new ResponseEntity<>( mapper.map(guest,GuestResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"/profile/{guestId}"})
-    public ResponseEntity<GuestProfile> getProfile(@PathVariable Long guestId) {
-        Guest guest = service.get(guestId);
+    @GetMapping({"/profile/{guestEmail}"})
+    public ResponseEntity<GuestProfile> getProfile(@PathVariable String guestEmail) {
+        Guest guest = service.getProfile(guestEmail);
         if(guest==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

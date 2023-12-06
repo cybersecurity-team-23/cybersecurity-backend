@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.tokens.EmailVerificationToken;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.PasswordChangeRequest;
 
 import java.util.Collection;
 
@@ -23,7 +24,7 @@ public interface IUserService{
 
     User activate(String verificationToken);
 
-    User changePassword(Long userId, String password);
+    User changePassword(Long userId, PasswordChangeRequest passwordChangeRequest);
 
     void removeAll();
 
