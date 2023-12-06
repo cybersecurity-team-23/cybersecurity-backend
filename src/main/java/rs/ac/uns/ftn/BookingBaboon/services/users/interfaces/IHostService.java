@@ -18,7 +18,7 @@ public interface IHostService {
 
     Host remove(Long hostId);
 
-    Host getProfile(Long hostId);
+    Host getProfile(String hostEmail);
 
     Host toggleNotificaitons(Long hostId, NotificationType notificationType);
 

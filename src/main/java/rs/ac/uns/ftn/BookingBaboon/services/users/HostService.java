@@ -56,8 +56,13 @@ public class HostService implements IHostService {
     @Override
     public Host update(Host host) throws ResponseStatusException {
         try {
-            get(host.getId());
-            repository.save(host);
+            Host updatedHost = get(host.getId());
+            updatedHost.setFirstName(host.getFirstName());
+            updatedHost.setLastName(host.getLastName());
+            updatedHost.setEmail(host.getEmail());
+            updatedHost.setAddress(host.getAddress());
+            updatedHost.setPhoneNumber(host.getPhoneNumber());
+            repository.save(updatedHost);
             repository.flush();
             return host;
         } catch (RuntimeException ex) {
@@ -94,8 +99,13 @@ public class HostService implements IHostService {
     }
 
     @Override
-    public Host getProfile(Long hostId) {
-        return new Host();
+    public Host getProfile(String hostEmail) {
+        Host found = repository.findByEmail(hostEmail);
+        if (found == null) {
+            String value = bundle.getString("host.notFound");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
+        }
+        return found;
     }
 
     @Override

@@ -18,7 +18,7 @@ public interface IGuestService {
 
     Guest remove(Long guestId);
 
-    Guest getProfile(Long guestId);
+    Guest getProfile(String guestEmail);
 
     Collection<Accommodation> getFavorites(Long guestId);
 

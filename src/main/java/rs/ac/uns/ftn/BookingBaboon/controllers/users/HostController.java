@@ -61,9 +61,9 @@ public class HostController {
         return new ResponseEntity<>( mapper.map(host,HostResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"/profile/{hostId}"})
-    public ResponseEntity<HostProfile> getProfile(@PathVariable Long hostId) {
-        Host host = service.getProfile(hostId);
+    @GetMapping({"/profile/{hostEmail}"})
+    public ResponseEntity<HostProfile> getProfile(@PathVariable String hostEmail) {
+        Host host = service.getProfile(hostEmail);
         if(host==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

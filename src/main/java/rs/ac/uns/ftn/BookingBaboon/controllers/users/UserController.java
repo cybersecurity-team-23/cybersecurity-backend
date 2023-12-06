@@ -1,11 +1,10 @@
 package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
-import com.fasterxml.jackson.databind.deser.CreatorProperty;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,7 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -73,13 +71,23 @@ public class UserController {
         return new ResponseEntity<>( mapper.map(user,UserResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"/profile/{userId}"})
-    public ResponseEntity<UserProfile> getProfile(@PathVariable Long userId) {
-        User user = service.get(userId);
+    @GetMapping({"/profile/{userEmail}"})
+    public ResponseEntity<UserProfile> getProfile(@PathVariable String userEmail) {
+
+        User user = service.getByEmail(userEmail);
         if(user==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>( mapper.map(user, UserProfile.class), HttpStatus.OK);
+    }
+
+    @GetMapping({"/email/{userEmail}"})
+    public ResponseEntity<UserResponse> getByEmail(@PathVariable String userEmail) {
+        User user = service.getByEmail(userEmail);
+        if(user==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
     @PostMapping({"/login"})
