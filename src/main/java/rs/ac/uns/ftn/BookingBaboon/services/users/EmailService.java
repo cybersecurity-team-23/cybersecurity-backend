@@ -35,7 +35,7 @@ public class EmailService implements IEmailService {
         tokenService.createVerificationToken(user, token);
 
         String subject = "Registration Confirmation";
-        String confirmationUrl = "http://localhost:8080/api/v1/users/activate?token=" + token;
+        String confirmationUrl = "http://localhost:4200/users/activate?token=" + token;
         String message = "Please verify your email by clicking on the following link: ";
 
         SimpleMailMessage mailMessage = new SimpleMailMessage();
