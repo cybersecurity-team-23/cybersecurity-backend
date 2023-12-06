@@ -35,7 +35,6 @@ public class UserService implements IUserService, UserDetailsService {
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
-    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
     @Override
     public Collection<User> getAll() {
         return new ArrayList<User>(repository.findAll());
