@@ -6,4 +6,6 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 
 @Repository
 public interface IAmenityRepository extends JpaRepository<Amenity, Long> {
+
+    public Amenity findByName(String name);
 }
