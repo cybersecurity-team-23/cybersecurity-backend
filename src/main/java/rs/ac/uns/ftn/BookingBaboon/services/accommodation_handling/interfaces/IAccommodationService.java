@@ -16,5 +16,6 @@ public interface IAccommodationService {
     public void removeAll();
     public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyType, String amenities, Double minRating);
     public Collection<Accommodation> search(AccommodationFilter filter);
-    public void removeAllByHost(Long hostId);
 
+    public void removeAllByHost(Long hostId);
+}
