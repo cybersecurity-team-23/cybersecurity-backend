@@ -13,11 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IGuestRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.AccommodationReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
 import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
@@ -33,6 +42,13 @@ public class GuestService implements IGuestService {
     private final IEmailService emailService;
 
     private final ITokenService tokenService;
+
+    private final IReservationService reservationService;
+    private final IGuestReportService guestReportService;
+    private final IHostReportService hostReportService;
+    private final INotificationService notificationService;
+    private final AccommodationReviewService accommodationReviewService;
+    private final IHostReviewService hostReviewService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -106,6 +122,17 @@ public class GuestService implements IGuestService {
     @Override
     public Guest remove(Long guestId) {
         Guest found = get(guestId);
+        for(Reservation reservation : reservationService.getAll()) {
+            if (reservation.getGuest().getId().equals(guestId) && reservationService.isApproved(reservation.getId())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Guest has active reservations");
+            }
+        }
+        reservationService.removeAllForGuest(guestId);
+        guestReportService.removeAllForGuest(guestId);
+        hostReportService.removeAllByUser(guestId);
+        notificationService.removeAllByUser(guestId);
+        accommodationReviewService.removeAllByUser(guestId);
+        hostReviewService.removeAllByUser(guestId);
         tokenService.delete(found);
         repository.delete(found);
         repository.flush();

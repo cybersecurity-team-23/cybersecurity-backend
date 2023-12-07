@@ -7,7 +7,6 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import rs.ac.uns.ftn.BookingBaboon.domain.reviews.AccommodationReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
@@ -24,7 +23,10 @@ public class HostReviewService implements IHostReviewService {
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
     @Override
-    public Collection<HostReview> getAll()  {return repository.findAll();}
+    public Collection<HostReview> getAll()  {
+        List<HostReview> hostReviews = repository.findAll();
+        return hostReviews;
+    }
 
     @Override
     public HostReview get(Long hostReviewId) {
@@ -87,6 +89,15 @@ public class HostReviewService implements IHostReviewService {
     }
 
     @Override
+    public void removeByHost(Long hostId) {
+        for(HostReview review : getAll()) {
+            if (review.getReviewedHost().getId().equals(hostId)) {
+                remove(review.getId());
+            }
+        }
+    }
+
+    @Override
     public User getReviewer(Long hostReviewId) {
         Optional<HostReview> found = repository.findById(hostReviewId);
         if (found.isEmpty()) {
@@ -112,5 +123,15 @@ public class HostReviewService implements IHostReviewService {
         }
 
         return (float) ratingSum / reviewNumber;
+    }
+
+    @Override
+    public void removeAllByUser(Long userId) {
+        Collection<HostReview> hostReviews = getAll();
+        for(HostReview review : hostReviews) {
+            if (review.getReviewer().getId().equals(userId)) {
+                remove(review.getId());
+            }
+        }
     }
 }

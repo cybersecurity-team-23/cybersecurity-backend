@@ -3,26 +3,50 @@ package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
+    private final IAmenityService amenityService;
+    private final IAccommodationReviewService accommodationReviewService;
+  
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
     public HashSet<Accommodation> getAll() {
         return new HashSet<Accommodation>(repository.findAll());
+    }
+
+    @Override
+    public HashSet<Accommodation> getAllByHost(Long hostId) {
+        HashSet<Accommodation> accommodations = getAll();
+        HashSet<Accommodation> accommodationsByHost = new HashSet<>();
+        for(Accommodation accommodation : accommodations) {
+            if (accommodation.getHost().getId().equals(hostId)) {
+                accommodationsByHost.add(accommodation);
+            }
+        }
+        return accommodationsByHost;
     }
 
     @Override
@@ -91,4 +115,195 @@ public class AccommodationService implements IAccommodationService {
         repository.flush();
     }
 
+
+    public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyTypes, String amenities, Double minRating){
+        AccommodationFilter filter = new AccommodationFilter();
+        filter.setCity(city);
+        filter.setCheckin(parseDate(checkin));
+        filter.setCheckout(parseDate(checkout));
+        filter.setGuestNum(guestNum);
+        filter.setMinPrice(minPrice);
+        filter.setMaxPrice(maxPrice);
+        filter.setAmenities(parseAmenities(amenities));
+        filter.setTypes(parseAccommodationTypes(propertyTypes));
+        filter.setMinRating(minRating);
+
+        return filter;
+    }
+
+    private LocalDate parseDate(String date){
+            DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            try {
+                if (date != null) {
+                    return LocalDate.parse(date, DATE_FORMATTER);
+                }
+            } catch (DateTimeParseException e) {
+                // Handle the exception or log it
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+            }
+            return null;
+    }
+
+    //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
+    private List<String> parseAmenities(String amenityString) {
+        if (amenityString == null || amenityString.isEmpty()) {
+            return null;
+        }
+
+        String decodedAmenities = URLDecoder.decode(amenityString, StandardCharsets.UTF_8);
+
+        String[] amenityNames = decodedAmenities.split(",");
+
+        List<String> amenities = new ArrayList<>();
+        for (String amenityName : amenityNames) {
+            amenities.add(amenityName);
+        }
+
+        return amenities;
+    }
+
+    //?type=Hotel,Resort
+    private List<AccommodationType> parseAccommodationTypes(String typeString) {
+        if (typeString == null || typeString.isEmpty()) {
+            return null;
+        }
+
+        return Arrays.stream(typeString.split(","))
+                .map(AccommodationType::valueOf)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Collection<Accommodation> search(AccommodationFilter filter){
+        List<Accommodation> filteredAccommodations = repository.findAccommodationsByFilter(filter);
+        if (filter.getCheckin() != null && filter.getCheckout() != null){
+            filteredAccommodations = filterByAvailability(filteredAccommodations, filter);
+
+            if (filter.getMinPrice() != null || filter.getMaxPrice() != null){
+                filteredAccommodations = filterByPrice(filteredAccommodations, filter);
+            }
+        }
+        return filteredAccommodations;
+    }
+
+    private List<Accommodation> filterByPrice(List<Accommodation> accommodations, AccommodationFilter filter) {
+        List<Accommodation> filteredAccommodations = new ArrayList<>();
+        TimeSlot desiredPeriod = new TimeSlot(filter.getCheckin(), filter.getCheckout());
+
+        for(Accommodation accommodation: accommodations){
+            float totalPrice = getTotalPrice(accommodation, desiredPeriod);
+            if(filter.getMinPrice() != null && filter.getMinPrice() > totalPrice){
+                continue;
+            }
+            if(filter.getMaxPrice() != null && filter.getMaxPrice() < totalPrice){
+                continue;
+            }
+            filteredAccommodations.add(accommodation);
+        }
+
+        return filteredAccommodations;
+    }
+
+    public float getTotalPrice(Accommodation accommodation, TimeSlot desiredPeriod) {
+        List<AvailablePeriod> availablePeriods = repository.findAvailablePeriodsSortedByStartDate(accommodation.getId());
+        float totalPrice = 0;
+
+        int startIndex = findFirstOverlappingPeriodIndex(availablePeriods, desiredPeriod);
+        int endIndex = findSuccessivePeriodIndex(availablePeriods, startIndex, desiredPeriod);
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            long numberOfNights = availablePeriods.get(i).getTimeSlot().countOverlappingDays(desiredPeriod);
+
+            if(i == endIndex){
+                totalPrice += availablePeriods.get(i).getPricePerNight() * (numberOfNights-1);
+            } else {
+                totalPrice += availablePeriods.get(i).getPricePerNight() * numberOfNights;
+            }
+
+        }
+
+        return totalPrice;
+    }
+
+    private int findFirstOverlappingPeriodIndex(List<AvailablePeriod> availablePeriods, TimeSlot desiredPeriod) {
+        for (int i = 0; i < availablePeriods.size(); i++) {
+            TimeSlot currentTimeSlot = availablePeriods.get(i).getTimeSlot();
+            if (!desiredPeriod.getStartDate().isBefore(currentTimeSlot.getStartDate()) &&
+                    currentTimeSlot.overlaps(desiredPeriod)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private int findSuccessivePeriodIndex(List<AvailablePeriod> availablePeriods, int startIndex, TimeSlot desiredPeriod) {
+        int endIndex = startIndex;
+
+        while (endIndex < availablePeriods.size() - 1 &&
+                desiredPeriod.getEndDate().isAfter(availablePeriods.get(endIndex).getTimeSlot().getEndDate())) {
+            if (!availablePeriods.get(endIndex).getTimeSlot().isSuccessive(availablePeriods.get(endIndex + 1).getTimeSlot())) {
+                break;
+            }
+            endIndex++;
+        }
+
+        return endIndex;
+    }
+
+    public List<Accommodation> filterByAvailability(List<Accommodation> accommodations, AccommodationFilter filter) {
+
+        List<Accommodation> filteredAccommodations = new ArrayList<>();
+
+        for (Accommodation accommodation : accommodations) {
+            if (hasAvailability(accommodation, filter)) {
+                filteredAccommodations.add(accommodation);
+            }
+        }
+
+        return filteredAccommodations;
+    }
+
+    private boolean hasAvailability(Accommodation accommodation, AccommodationFilter filter) {
+        List<AvailablePeriod> availablePeriods = repository.findAvailablePeriodsSortedByStartDate(accommodation.getId());
+        TimeSlot desiredPeriod = new TimeSlot(filter.getCheckin(), filter.getCheckout());
+
+        // Find the first available period that overlaps with the desired period
+        TimeSlot currentTimeSlot;
+        int foundIndex = -1;
+        for (int i = 0; i < availablePeriods.size(); i++) {
+            currentTimeSlot = availablePeriods.get(i).getTimeSlot();
+            if(!desiredPeriod.getStartDate().isBefore(currentTimeSlot.getStartDate()) &&
+                    currentTimeSlot.overlaps(desiredPeriod)){
+                foundIndex = i;
+                break;
+            }
+        }
+
+        if(foundIndex == -1){
+            return false;
+        }
+
+        //If found check successive periods
+        int currentIndex = foundIndex;
+
+        while(currentIndex < availablePeriods.size()-1 && desiredPeriod.getEndDate().isAfter(availablePeriods.get(currentIndex).getTimeSlot().getEndDate())){
+            if(!availablePeriods.get(currentIndex).getTimeSlot().isSuccessive(availablePeriods.get(currentIndex+1).getTimeSlot())){
+                return false;
+            }
+            currentIndex++;
+        }
+
+        return true;
+    }
+  
+    @Override
+    public void removeAllByHost(Long hostId) {
+        for(Accommodation accommodation : getAllByHost(hostId)) {
+            accommodationReviewService.removeFromAccommodation(accommodation.getId());
+            repository.delete(accommodation);
+            repository.flush();
+        }
+    }
+
 }
+

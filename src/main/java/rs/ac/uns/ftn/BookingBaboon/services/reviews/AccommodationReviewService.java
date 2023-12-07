@@ -87,6 +87,16 @@ public class AccommodationReviewService implements IAccommodationReviewService {
     }
 
     @Override
+    public void removeFromAccommodation(Long accommodationId) {
+
+        for(AccommodationReview review : getAll()) {
+            if(review.getReviewedAccommodation().getId().equals(accommodationId)) {
+                remove(review.getId());
+            }
+        }
+    }
+
+    @Override
     public User getReviewer(Long accommodationReviewId) {
         Optional<AccommodationReview> found = repository.findById(accommodationReviewId);
         if (found.isEmpty()) {
@@ -112,5 +122,14 @@ public class AccommodationReviewService implements IAccommodationReviewService {
     }
 
     return (float) ratingSum / reviewNumber;
+    }
+
+    @Override
+    public void removeAllByUser(Long userId) {
+        for(AccommodationReview accommodationReview : getAll()) {
+            if (accommodationReview.getReviewer().getId().equals(userId)) {
+                remove(accommodationReview.getId());
+            }
+        }
     }
 }

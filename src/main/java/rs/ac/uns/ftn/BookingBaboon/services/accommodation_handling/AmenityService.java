@@ -89,4 +89,9 @@ public class AmenityService implements IAmenityService {
         repository.deleteAll();
         repository.flush();
     }
+
+    @Override
+    public Amenity findByName(String amenityName) {
+        return repository.findByName(amenityName);
+    }
 }

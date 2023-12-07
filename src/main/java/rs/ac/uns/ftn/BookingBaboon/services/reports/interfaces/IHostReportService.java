@@ -14,4 +14,7 @@ public interface IHostReportService {
     HostReport update(HostReport hostReport);
 
     HostReport remove(Long hostReportId);
+    void removeAllForHost(Long hostId);
+
+    void removeAllByUser(Long userId);
 }

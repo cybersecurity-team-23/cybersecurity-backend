@@ -14,4 +14,7 @@ public interface IGuestReportService {
     GuestReport update(GuestReport guestReport);
 
     GuestReport remove(Long guestReportId);
+    void removeAllForGuest(Long guestid);
+
+    void removeAllByUser(Long userId);
 }

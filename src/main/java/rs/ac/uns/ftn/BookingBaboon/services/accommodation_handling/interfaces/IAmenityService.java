@@ -13,4 +13,5 @@ public interface IAmenityService {
     public Amenity update(Amenity amenity);
     public Amenity remove(Long amenityId);
     public void removeAll();
+    public Amenity findByName(String amenityName);
 }

@@ -84,4 +84,22 @@ public class GuestReportService implements IGuestReportService {
         repository.flush();
         return found;
     }
+
+    @Override
+    public void removeAllForGuest(Long guestid) {
+        for(GuestReport report : getAll()) {
+            if (report.getReportedGuest().getId().equals(guestid)) {
+                remove(report.getId());
+            }
+        }
+    }
+
+    @Override
+    public void removeAllByUser(Long userId) {
+        for(GuestReport report : getAll()) {
+            if(report.getReportee().getId().equals(userId)) {
+                remove(report.getId());
+            }
+        }
+    }
 }
