@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -27,11 +28,25 @@ import java.util.stream.Collectors;
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
     private final IAmenityService amenityService;
+    private final IAccommodationReviewService accommodationReviewService;
+  
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
     public HashSet<Accommodation> getAll() {
         return new HashSet<Accommodation>(repository.findAll());
+    }
+
+    @Override
+    public HashSet<Accommodation> getAllByHost(Long hostId) {
+        HashSet<Accommodation> accommodations = getAll();
+        HashSet<Accommodation> accommodationsByHost = new HashSet<>();
+        for(Accommodation accommodation : accommodations) {
+            if (accommodation.getHost().getId().equals(hostId)) {
+                accommodationsByHost.add(accommodation);
+            }
+        }
+        return accommodationsByHost;
     }
 
     @Override
@@ -99,6 +114,7 @@ public class AccommodationService implements IAccommodationService {
         repository.deleteAll();
         repository.flush();
     }
+
 
     public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyTypes, String amenities, Double minRating){
         AccommodationFilter filter = new AccommodationFilter();
@@ -278,6 +294,15 @@ public class AccommodationService implements IAccommodationService {
         }
 
         return true;
+    }
+  
+    @Override
+    public void removeAllByHost(Long hostId) {
+        for(Accommodation accommodation : getAllByHost(hostId)) {
+            accommodationReviewService.removeFromAccommodation(accommodation.getId());
+            repository.delete(accommodation);
+            repository.flush();
+        }
     }
 
 }

@@ -9,7 +9,7 @@ import lombok.Data;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "users")
 @TableGenerator(name="user_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="user", valueColumnName="value_pk")
-public class User {
+public class User{
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_id_generator")
     private Long id;
@@ -29,5 +29,16 @@ public class User {
 
     private String phoneNumber;
 
+    private Role role = Role.GUEST;
 
+    @Transient
+    private String jwt;
+
+    public void activate() {
+        this.status = UserStatus.Active;
+    }
+
+    public boolean isActive() {
+        return this.status == UserStatus.Active;
+    }
 }

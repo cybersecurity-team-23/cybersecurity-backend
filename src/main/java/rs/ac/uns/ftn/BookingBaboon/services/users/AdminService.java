@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
@@ -22,6 +24,8 @@ import java.util.*;
 public class AdminService implements IAdminService {
 
     private final IAdminRepository repository;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -44,6 +48,7 @@ public class AdminService implements IAdminService {
     @Override
     public Admin create(Admin admin) throws ResponseStatusException {
         try {
+            admin.setPassword(encoder.encode(admin.getPassword()));
             repository.save(admin);
             repository.flush();
             return admin;

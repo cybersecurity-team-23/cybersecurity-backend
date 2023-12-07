@@ -84,4 +84,23 @@ public class HostReportService implements IHostReportService {
         repository.flush();
         return found;
     }
+
+    @Override
+    public void removeAllForHost(Long hostId) {
+        for(HostReport hostReport : getAll()) {
+            if (hostReport.getReportedHost().getId().equals(hostId)) {
+                remove(hostReport.getId());
+            }
+        }
+    }
+
+    @Override
+    public void removeAllByUser(Long userId) {
+        Collection<HostReport> reports = getAll();
+        for(HostReport report : reports) {
+            if (report.getReportee().getId().equals(userId)) {
+                remove(report.getId());
+            }
+        }
+    }
 }

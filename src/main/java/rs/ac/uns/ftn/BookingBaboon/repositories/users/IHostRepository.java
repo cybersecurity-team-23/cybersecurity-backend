@@ -6,4 +6,6 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
 @Repository
 public interface IHostRepository extends JpaRepository<Host, Long> {
+
+    public Host findByEmail(String email);
 }

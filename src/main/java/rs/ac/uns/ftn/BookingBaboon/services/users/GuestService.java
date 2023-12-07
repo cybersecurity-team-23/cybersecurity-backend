@@ -5,14 +5,30 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IGuestRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.AccommodationReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
 import java.util.*;
@@ -22,6 +38,19 @@ import java.util.*;
 public class GuestService implements IGuestService {
 
     private final IGuestRepository repository;
+
+    private final IEmailService emailService;
+
+    private final ITokenService tokenService;
+
+    private final IReservationService reservationService;
+    private final IGuestReportService guestReportService;
+    private final IHostReportService hostReportService;
+    private final INotificationService notificationService;
+    private final AccommodationReviewService accommodationReviewService;
+    private final IHostReviewService hostReviewService;
+
+    private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -44,8 +73,10 @@ public class GuestService implements IGuestService {
     @Override
     public Guest create(Guest guest) throws ResponseStatusException{
         try {
+            guest.setPassword(encoder.encode(guest.getPassword()));
             repository.save(guest);
             repository.flush();
+            emailService.sendActivationEmail(guest);
             return guest;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -60,8 +91,13 @@ public class GuestService implements IGuestService {
     @Override
     public Guest update(Guest guest) throws ResponseStatusException{
         try {
-            get(guest.getId());
-            repository.save(guest);
+            Guest updatedGuest = get(guest.getId());
+            updatedGuest.setFirstName(guest.getFirstName());
+            updatedGuest.setLastName(guest.getLastName());
+            updatedGuest.setEmail(guest.getEmail());
+            updatedGuest.setAddress(guest.getAddress());
+            updatedGuest.setPhoneNumber(guest.getPhoneNumber());
+            repository.save(updatedGuest);
             repository.flush();
             return guest;
         } catch (RuntimeException ex) {
@@ -86,6 +122,18 @@ public class GuestService implements IGuestService {
     @Override
     public Guest remove(Long guestId) {
         Guest found = get(guestId);
+        for(Reservation reservation : reservationService.getAll()) {
+            if (reservation.getGuest().getId().equals(guestId) && reservationService.isApproved(reservation.getId())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Guest has active reservations");
+            }
+        }
+        reservationService.removeAllForGuest(guestId);
+        guestReportService.removeAllForGuest(guestId);
+        hostReportService.removeAllByUser(guestId);
+        notificationService.removeAllByUser(guestId);
+        accommodationReviewService.removeAllByUser(guestId);
+        hostReviewService.removeAllByUser(guestId);
+        tokenService.delete(found);
         repository.delete(found);
         repository.flush();
         return found;
@@ -98,8 +146,13 @@ public class GuestService implements IGuestService {
     }
 
     @Override
-    public Guest getProfile(Long guestId) {
-        return new Guest();
+    public Guest getProfile(String guestEmail) {
+        Guest found = repository.findByEmail(guestEmail);
+        if (found == null) {
+            String value = bundle.getString("host.notFound");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, value);
+        }
+        return found;
     }
 
     @Override

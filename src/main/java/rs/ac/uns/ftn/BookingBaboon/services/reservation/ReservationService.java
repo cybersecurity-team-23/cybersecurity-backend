@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
@@ -86,6 +87,15 @@ public class ReservationService implements IReservationService {
     }
 
     @Override
+    public void removeAllForGuest(Long guestId) {
+        for(Reservation reservation : getAll()) {
+            if (reservation.getGuest().getId().equals(guestId)) {
+                remove(reservation.getId());
+            }
+        }
+    }
+
+    @Override
     public void removeAll() {
         repository.deleteAll();
         repository.flush();
@@ -101,5 +111,10 @@ public class ReservationService implements IReservationService {
     @Override
     public int getCancellationCountForUser(Long userId) {
         return 0;
+    }
+
+    @Override
+    public boolean isApproved(Long reservationId) {
+        return get(reservationId).getStatus().equals(ReservationStatus.Approved);
     }
 }

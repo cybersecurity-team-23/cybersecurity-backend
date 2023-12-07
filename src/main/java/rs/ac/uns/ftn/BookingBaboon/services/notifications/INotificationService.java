@@ -19,4 +19,6 @@ public interface INotificationService {
     Collection<Notification> getByUserId(Long userId);
 
     void removeAll();
+
+    void removeAllByUser(Long userId);
 }

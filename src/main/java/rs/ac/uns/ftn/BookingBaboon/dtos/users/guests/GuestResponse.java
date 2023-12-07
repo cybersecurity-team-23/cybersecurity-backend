@@ -9,4 +9,6 @@ public class GuestResponse {
 
     private String email;
 
+    private String jwt;
+
 }
