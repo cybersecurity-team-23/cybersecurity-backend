@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -99,7 +100,7 @@ public class AccommodationService implements IAccommodationService {
         repository.flush();
     }
 
-    public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyType, String amenities, Double minRating){
+    public AccommodationFilter parseFilter(String city, String checkin, String checkout, Integer guestNum, Double minPrice, Double maxPrice, String propertyTypes, String amenities, Double minRating){
         AccommodationFilter filter = new AccommodationFilter();
         filter.setCity(city);
         filter.setCheckin(parseDate(checkin));
@@ -108,7 +109,7 @@ public class AccommodationService implements IAccommodationService {
         filter.setMinPrice(minPrice);
         filter.setMaxPrice(maxPrice);
         filter.setAmenities(parseAmenities(amenities));
-        filter.setType(parseAccommodationType(propertyType));
+        filter.setTypes(parseAccommodationTypes(propertyTypes));
         filter.setMinRating(minRating);
 
         return filter;
@@ -145,11 +146,15 @@ public class AccommodationService implements IAccommodationService {
         return amenities;
     }
 
-    private AccommodationType parseAccommodationType(String typeString) {
+    //?type=Hotel,Resort
+    private List<AccommodationType> parseAccommodationTypes(String typeString) {
         if (typeString == null || typeString.isEmpty()) {
             return null;
         }
-        return AccommodationType.valueOf(typeString); // Assuming the enum has the same name as the strings
+
+        return Arrays.stream(typeString.split(","))
+                .map(AccommodationType::valueOf)
+                .collect(Collectors.toList());
     }
 
     @Override

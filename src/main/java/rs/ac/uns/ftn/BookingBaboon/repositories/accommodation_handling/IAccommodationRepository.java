@@ -17,21 +17,12 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
             "WHERE (:#{#filter.city} IS NULL OR a.location.city = :#{#filter.city}) AND" +
             "(:#{#filter.guestNum} IS NULL OR a.minGuests <= :#{#filter.guestNum}) AND" +
             "(:#{#filter.guestNum} IS NULL OR a.maxGuests >= :#{#filter.guestNum}) AND" +
-            "(:#{#filter.type} IS NULL OR a.type = :#{#filter.type}) AND" +
+            "(:#{#filter.types} IS NULL OR a.type IN :#{#filter.types}) AND" +
             "(:#{#filter.minRating} IS NULL OR (SELECT AVG(r.rating) FROM AccommodationReview r WHERE r.reviewedAccommodation.id = a.id) >= :#{#filter.minRating}) AND" +
             "(:#{#filter.amenities} IS NULL OR (SELECT COUNT(DISTINCT amenity.name) FROM a.amenities amenity WHERE amenity.name IN :#{#filter.amenities}) = :#{#filter.amenities?.size()})"
     )
     List<Accommodation> findAccommodationsByFilter(
             @Param("filter") AccommodationFilter filter
-//            @Param("city") String city,                   +
-//            @Param("checkin") Date checkin,
-//            @Param("checkout") Date checkout,
-//            @Param("guestNum") Integer guestNum,          +
-//            @Param("minPrice") Double minPrice,
-//            @Param("maxPrice") Double maxPrice,
-//            @Param("type") AccommodationType type,        +
-//            @Param("amenities") Set<Amenity> amenities,   +
-//            @Param("minRating") Double minRating          +
     );
 
     @Query("SELECT ap FROM Accommodation a JOIN a.availablePeriods ap WHERE a.id = :accommodationId ORDER BY ap.timeSlot.startDate")

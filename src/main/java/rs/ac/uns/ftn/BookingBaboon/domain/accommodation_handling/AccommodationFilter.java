@@ -17,6 +17,6 @@ public class AccommodationFilter {
     Double minPrice;
     Double maxPrice;
     List<String> amenities;
-    AccommodationType type;
+    List<AccommodationType> types;
     Double minRating;
 }
