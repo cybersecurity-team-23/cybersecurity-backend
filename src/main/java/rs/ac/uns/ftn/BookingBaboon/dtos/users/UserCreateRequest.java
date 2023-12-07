@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.users;
 
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Role;
 
 @Data
 public class UserCreateRequest {
@@ -17,4 +18,5 @@ public class UserCreateRequest {
 
     private String phoneNumber;
 
+    private Role role;
 }

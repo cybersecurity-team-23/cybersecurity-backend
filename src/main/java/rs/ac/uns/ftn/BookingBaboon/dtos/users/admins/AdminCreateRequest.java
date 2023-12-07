@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.users.admins;
 
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Role;
 
 @Data
 public class AdminCreateRequest {
@@ -15,4 +16,6 @@ public class AdminCreateRequest {
     private String address;
 
     private String phoneNumber;
+
+    private Role role;
 }
