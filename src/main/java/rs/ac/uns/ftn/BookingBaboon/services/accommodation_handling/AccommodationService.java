@@ -162,11 +162,11 @@ public class AccommodationService implements IAccommodationService {
         List<Accommodation> filteredAccommodations = repository.findAccommodationsByFilter(filter);
         if (filter.getCheckin() != null && filter.getCheckout() != null){
             filteredAccommodations = filterByAvailability(filteredAccommodations, filter);
-        }
-        if (filter.getMinPrice() != null || filter.getMaxPrice() != null){
-            filteredAccommodations = filterByPrice(filteredAccommodations, filter);
-        }
 
+            if (filter.getMinPrice() != null || filter.getMaxPrice() != null){
+                filteredAccommodations = filterByPrice(filteredAccommodations, filter);
+            }
+        }
         return filteredAccommodations;
     }
 
