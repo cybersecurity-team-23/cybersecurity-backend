@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @Table(name = "reports")
 @TableGenerator(name="report_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="report", valueColumnName="value_pk")

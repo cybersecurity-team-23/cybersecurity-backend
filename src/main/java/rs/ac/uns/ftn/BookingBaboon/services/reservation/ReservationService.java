@@ -117,4 +117,13 @@ public class ReservationService implements IReservationService {
     public boolean isApproved(Long reservationId) {
         return get(reservationId).getStatus().equals(ReservationStatus.Approved);
     }
+
+    @Override
+    public void removeAllForAccommodation(Long accommodationId) {
+        for(Reservation reservation : getAll()) {
+            if (reservation.getAccommodation().getId().equals(accommodationId)) {
+                remove(reservation.getId());
+            }
+        }
+    }
 }
