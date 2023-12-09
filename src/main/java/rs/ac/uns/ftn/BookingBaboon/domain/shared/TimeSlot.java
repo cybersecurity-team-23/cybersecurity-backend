@@ -1,11 +1,10 @@
-package rs.ac.uns.ftn.BookingBaboon.domain;
+package rs.ac.uns.ftn.BookingBaboon.domain.shared;
 
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @Embeddable
 @Data

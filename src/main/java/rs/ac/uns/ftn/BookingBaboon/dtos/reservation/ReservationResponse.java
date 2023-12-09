@@ -2,7 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.dtos.reservation;
 
 
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestResponse;

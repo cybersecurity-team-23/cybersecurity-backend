@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
 import java.util.List;
@@ -35,6 +36,9 @@ public class Accommodation {
     private Boolean isPricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+
+    @OneToMany
+    private List<Image> images;
 
     public void AddAmenity(Amenity amenity){
         amenities.add(amenity);
