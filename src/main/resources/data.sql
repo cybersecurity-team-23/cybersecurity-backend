@@ -331,4 +331,24 @@ UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_reviews)
 WHERE key_pk = 'accommodation_review';
 
+INSERT INTO public.images(
+    id, file_name, path)
+VALUES (1, 'test8.jpg', 'accommodations\1'),
+       (33, 'test3.jpg', 'accommodations\1' ),
+       (44, 'test4.jpg', 'accommodations\1'),
+       (55, 'test5.jpg', 'accommodations\1')
+    ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.accommodations_images(
+    accommodation_id, images_id)
+VALUES (1, 1),
+       (1, 33),
+       (1, 44),
+       (1, 55)
+    ON CONFLICT DO NOTHING;
+
+UPDATE public.primary_keys
+SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.images)
+WHERE key_pk = 'image';
+
 COMMIT;

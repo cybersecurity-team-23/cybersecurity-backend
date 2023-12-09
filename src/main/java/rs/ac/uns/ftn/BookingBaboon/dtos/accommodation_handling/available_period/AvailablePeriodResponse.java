@@ -1,8 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period;
 
-import jakarta.persistence.Embedded;
 import lombok.Data;
-import rs.ac.uns.ftn.BookingBaboon.domain.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
 @Data
 public class AvailablePeriodResponse {
