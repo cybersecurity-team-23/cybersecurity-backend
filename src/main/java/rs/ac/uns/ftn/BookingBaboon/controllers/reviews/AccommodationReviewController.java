@@ -14,6 +14,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -94,5 +95,18 @@ public class AccommodationReviewController {
         float averageRating = service.getAverageRating(accommodationId);
 
         return new ResponseEntity<>(averageRating, HttpStatus.OK);
+    }
+
+    @GetMapping({"/accommodation/{accommodationId}"})
+    public ResponseEntity<Collection<AccommodationReviewResponse>> getAccommodationReviews(@PathVariable Long accommodationId) {
+        List<AccommodationReview> accommodationReviews = service.getAccommodationReviews(accommodationId);
+        if(accommodationReviews==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Collection<AccommodationReviewResponse> accommodationReviewResponses =  accommodationReviews.stream()
+                .map(accommodationReview -> mapper.map(accommodationReview, AccommodationReviewResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<Collection<AccommodationReviewResponse>>(accommodationReviewResponses, HttpStatus.OK);
     }
 }

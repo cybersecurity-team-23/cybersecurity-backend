@@ -132,4 +132,9 @@ public class AccommodationReviewService implements IAccommodationReviewService {
             }
         }
     }
+
+    @Override
+    public List<AccommodationReview> getAccommodationReviews(Long accommodationId) {
+        return repository.findAccommodationReviewsByReviewedAccommodation_Id(accommodationId);
+    }
 }

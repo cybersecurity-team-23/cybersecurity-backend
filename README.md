@@ -9,7 +9,9 @@ Team 4:
 Initialising the project:
 - Install Postgres
 - Run the init_database.sql script locates in resources folder
+  ( psql -U postgres -d postgres -a -f init_database.sql )
 - Run the app
+
 
 Login credentials for test data:
 - Hosts:
