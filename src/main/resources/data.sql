@@ -14,18 +14,18 @@ INSERT INTO public.users (
     ON CONFLICT (id) DO NOTHING ;
 
 INSERT INTO public.hosts (id) VALUES
-                                  (1),
-                                  (2),
-                                  (3),
-                                  (4)
+      (1),
+      (2),
+      (3),
+      (4)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.guests (id) VALUES
-                                   (5),
-                                   (6),
-                                   (7),
-                                   (8),
-                                   (9)
+       (5),
+       (6),
+       (7),
+       (8),
+       (9)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.admin (id) VALUES
@@ -235,28 +235,78 @@ UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.reservations)
 WHERE key_pk = 'reservation';
 
-INSERT INTO public.host_reviews (
-    id, comment, created_on, rating, reviewer_id, reviewed_host_id
+INSERT INTO public.reviews (
+    id, comment, created_on, rating, reviewer_id
 ) VALUES
-      (1, 'Great host!', '2023-11-28', 4, 5, 1),
-      (2, 'Excellent experience!', '2023-11-29', 5, 6, 2),
-      (3, 'Could be better.', '2023-11-30', 3, 7, 3),
-      (4, 'Highly recommended!', '2023-12-01', 5, 8, 4),
-      (5, 'Enjoyed my stay.', '2023-12-02', 4, 9, 1)
+      (1, 'Great host!', '2023-11-28', 4, 5),
+      (2, 'Excellent experience!', '2023-11-29', 5, 6),
+      (3, 'Could be better.', '2023-11-30', 3, 7),
+      (4, 'Highly recommended!', '2023-12-01', 5, 8),
+      (5, 'Enjoyed my stay.', '2023-12-02', 4, 9),
+    (6, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 5),
+    (7, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 6),
+    (8, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 7),
+    (9, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 8),
+    (10, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 9),
+    (11, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 5),
+    (12, 'Average stay. Nothing exceptional.', NOW(), 3.8, 6),
+    (13, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 7),
+    (14, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 8),
+    (15, 'Terrible experience. Would not recommend.', NOW(), 2.0, 9)
+    ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.host_reviews (
+    id, reviewed_host_id
+) VALUES
+      (1, 1),
+      (2, 2),
+      (3, 3),
+      (4, 4),
+      (5, 1)
+    ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.accommodation_reviews (
+    id, reviewed_accommodation_id)
+VALUES
+    (6,1),
+    (7, 2),
+    (8, 3),
+    (9, 4),
+    (10, 5),
+    (11, 6),
+    (12, 7),
+    (13, 6),
+    (14, 10),
+    (15, 10)
     ON CONFLICT (id) DO NOTHING;
 
 UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.host_reviews)
 WHERE key_pk = 'host_review';
 
-INSERT INTO public.host_reports (
-    id, created_on, message, status, reportee_id, reported_host_id
+INSERT INTO public.reports (
+    id, created_on, message, status, reportee_id
 ) VALUES
-      (1, '2023-12-15', 'Inappropriate behavior', 0, 5, 3),
-      (2, '2023-12-16', 'Violated house rules', 0, 5, 2),
-      (3, '2023-12-17', 'Unresponsive host', 0, 6, 4),
-      (4, '2023-12-18', 'Misrepresentation of property', 0, 7, 1),
-      (5, '2023-12-19', 'Suspicious activity', 0, 8, 1)
+      (1, '2023-12-15', 'Inappropriate behavior', 0, 5),
+      (2, '2023-12-16', 'Violated house rules', 0, 5),
+      (3, '2023-12-17', 'Unresponsive host', 0, 6),
+      (4, '2023-12-18', 'Misrepresentation of property', 0, 7),
+      (5, '2023-12-19', 'Suspicious activity', 0, 8),
+      (6, NOW(), 'Inappropriate behavior', 0, 1),
+      (7, NOW(), 'Noise disturbance', 0, 2),
+      (8, NOW(), 'Unpleasant experience', 0, 3),
+      (9, NOW(), 'Disrespectful behavior', 0, 4),
+      (10, NOW(), 'Repeated violation of policies', 0, 1)
+    ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.host_reports (
+    id, reported_host_id
+) VALUES
+      (1, 3),
+      (2, 2),
+      (3, 4),
+      (4, 1),
+      (5, 1)
     ON CONFLICT (id) DO NOTHING;
 
 UPDATE public.primary_keys
@@ -264,33 +314,18 @@ SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.host_reports)
 WHERE key_pk = 'host_report';
 
 INSERT INTO public.guest_reports (
-    id, created_on, message, status, reportee_id, reported_guest_id
+    id, reported_guest_id
 ) VALUES
-      (1, NOW(), 'Inappropriate behavior', 0, 1, 5),
-      (2, NOW(), 'Noise disturbance', 0, 2, 6),
-      (3, NOW(), 'Unpleasant experience', 0, 3, 7),
-      (4, NOW(), 'Disrespectful behavior', 0, 4, 8),
-      (5, NOW(), 'Repeated violation of policies', 0, 1, 9)
+      (6, 5),
+      (7, 6),
+      (8, 7),
+      (9, 8),
+      (10, 9)
     ON CONFLICT (id) DO NOTHING;
 
 UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.guest_reports)
 WHERE key_pk = 'guest_report';
-
-INSERT INTO public.accommodation_reviews (
-    id, comment, created_on, rating, reviewer_id, reviewed_accommodation_id)
-VALUES
-    (1, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 5, 1),
-    (2, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 6, 2),
-    (3, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 7, 3),
-    (4, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 8, 4),
-    (5, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 9, 5),
-    (6, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 5, 6),
-    (7, 'Average stay. Nothing exceptional.', NOW(), 3.8, 6, 7),
-    (8, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 7, 6),
-    (9, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 8, 10),
-    (10, 'Terrible experience. Would not recommend.', NOW(), 2.0, 9, 10)
-    ON CONFLICT (id) DO NOTHING;
 
 UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_reviews)

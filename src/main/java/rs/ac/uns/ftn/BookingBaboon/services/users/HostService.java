@@ -121,8 +121,8 @@ public class HostService implements IHostService {
             }
         }
         //if no active reservations in any of the host's accommodations
-        accommodationService.removeAllByHost(hostId);
         hostReviewService.removeByHost(hostId);
+        accommodationService.removeAllByHost(hostId);
         hostReportService.removeAllForHost(hostId);
         notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);

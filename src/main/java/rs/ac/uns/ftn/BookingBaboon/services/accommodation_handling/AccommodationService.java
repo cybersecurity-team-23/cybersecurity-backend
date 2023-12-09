@@ -12,6 +12,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 
 import java.net.URLDecoder;
@@ -26,9 +27,10 @@ import java.util.stream.Collectors;
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
+    private final IReservationService reservationService;
     private final IAmenityService amenityService;
     private final IAccommodationReviewService accommodationReviewService;
-  
+
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
     @Override
@@ -294,15 +296,15 @@ public class AccommodationService implements IAccommodationService {
 
         return true;
     }
-  
+
     @Override
     public void removeAllByHost(Long hostId) {
         for(Accommodation accommodation : getAllByHost(hostId)) {
             accommodationReviewService.removeFromAccommodation(accommodation.getId());
+            reservationService.removeAllForAccommodation(accommodation.getId());
             repository.delete(accommodation);
             repository.flush();
         }
     }
 
 }
-
