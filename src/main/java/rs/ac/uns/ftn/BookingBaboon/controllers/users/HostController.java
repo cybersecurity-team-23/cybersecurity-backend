@@ -80,4 +80,13 @@ public class HostController {
         return new ResponseEntity<> (service.handleReservation(reservationId,isApproved),HttpStatus.OK);
     }
 
+    @GetMapping({"email/{hostEmail}"})
+    public ResponseEntity<HostResponse> getHostByEmail(@PathVariable String hostEmail) {
+        Host host = service.get(hostEmail);
+        if(host==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(host, HostResponse.class), HttpStatus.OK);
+    }
+
 }

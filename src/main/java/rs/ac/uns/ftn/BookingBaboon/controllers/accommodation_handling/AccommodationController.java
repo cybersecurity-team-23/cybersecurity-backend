@@ -43,6 +43,15 @@ public class AccommodationController {
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<Collection<AccommodationResponse>> getAllByHost(@PathVariable Long hostId) {
+        Collection<Accommodation> accommodations = service.getAllByHost(hostId);
+
+        return new ResponseEntity<>(accommodations.stream()
+                .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<AccommodationResponse> get(@PathVariable Long id) {
         Accommodation accommodation = service.get(id);

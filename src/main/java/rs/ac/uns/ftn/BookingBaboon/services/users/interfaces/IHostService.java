@@ -12,6 +12,8 @@ public interface IHostService {
 
     Host get(Long hostId) throws ResponseStatusException;
 
+    Host get(String hostEmail) throws ResponseStatusException;
+
     Host create(Host host) throws ResponseStatusException;
 
     Host update(Host host) throws ResponseStatusException;

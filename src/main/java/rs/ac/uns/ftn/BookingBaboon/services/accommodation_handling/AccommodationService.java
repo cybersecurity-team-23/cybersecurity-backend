@@ -39,15 +39,8 @@ public class AccommodationService implements IAccommodationService {
     }
 
     @Override
-    public HashSet<Accommodation> getAllByHost(Long hostId) {
-        HashSet<Accommodation> accommodations = getAll();
-        HashSet<Accommodation> accommodationsByHost = new HashSet<>();
-        for(Accommodation accommodation : accommodations) {
-            if (accommodation.getHost().getId().equals(hostId)) {
-                accommodationsByHost.add(accommodation);
-            }
-        }
-        return accommodationsByHost;
+    public Set<Accommodation> getAllByHost(Long hostId) {
+        return repository.findAllByHostId(hostId);
     }
 
     @Override

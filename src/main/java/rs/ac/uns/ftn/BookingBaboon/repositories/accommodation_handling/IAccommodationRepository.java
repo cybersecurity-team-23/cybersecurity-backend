@@ -28,4 +28,5 @@ public interface IAccommodationRepository extends JpaRepository<Accommodation, L
     @Query("SELECT ap FROM Accommodation a JOIN a.availablePeriods ap WHERE a.id = :accommodationId ORDER BY ap.timeSlot.startDate")
     List<AvailablePeriod> findAvailablePeriodsSortedByStartDate(@Param("accommodationId") Long accommodationId);
 
+    Set<Accommodation> findAllByHostId(Long hostId);
 }

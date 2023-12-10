@@ -5,11 +5,12 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFi
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 public interface IAccommodationService {
     public HashSet<Accommodation> getAll();
 
-    public HashSet<Accommodation> getAllByHost(Long hostId);
+    public Set<Accommodation> getAllByHost(Long hostId);
 
     public Accommodation get(Long accommodationId);
 

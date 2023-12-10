@@ -62,6 +62,11 @@ public class HostService implements IHostService {
         return found.get();    }
 
     @Override
+    public Host get(String hostEmail) throws ResponseStatusException {
+        return repository.findByEmail(hostEmail);
+    }
+
+    @Override
     public Host create(Host host) throws ResponseStatusException {
         try {
             host.setPassword(encoder.encode(host.getPassword()));
