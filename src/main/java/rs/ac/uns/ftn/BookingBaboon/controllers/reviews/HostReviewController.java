@@ -93,4 +93,13 @@ public class HostReviewController {
 
         return new ResponseEntity<>(averageRating, HttpStatus.OK);
     }
+
+    @GetMapping("/host/{hostId}")
+    public ResponseEntity<Collection<HostReviewResponse>> getReviewsByHost(@PathVariable Long hostId) {
+        Collection<HostReview> hostReviews = service.getReviewsByHost(hostId);
+        Collection<HostReviewResponse> hostReviewResponses =  hostReviews.stream()
+                .map(hostReview -> mapper.map(hostReview, HostReviewResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<>(hostReviewResponses, HttpStatus.OK);
+    }
 }
