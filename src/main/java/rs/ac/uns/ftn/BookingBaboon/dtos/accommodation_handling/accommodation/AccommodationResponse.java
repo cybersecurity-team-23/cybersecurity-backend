@@ -5,6 +5,8 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationTy
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Location;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.shared.ImageReference;
+import rs.ac.uns.ftn.BookingBaboon.dtos.shared.ImageResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
 
 import java.util.Set;
@@ -23,4 +25,5 @@ public class AccommodationResponse {
     private Boolean pricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+    private Set<ImageReference> images;
 }

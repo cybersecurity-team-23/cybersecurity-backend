@@ -25,4 +25,5 @@ public interface IHostReviewService {
     float getAverageRating(Long id);
 
     void removeAllByUser(Long userId);
+    Collection<HostReview> getReviewsByHost(Long hostId);
 }

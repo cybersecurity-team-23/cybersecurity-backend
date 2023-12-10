@@ -5,7 +5,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
@@ -61,9 +60,18 @@ public class HostController {
         return new ResponseEntity<>( mapper.map(host,HostResponse.class), HttpStatus.OK);
     }
 
-    @GetMapping({"/profile/{hostEmail}"})
-    public ResponseEntity<HostProfile> getProfile(@PathVariable String hostEmail) {
+    @GetMapping({"/profile/email/{hostEmail}"})
+    public ResponseEntity<HostProfile> getProfileByEmail(@PathVariable String hostEmail) {
         Host host = service.getProfile(hostEmail);
+        if(host==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(host, HostProfile.class), HttpStatus.OK);
+    }
+
+    @GetMapping({"/profile/{hostId}"})
+    public ResponseEntity<HostProfile> getProfile(@PathVariable Long hostId) {
+        Host host = service.get(hostId);
         if(host==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
