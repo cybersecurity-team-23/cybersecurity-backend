@@ -2,7 +2,9 @@ package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -27,4 +29,7 @@ public interface IAccommodationService {
     public Collection<Accommodation> search(AccommodationFilter filter);
 
     public void removeAllByHost(Long hostId);
+
+    public float getTotalPrice(Accommodation accommodation, TimeSlot desiredPeriod);
+    public LocalDate parseDate(String date);
 }

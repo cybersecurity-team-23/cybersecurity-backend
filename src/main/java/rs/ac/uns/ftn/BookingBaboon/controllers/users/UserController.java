@@ -107,7 +107,7 @@ public class UserController {
         }
 
         UserDetails userDetails = service.loadUserByUsername(user.getEmail());
-        String token = jwtTokenUtil.generateToken(userDetails);
+        String token = jwtTokenUtil.generateToken(userDetails, user.getId());
         user.setJwt(token);
 
         return new ResponseEntity<>( mapper.map(user, UserResponse.class), HttpStatus.OK);

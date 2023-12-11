@@ -125,7 +125,7 @@ public class AccommodationService implements IAccommodationService {
         return filter;
     }
 
-    private LocalDate parseDate(String date){
+    public LocalDate parseDate(String date){
             DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             try {
                 if (date != null) {
