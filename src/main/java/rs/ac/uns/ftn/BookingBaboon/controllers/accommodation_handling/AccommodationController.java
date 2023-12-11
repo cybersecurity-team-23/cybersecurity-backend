@@ -9,6 +9,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
@@ -132,5 +133,22 @@ public class AccommodationController {
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
+
+    @GetMapping("/{id}/total-price")
+    public ResponseEntity<Float> get(
+            @PathVariable Long id,
+            @RequestParam(name = "checkin", required = true) String checkin,
+            @RequestParam(name = "checkout", required = true) String checkout) {
+
+        float totalPrice = service.getTotalPrice(service.get(id), new TimeSlot(service.parseDate(checkin), service.parseDate(checkout)));
+
+        if (totalPrice == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(totalPrice, HttpStatus.OK);
+    }
+
+
 
 }
