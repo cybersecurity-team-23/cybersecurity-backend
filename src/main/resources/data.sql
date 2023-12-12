@@ -351,4 +351,17 @@ UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.images)
 WHERE key_pk = 'image';
 
+INSERT INTO public.accommodation_modifications(
+    id, description, is_automatically_accepted, address, city, country, max_guests, min_guests, name, pricing_per_person, request_date, request_type, status, type, accommodation_id)
+VALUES (1, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true,NOW(), 1, 0, 1, 1),
+       (2, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true,NOW(), 0, 0, 2, 2),
+       (3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, NOW(), 0, 0, 3, 3),
+       (4, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, NOW(), 1, 0, 4, 4),
+       (5, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, NOW(), 1, 0, 1, 5)
+ON CONFLICT DO NOTHING;
+
+UPDATE public.primary_keys
+SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_modifications)
+WHERE key_pk = 'accommodation_modification';
+
 COMMIT;
