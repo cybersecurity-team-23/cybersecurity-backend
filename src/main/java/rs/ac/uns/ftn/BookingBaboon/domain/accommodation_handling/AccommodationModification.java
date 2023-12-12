@@ -2,8 +2,11 @@ package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -20,7 +23,8 @@ public class AccommodationModification {
 
     private String name;
     private String description;
-
+    @ManyToOne
+    private Host host;
     @Embedded
     private Location location;
 
@@ -35,6 +39,9 @@ public class AccommodationModification {
     private Boolean pricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+
+    @OneToMany
+    private List<Image> images;
 
     private Date requestDate;
 

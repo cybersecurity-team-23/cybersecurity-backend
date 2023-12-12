@@ -66,7 +66,7 @@ public class AccommodationModificationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        accommodationModification.Approve();
+        accommodationModification = service.approve(id);
         return new ResponseEntity<>(mapper.map(accommodationModification, AccommodationModificationResponse.class), HttpStatus.OK);
     }
 
@@ -78,7 +78,7 @@ public class AccommodationModificationController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        accommodationModification.Deny();
+        accommodationModification = service.deny(id);
         return new ResponseEntity<>(mapper.map(accommodationModification, AccommodationModificationResponse.class), HttpStatus.OK);
     }
 
