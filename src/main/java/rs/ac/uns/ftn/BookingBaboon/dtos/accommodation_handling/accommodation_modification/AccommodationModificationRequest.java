@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_mo
 
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationReference;
 
 import java.util.Date;
 import java.util.Set;
@@ -9,7 +10,7 @@ import java.util.Set;
 @Data
 public class AccommodationModificationRequest {
     private Long id;
-    private Accommodation accommodation;
+    private AccommodationReference accommodation;
     private String name;
     private String description;
     private Location location;
@@ -21,5 +22,6 @@ public class AccommodationModificationRequest {
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
     private Date requestDate;
-    private ChangeRequestStatus status;
+    private AccommodationModificationStatus status;
+    private AccommodationModificationType requestType;
 }

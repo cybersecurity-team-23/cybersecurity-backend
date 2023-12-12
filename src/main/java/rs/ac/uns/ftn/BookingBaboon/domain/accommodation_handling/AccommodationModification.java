@@ -8,11 +8,11 @@ import java.util.Set;
 
 @Entity
 @Data
-@Table(name = "accommodation_change_requests")
-@TableGenerator(name="accommodation_change_request_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="accommodation_change_request", valueColumnName="value_pk")
+@Table(name = "accommodation_modifications")
+@TableGenerator(name="accommodation_modification_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="accommodation_modification", valueColumnName="value_pk")
 public class AccommodationModification {
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "accommodation_change_request_id_generator")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "accommodation_modification_id_generator")
     private Long id;
 
     @ManyToOne
@@ -39,13 +39,15 @@ public class AccommodationModification {
     private Date requestDate;
 
     @Enumerated
-    private ChangeRequestStatus status = ChangeRequestStatus.Pending;
+    private AccommodationModificationStatus status = AccommodationModificationStatus.Pending;
+    @Enumerated
+    private AccommodationModificationType requestType;
 
     public void Approve(){
-        status = ChangeRequestStatus.Approved;
+        status = AccommodationModificationStatus.Approved;
     }
 
     public void Deny(){
-        status = ChangeRequestStatus.Denied;
+        status = AccommodationModificationStatus.Denied;
     }
 }

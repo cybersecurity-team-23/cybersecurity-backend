@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/accommodation-change-requests")
+@RequestMapping("/api/v1/accommodation-modifications")
 public class AccommodationModificationController {
     private final IAccommodationModificationService service;
     private final ModelMapper mapper;
