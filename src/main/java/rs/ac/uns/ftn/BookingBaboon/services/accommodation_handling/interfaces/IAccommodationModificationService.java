@@ -11,4 +11,8 @@ public interface IAccommodationModificationService {
     public AccommodationModification update(AccommodationModification request);
     public AccommodationModification remove(Long Id);
     public void removeAll();
+
+    public AccommodationModification approve(Long id);
+
+    public AccommodationModification deny(Long id);
 }

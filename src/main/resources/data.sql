@@ -351,4 +351,52 @@ UPDATE public.primary_keys
 SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.images)
 WHERE key_pk = 'image';
 
+INSERT INTO public.accommodation_modifications(
+    id, description, is_automatically_accepted, address, city, country, max_guests, min_guests, name, pricing_per_person, request_date, request_type, status, type, accommodation_id, host_id)
+VALUES (1, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true,NOW(), 1, 0, 1, 1, 1),
+       (2, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true,NOW(), 0, 0, 2, 2, 2),
+       (3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, NOW(), 0, 0, 3, 3, 3),
+       (4, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, NOW(), 1, 0, 4, 4, 4),
+       (5, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, NOW(), 1, 0, 1, 5, 1)
+ON CONFLICT DO NOTHING;
+
+INSERT INTO public.accommodation_modifications_amenities (accommodation_modification_id, amenities_id) VALUES
+     (1, 1), (1, 2), (1, 3),
+     (2, 4), (2, 5), (2, 6),
+     (3, 7), (3, 8), (3, 9),
+     (4, 10), (4, 1), (4, 2),
+     (5, 3), (5, 4), (5, 5)
+    ON CONFLICT DO NOTHING;
+
+INSERT INTO public.accommodation_modifications_available_periods (accommodation_modification_id, available_periods_id) VALUES
+         (1, 1),
+         (1, 2),
+         (1, 4),
+         (1, 42),
+         (1, 43),
+         (1, 44),
+         (1, 45),
+         (2, 2),
+         (2, 5),
+         (3, 3),
+         (3, 6),
+         (4, 7),
+         (4, 10),
+         (5, 8),
+         (5, 11)
+        ON CONFLICT DO NOTHING;
+
+INSERT INTO public.accommodation_modifications_images(
+    accommodation_modification_id, images_id)
+VALUES (1, 1),
+       (1, 33),
+       (1, 44),
+       (1, 55)
+    ON CONFLICT DO NOTHING;
+
+
+UPDATE public.primary_keys
+SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_modifications)
+WHERE key_pk = 'accommodation_modification';
+
 COMMIT;

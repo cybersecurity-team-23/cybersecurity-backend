@@ -25,6 +25,6 @@ Login credentials for test data:
   - email: david.davis@example.com , password: davidspass
   - email: grace.jones@example.com , password: gracesspass
   - email: frank.white@example.com , password: franksspass
-- Guest:
+- Admin:
   - email: helen.martin@example.com , password: helenspass
 

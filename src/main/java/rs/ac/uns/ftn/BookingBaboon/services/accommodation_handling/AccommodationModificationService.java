@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModificationStatus;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationModificationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationModificationService;
 
@@ -89,6 +90,26 @@ public class AccommodationModificationService implements IAccommodationModificat
     public void removeAll() {
         repository.deleteAll();
         repository.flush();
+    }
+
+    @Override
+    public AccommodationModification approve(Long id) {
+        AccommodationModification accommodationModification = get(id);
+
+        accommodationModification.setStatus(AccommodationModificationStatus.Approved);
+        repository.save(accommodationModification);
+        repository.flush();
+        return accommodationModification;
+    }
+
+    @Override
+    public AccommodationModification deny(Long id) {
+        AccommodationModification accommodationModification = get(id);
+
+        accommodationModification.setStatus(AccommodationModificationStatus.Denied);
+        repository.save(accommodationModification);
+        repository.flush();
+        return accommodationModification;
     }
 
 
