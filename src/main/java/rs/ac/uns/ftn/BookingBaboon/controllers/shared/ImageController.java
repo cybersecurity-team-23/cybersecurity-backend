@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.shared.ImageCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.shared.ImageResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.shared.IImageService;

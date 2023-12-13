@@ -7,23 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationType;
-import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Amenity;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @CrossOrigin
@@ -149,6 +139,26 @@ public class AccommodationController {
         return new ResponseEntity<>(totalPrice, HttpStatus.OK);
     }
 
+    @PutMapping("/{accommodationId}/add/{imageId}")
+    public ResponseEntity<AccommodationResponse> addImage(@PathVariable Long imageId,@PathVariable Long accommodationId){
+        Accommodation accommodation = service.addImage(imageId, accommodationId);
 
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
+    }
+
+    @PutMapping("/{accommodationId}/addPeriod/{periodId}")
+    public ResponseEntity<AccommodationResponse> addPeriod(@PathVariable Long periodId, @PathVariable Long accommodationId){
+        Accommodation accommodation = service.addPeriod(periodId, accommodationId);
+
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
+    }
 
 }

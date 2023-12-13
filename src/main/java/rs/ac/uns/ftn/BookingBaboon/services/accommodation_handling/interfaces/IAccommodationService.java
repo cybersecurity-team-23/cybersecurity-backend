@@ -32,4 +32,8 @@ public interface IAccommodationService {
 
     public float getTotalPrice(Accommodation accommodation, TimeSlot desiredPeriod);
     public LocalDate parseDate(String date);
+
+    Accommodation addImage(Long imageId, Long accommodationId);
+
+    Accommodation addPeriod(Long periodId, Long accommodationId);
 }

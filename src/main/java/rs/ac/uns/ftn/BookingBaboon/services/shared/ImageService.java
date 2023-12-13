@@ -157,5 +157,4 @@ public class ImageService implements IImageService{
         }
         throw new IOException("Invalid image type");
     }
-
 }

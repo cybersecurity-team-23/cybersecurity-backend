@@ -28,7 +28,7 @@ public class Accommodation {
     @ManyToMany
     private List<Amenity> amenities;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailablePeriod> availablePeriods;
 
     private Integer minGuests;
@@ -37,7 +37,7 @@ public class Accommodation {
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
     public void AddAmenity(Amenity amenity){

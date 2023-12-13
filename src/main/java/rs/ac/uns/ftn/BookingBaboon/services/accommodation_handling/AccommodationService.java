@@ -12,8 +12,11 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.shared.IImageService;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -30,6 +33,8 @@ public class AccommodationService implements IAccommodationService {
     private final IReservationService reservationService;
     private final IAmenityService amenityService;
     private final IAccommodationReviewService accommodationReviewService;
+    private final IImageService imageService;
+    private final IAvailablePeriodService periodService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -136,6 +141,30 @@ public class AccommodationService implements IAccommodationService {
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
             }
             return null;
+    }
+
+    @Override
+    public Accommodation addImage(Long imageId, Long accommodationId) {
+        Image image = imageService.get(imageId);
+        Accommodation accommodation = get(accommodationId);
+        if(image == null || accommodation==null)return null;
+        List<Image> images =  accommodation.getImages();
+        images.add(image);
+        accommodation.setImages(images);
+        repository.save(accommodation);
+        return accommodation;
+    }
+
+    @Override
+    public Accommodation addPeriod(Long periodId, Long accommodationId) {
+        AvailablePeriod period = periodService.get(periodId);
+        Accommodation accommodation = get(accommodationId);
+        if(period == null || accommodation==null)return null;
+        List<AvailablePeriod> periods =  accommodation.getAvailablePeriods();
+        periods.add(period);
+        accommodation.setAvailablePeriods(periods);
+        repository.save(accommodation);
+        return accommodation;
     }
 
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
