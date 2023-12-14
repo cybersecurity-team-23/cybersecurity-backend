@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
 import java.time.LocalDate;
@@ -36,4 +37,6 @@ public interface IAccommodationService {
     Accommodation addImage(Long imageId, Long accommodationId);
 
     Accommodation addPeriod(Long periodId, Long accommodationId);
+
+    Accommodation removePeriod(Long periodId, Long accommodationId);
 }

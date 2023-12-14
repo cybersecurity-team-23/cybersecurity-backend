@@ -7,9 +7,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.*;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationModificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAmenityService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
@@ -35,6 +38,7 @@ public class AccommodationService implements IAccommodationService {
     private final IAccommodationReviewService accommodationReviewService;
     private final IImageService imageService;
     private final IAvailablePeriodService periodService;
+    private final IAccommodationModificationService modificationService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -167,6 +171,20 @@ public class AccommodationService implements IAccommodationService {
         return accommodation;
     }
 
+    @Override
+    public Accommodation removePeriod(Long periodId, Long accommodationId) {
+        AvailablePeriod period = periodService.get(periodId);
+        Accommodation accommodation = get(accommodationId);
+        if(period == null || accommodation==null)return null;
+        List<AvailablePeriod> periods =  accommodation.getAvailablePeriods();
+        periods.remove(period);
+        accommodation.setAvailablePeriods(periods);
+        modificationService.removePeriod(period, accommodationId);
+        repository.save(accommodation);
+        periodService.remove(periodId);
+        return accommodation;
+    }
+
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
     private List<String> parseAmenities(String amenityString) {
         if (amenityString == null || amenityString.isEmpty()) {
@@ -278,7 +296,7 @@ public class AccommodationService implements IAccommodationService {
         List<Accommodation> filteredAccommodations = new ArrayList<>();
 
         for (Accommodation accommodation : accommodations) {
-            if (hasAvailability(accommodation, filter)) {
+            if (hasAvailability(accommodation, new TimeSlot(filter.getCheckin(),filter.getCheckout()))) {
                 filteredAccommodations.add(accommodation);
             }
         }
@@ -286,9 +304,8 @@ public class AccommodationService implements IAccommodationService {
         return filteredAccommodations;
     }
 
-    private boolean hasAvailability(Accommodation accommodation, AccommodationFilter filter) {
+    private boolean hasAvailability(Accommodation accommodation, TimeSlot desiredPeriod) {
         List<AvailablePeriod> availablePeriods = repository.findAvailablePeriodsSortedByStartDate(accommodation.getId());
-        TimeSlot desiredPeriod = new TimeSlot(filter.getCheckin(), filter.getCheckout());
 
         // Find the first available period that overlaps with the desired period
         TimeSlot currentTimeSlot;

@@ -7,8 +7,10 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModificationStatus;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationModificationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationModificationService;
 
@@ -110,6 +112,22 @@ public class AccommodationModificationService implements IAccommodationModificat
         repository.save(accommodationModification);
         repository.flush();
         return accommodationModification;
+    }
+
+    @Override
+    public void removePeriod(AvailablePeriod period, Long accommodationId) {
+        Collection<AccommodationModification> modifications = getByAccommodationId(accommodationId);
+        for (AccommodationModification modification: modifications) {
+            Set<AvailablePeriod> periods =  modification.getAvailablePeriods();
+            periods.remove(period);
+            modification.setAvailablePeriods(periods);
+            repository.save(modification);
+        }
+
+    }
+
+    private Collection<AccommodationModification> getByAccommodationId(Long accommodationId) {
+        return repository.findAllByAccommodationId(accommodationId);
     }
 
 

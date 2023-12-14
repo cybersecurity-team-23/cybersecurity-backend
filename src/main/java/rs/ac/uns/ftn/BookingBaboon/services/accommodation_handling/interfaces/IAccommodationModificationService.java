@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 
 import java.util.HashSet;
 
@@ -15,4 +16,6 @@ public interface IAccommodationModificationService {
     public AccommodationModification approve(Long id);
 
     public AccommodationModification deny(Long id);
+
+    void removePeriod(AvailablePeriod periodId, Long accommodationId);
 }
