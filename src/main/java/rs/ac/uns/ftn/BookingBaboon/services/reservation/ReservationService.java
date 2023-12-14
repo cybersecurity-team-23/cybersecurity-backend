@@ -126,4 +126,9 @@ public class ReservationService implements IReservationService {
             }
         }
     }
+
+    @Override
+    public Collection<Reservation> getAllByAccommodation(Long accommodationId) {
+        return repository.findAllByAccommodationId(accommodationId);
+    }
 }

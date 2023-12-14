@@ -82,6 +82,18 @@ public class AccommodationController {
         }
     }
 
+
+    @DeleteMapping("{accommodationId}/available-periods/{periodId}")
+    public ResponseEntity<Void> remove(@PathVariable Long accommodationId, @PathVariable Long periodId) {
+        Accommodation accommodation = service.removePeriod(periodId, accommodationId);
+        if (accommodation != null) {
+            service.remove(accommodationId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 //    @GetMapping("/filter")
 //    public ResponseEntity<Collection<AccommodationResponse>> search(
 //            @RequestParam(name = "city", required = false) String city,
