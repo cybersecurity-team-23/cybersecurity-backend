@@ -41,15 +41,6 @@ VALUES
     (5, false, 'Host responded to your reservation request', CURRENT_TIMESTAMP, 4, 1)
     ON CONFLICT (id) DO NOTHING;
 
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.users)
-WHERE key_pk = 'user';
-
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.notifications)
-WHERE key_pk = 'notification';
-
--- ACCOMMODATION HANDLING
 
 INSERT INTO public.amenities (id, name) VALUES
                                             (1, 'Wi-Fi'),
@@ -215,25 +206,6 @@ INSERT INTO public.reservations (id, price, status, end_date, start_date, accomm
   (10, 800, 2, '2024-04-15', '2024-04-20', 10, 9)
 ON CONFLICT (id) DO NOTHING;
 
--- Update Accommodations
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodations)
-WHERE key_pk = 'accommodation';
-
--- Update Available Periods
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.available_period)
-WHERE key_pk = 'available_period';
-
--- Update Amenities
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.amenities)
-WHERE key_pk = 'amenity';
-
--- Update Reservations
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.reservations)
-WHERE key_pk = 'reservation';
 
 INSERT INTO public.reviews (
     id, comment, created_on, rating, reviewer_id
@@ -280,9 +252,6 @@ VALUES
     (15, 10)
     ON CONFLICT (id) DO NOTHING;
 
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.host_reviews)
-WHERE key_pk = 'host_review';
 
 INSERT INTO public.reports (
     id, created_on, message, status, reportee_id
@@ -309,9 +278,6 @@ INSERT INTO public.host_reports (
       (5, 1)
     ON CONFLICT (id) DO NOTHING;
 
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.host_reports)
-WHERE key_pk = 'host_report';
 
 INSERT INTO public.guest_reports (
     id, reported_guest_id
@@ -323,33 +289,24 @@ INSERT INTO public.guest_reports (
       (10, 9)
     ON CONFLICT (id) DO NOTHING;
 
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.guest_reports)
-WHERE key_pk = 'guest_report';
-
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_reviews)
-WHERE key_pk = 'accommodation_review';
 
 INSERT INTO public.images(
     id, file_name, path)
 VALUES (1, 'test8.jpg', 'accommodations\1'),
-       (33, 'test3.jpg', 'accommodations\1' ),
-       (44, 'test4.jpg', 'accommodations\1'),
-       (55, 'test5.jpg', 'accommodations\1')
+       (2, 'test3.jpg', 'accommodations\1' ),
+       (3, 'test4.jpg', 'accommodations\1'),
+       (4, 'test5.jpg', 'accommodations\1')
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.accommodations_images(
     accommodation_id, images_id)
 VALUES (1, 1),
-       (1, 33),
-       (1, 44),
-       (1, 55)
+       (1, 2),
+       (1, 3),
+       (1, 4)
     ON CONFLICT DO NOTHING;
 
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.images)
-WHERE key_pk = 'image';
+
 
 INSERT INTO public.accommodation_modifications(
     id, description, is_automatically_accepted, address, city, country, max_guests, min_guests, name, pricing_per_person, request_date, request_type, status, type, accommodation_id, host_id)
@@ -389,14 +346,10 @@ INSERT INTO public.accommodation_modifications_available_periods (accommodation_
 INSERT INTO public.accommodation_modifications_images(
     accommodation_modification_id, images_id)
 VALUES (1, 1),
-       (1, 33),
-       (1, 44),
-       (1, 55)
+       (1, 2),
+       (1, 3),
+       (1, 4)
     ON CONFLICT DO NOTHING;
 
-
-UPDATE public.primary_keys
-SET value_pk = (SELECT COALESCE(MAX(id), 0) + 1 FROM public.accommodation_modifications)
-WHERE key_pk = 'accommodation_modification';
 
 COMMIT;

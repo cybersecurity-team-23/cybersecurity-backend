@@ -6,7 +6,7 @@ import lombok.Data;
 @Entity
 @Data
 @Table(name = "images")
-@TableGenerator(name="image_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="image", valueColumnName="value_pk")
+@TableGenerator(name="image_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="image", initialValue = 4, valueColumnName="value_pk")
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "image_id_generator")

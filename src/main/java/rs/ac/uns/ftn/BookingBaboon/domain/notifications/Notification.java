@@ -9,7 +9,7 @@ import java.util.Date;
 @Entity
 @Data
 @Table(name = "notifications")
-@TableGenerator(name="notifications_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="notification", valueColumnName="value_pk")
+@TableGenerator(name="notifications_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="notification", initialValue = 5, valueColumnName="value_pk")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "notifications_id_generator")

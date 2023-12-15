@@ -12,7 +12,7 @@ import java.util.Set;
 @Entity
 @Data
 @Table(name = "accommodation_modifications")
-@TableGenerator(name="accommodation_modification_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="accommodation_modification", valueColumnName="value_pk")
+@TableGenerator(name="accommodation_modification_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="accommodation_modification", initialValue = 5, valueColumnName="value_pk")
 public class AccommodationModification {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "accommodation_modification_id_generator")
