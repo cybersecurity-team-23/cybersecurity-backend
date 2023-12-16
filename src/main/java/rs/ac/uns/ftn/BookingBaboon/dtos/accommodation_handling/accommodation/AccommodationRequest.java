@@ -24,4 +24,5 @@ public class AccommodationRequest {
     private Boolean pricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+    private Boolean isBeingEdited;
 }

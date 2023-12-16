@@ -30,4 +30,5 @@ public class AccommodationModificationRequest {
     private Date requestDate;
     private AccommodationModificationStatus status;
     private AccommodationModificationType requestType;
+    private Boolean isBeingEdited;
 }

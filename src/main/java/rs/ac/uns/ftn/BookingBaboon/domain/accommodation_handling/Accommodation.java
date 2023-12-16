@@ -40,6 +40,8 @@ public class Accommodation {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;
 
+    private Boolean isBeingEdited = true;
+
     public void AddAmenity(Amenity amenity){
         amenities.add(amenity);
     }

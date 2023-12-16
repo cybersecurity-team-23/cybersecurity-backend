@@ -26,4 +26,5 @@ public class AccommodationResponse {
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
     private Set<ImageReference> images;
+    private Boolean isBeingEdited;
 }

@@ -50,6 +50,8 @@ public class AccommodationModification {
     @Enumerated
     private AccommodationModificationType requestType;
 
+    private Boolean isBeingEdited = true;
+
     public void Approve(){
         status = AccommodationModificationStatus.Approved;
     }
