@@ -24,6 +24,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.*;
@@ -65,6 +66,26 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation create(Accommodation accommodation) {
         try {
+            AccommodationModification modification = new AccommodationModification();
+
+            modification.setName(accommodation.getName());
+            modification.setAccommodation(accommodation);
+            modification.setStatus(AccommodationModificationStatus.Pending);
+            modification.setAmenities(new HashSet<Amenity>(accommodation.getAmenities()));
+            modification.setImages(accommodation.getImages());
+            modification.setAvailablePeriods(new HashSet<>(accommodation.getAvailablePeriods()));
+            modification.setHost(accommodation.getHost());
+            modification.setDescription(accommodation.getDescription());
+            modification.setLocation(accommodation.getLocation());
+            modification.setType(accommodation.getType());
+            modification.setAutomaticallyAccepted(accommodation.isAutomaticallyAccepted());
+            modification.setMaxGuests(accommodation.getMaxGuests());
+            modification.setMinGuests(accommodation.getMinGuests());
+            modification.setPricingPerPerson(accommodation.getIsPricingPerPerson());
+            modification.setRequestDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+            modification.setRequestType(AccommodationModificationType.New);
+
+            modificationService.create(modification);
             repository.save(accommodation);
             repository.flush();
             return accommodation;
