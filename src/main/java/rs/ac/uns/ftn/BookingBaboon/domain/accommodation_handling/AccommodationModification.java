@@ -32,7 +32,7 @@ public class AccommodationModification {
     private Set<Amenity> amenities;
 
     @OneToMany
-    private Set<AvailablePeriod> availablePeriods;
+    private List<AvailablePeriod> availablePeriods;
 
     private Integer minGuests;
     private Integer maxGuests;

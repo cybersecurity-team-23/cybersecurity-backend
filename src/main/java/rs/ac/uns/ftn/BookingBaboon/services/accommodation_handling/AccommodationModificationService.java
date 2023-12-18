@@ -123,7 +123,7 @@ public class AccommodationModificationService implements IAccommodationModificat
     public void removePeriod(AvailablePeriod period, Long accommodationId) {
         Collection<AccommodationModification> modifications = getByAccommodationId(accommodationId);
         for (AccommodationModification modification: modifications) {
-            Set<AvailablePeriod> periods =  modification.getAvailablePeriods();
+            List<AvailablePeriod> periods =  modification.getAvailablePeriods();
             periods.remove(period);
             modification.setAvailablePeriods(periods);
             repository.save(modification);
@@ -152,7 +152,7 @@ public class AccommodationModificationService implements IAccommodationModificat
         AvailablePeriod period = periodService.get(periodId);
         AccommodationModification accommodationModification = get(accommodationModificationId);
         if(period == null || accommodationModification==null)return null;
-        Set<AvailablePeriod> periods =  accommodationModification.getAvailablePeriods();
+        List<AvailablePeriod> periods =  accommodationModification.getAvailablePeriods();
         periods.add(period);
         accommodationModification.setAvailablePeriods(periods);
         repository.save(accommodationModification);

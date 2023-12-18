@@ -73,7 +73,7 @@ public class AccommodationService implements IAccommodationService {
             modification.setStatus(AccommodationModificationStatus.Pending);
             modification.setAmenities(new HashSet<Amenity>(accommodation.getAmenities()));
             modification.setImages(accommodation.getImages());
-            modification.setAvailablePeriods(new HashSet<>(accommodation.getAvailablePeriods()));
+            modification.setAvailablePeriods(accommodation.getAvailablePeriods());
             modification.setHost(accommodation.getHost());
             modification.setDescription(accommodation.getDescription());
             modification.setLocation(accommodation.getLocation());
