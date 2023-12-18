@@ -295,7 +295,26 @@ INSERT INTO public.images(
 VALUES (1, 'test8.jpg', 'accommodations\1'),
        (2, 'test3.jpg', 'accommodations\1' ),
        (3, 'test4.jpg', 'accommodations\1'),
-       (4, 'test5.jpg', 'accommodations\1')
+       (4, 'test5.jpg', 'accommodations\1'),
+       (5, 'test2.jpg', 'accommodations\2'),
+       (6, 'test3.jpg', 'accommodations\3'),
+       (7, 'test4.jpg', 'accommodations\4'),
+       (8, 'test5.jpg', 'accommodations\5'),
+       (9, 'test6.jpg', 'accommodations\6'),
+       (10, 'test7.jpg', 'accommodations\7'),
+       (11, 'test8.jpg', 'accommodations\8'),
+       (12, 'test9.jpg', 'accommodations\9'),
+       (13, 'test10.jpg', 'accommodations\10'),
+       (14, 'test11.jpg', 'accommodations\11'),
+       (15, 'test12.jpg', 'accommodations\12'),
+       (16, 'test13.jpg', 'accommodations\13'),
+       (17, 'test14.jpg', 'accommodations\14'),
+       (18, 'test15.jpg', 'accommodations\15'),
+       (19, 'test16.jpg', 'accommodations\16'),
+       (20, 'test17.jpg', 'accommodations\17'),
+       (21, 'test18.jpg', 'accommodations\18'),
+       (22, 'test19.jpg', 'accommodations\19'),
+       (23, 'test20.jpg', 'accommodations\20')
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.accommodations_images(
@@ -303,7 +322,26 @@ INSERT INTO public.accommodations_images(
 VALUES (1, 1),
        (1, 2),
        (1, 3),
-       (1, 4)
+       (1, 4),
+       (2, 5),
+       (3, 6),
+       (4, 7),
+       (5, 8),
+       (6, 9),
+       (7, 10),
+       (8, 11),
+       (9, 12),
+       (10, 13),
+       (11, 14),
+       (12, 15),
+       (13, 16),
+       (14, 17),
+       (15, 18),
+       (16, 19),
+       (17, 20),
+       (18, 21),
+       (19, 22),
+       (20, 23)
     ON CONFLICT DO NOTHING;
 
 
