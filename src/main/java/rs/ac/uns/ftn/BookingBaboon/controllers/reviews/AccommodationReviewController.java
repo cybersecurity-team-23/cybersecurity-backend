@@ -17,9 +17,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin
 @RequestMapping("/api/v1/accommodation-reviews")
 public class AccommodationReviewController {
 

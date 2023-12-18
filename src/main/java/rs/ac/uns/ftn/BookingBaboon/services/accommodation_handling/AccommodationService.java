@@ -206,6 +206,17 @@ public class AccommodationService implements IAccommodationService {
         return accommodation;
     }
 
+    @Override
+    public Accommodation updateEditingStatus(Long accommodationId, boolean isBeingEdited) {
+        Accommodation accommodation = get(accommodationId);
+        if (accommodation == null) {
+            return accommodation;
+        }
+        accommodation.setIsBeingEdited(isBeingEdited);
+        repository.save(accommodation);
+        return accommodation;
+    }
+
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
     private List<String> parseAmenities(String amenityString) {
         if (amenityString == null || amenityString.isEmpty()) {

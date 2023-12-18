@@ -43,7 +43,7 @@ public class AccommodationModification {
     @OneToMany
     private List<Image> images;
 
-    private Date requestDate;
+    private Date requestDate = new Date();
 
     @Enumerated
     private AccommodationModificationStatus status = AccommodationModificationStatus.Pending;

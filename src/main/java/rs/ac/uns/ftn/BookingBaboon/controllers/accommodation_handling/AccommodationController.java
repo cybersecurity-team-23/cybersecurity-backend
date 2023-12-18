@@ -173,4 +173,14 @@ public class AccommodationController {
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
 
+    @PutMapping("/{accommodationId}/updateEditingStatus/{isBeingEdited}")
+    public ResponseEntity<AccommodationResponse> updateEditingStatus(@PathVariable Long accommodationId, @PathVariable boolean isBeingEdited) {
+        Accommodation accommodation = service.updateEditingStatus(accommodationId, isBeingEdited);
+
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
+    }
 }
