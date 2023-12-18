@@ -23,7 +23,7 @@ public class AccommodationModificationResponse {
     private Set<AvailablePeriod> availablePeriods;
     private Integer minGuests;
     private Integer maxGuests;
-    private Boolean pricingPerPerson;
+    private Boolean isPricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
     private Set<ImageReference> images;
