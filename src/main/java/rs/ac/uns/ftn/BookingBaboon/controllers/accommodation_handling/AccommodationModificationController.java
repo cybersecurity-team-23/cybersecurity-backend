@@ -44,6 +44,7 @@ public class AccommodationModificationController {
         return new ResponseEntity<>(result,  HttpStatus.OK) ;
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @PostMapping
     public ResponseEntity<AccommodationModificationResponse> create(@RequestBody AccommodationModificationCreateRequest request) {
         AccommodationModification result = service.create(mapper.map(request, AccommodationModification.class));
