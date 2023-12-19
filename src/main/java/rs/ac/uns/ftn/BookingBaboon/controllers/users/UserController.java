@@ -116,6 +116,7 @@ public class UserController {
         return new ResponseEntity<>( mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
     @GetMapping("/logout")
     public ResponseEntity logout() {
 
