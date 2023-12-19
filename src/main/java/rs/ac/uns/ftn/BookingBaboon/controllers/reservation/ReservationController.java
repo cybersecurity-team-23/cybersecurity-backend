@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
@@ -42,6 +43,7 @@ public class ReservationController {
         return new ResponseEntity<>(mapper.map(reservation, ReservationResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('GUEST')")
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationCreateRequest reservation) {
         Reservation result = service.create(mapper.map(reservation, Reservation.class));

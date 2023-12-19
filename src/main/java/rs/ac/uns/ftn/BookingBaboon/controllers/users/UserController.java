@@ -5,6 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -64,6 +65,7 @@ public class UserController {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(user, User.class)),UserResponse.class),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
     @DeleteMapping({"/{userId}"})
     public ResponseEntity<UserResponse> remove(@PathVariable Long userId) {
         User user = service.remove(userId);
@@ -73,6 +75,7 @@ public class UserController {
         return new ResponseEntity<>( mapper.map(user,UserResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
     @GetMapping({"/profile/{userEmail}"})
     public ResponseEntity<UserProfile> getProfile(@PathVariable String userEmail) {
 

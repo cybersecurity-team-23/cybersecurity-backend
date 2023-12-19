@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationFilter;
@@ -54,12 +55,14 @@ public class AccommodationController {
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @PostMapping
     public ResponseEntity<AccommodationResponse> create(@RequestBody AccommodationCreateRequest accommodation) {
         Accommodation result = service.create(mapper.map(accommodation, Accommodation.class));
         return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @PutMapping
     public ResponseEntity<AccommodationResponse> update(@RequestBody AccommodationRequest accommodation) {
         Accommodation result = service.update(mapper.map(accommodation, Accommodation.class));
@@ -150,6 +153,7 @@ public class AccommodationController {
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @PutMapping("/{accommodationId}/addPeriod/{periodId}")
     public ResponseEntity<AccommodationResponse> addPeriod(@PathVariable Long periodId, @PathVariable Long accommodationId){
         Accommodation accommodation = service.addPeriod(periodId, accommodationId);
