@@ -85,9 +85,10 @@ public class AccommodationService implements IAccommodationService {
             modification.setRequestDate(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
             modification.setRequestType(AccommodationModificationType.New);
 
-            modificationService.create(modification);
             repository.save(accommodation);
             repository.flush();
+
+            modificationService.create(modification);
             return accommodation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
