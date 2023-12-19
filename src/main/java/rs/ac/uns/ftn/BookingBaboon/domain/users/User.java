@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.users;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 
@@ -14,8 +15,10 @@ public class User{
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_id_generator")
     private Long id;
 
+    @NotNull
     private String password;
 
+    @Enumerated
     private UserStatus status = UserStatus.Inactive;
 
     @Column(unique = true)
@@ -29,6 +32,7 @@ public class User{
 
     private String phoneNumber;
 
+    @Enumerated
     private Role role = Role.GUEST;
 
     @Transient

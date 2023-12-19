@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
@@ -34,10 +35,17 @@ public class AccommodationModification {
     @OneToMany
     private List<AvailablePeriod> availablePeriods;
 
+    @Min(1)
     private Integer minGuests;
+
+    @Min(1)
     private Integer maxGuests;
+
     private Boolean pricingPerPerson;
+
+    @Enumerated
     private AccommodationType type;
+
     private boolean isAutomaticallyAccepted;
 
     @OneToMany

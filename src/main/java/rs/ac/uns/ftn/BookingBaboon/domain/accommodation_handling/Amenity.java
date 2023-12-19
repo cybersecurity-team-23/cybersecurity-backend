@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,5 +16,7 @@ public class Amenity {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "amenity_id_generator")
     private Long id;
+
+    @Column(unique = true)
     private String name;
 }
