@@ -11,8 +11,11 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModificationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationModificationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationModificationService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
+import rs.ac.uns.ftn.BookingBaboon.services.shared.IImageService;
 
 import java.util.*;
 
@@ -20,6 +23,8 @@ import java.util.*;
 @Service
 public class AccommodationModificationService implements IAccommodationModificationService {
     private final IAccommodationModificationRepository repository;
+    private final IImageService imageService;
+    private final IAvailablePeriodService periodService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -39,11 +44,11 @@ public class AccommodationModificationService implements IAccommodationModificat
     }
 
     @Override
-    public AccommodationModification create(AccommodationModification reservation) {
+    public AccommodationModification create(AccommodationModification accommodationModification) {
         try {
-            repository.save(reservation);
+            repository.save(accommodationModification);
             repository.flush();
-            return reservation;
+            return accommodationModification;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
             StringBuilder sb = new StringBuilder(1000);
@@ -118,7 +123,7 @@ public class AccommodationModificationService implements IAccommodationModificat
     public void removePeriod(AvailablePeriod period, Long accommodationId) {
         Collection<AccommodationModification> modifications = getByAccommodationId(accommodationId);
         for (AccommodationModification modification: modifications) {
-            Set<AvailablePeriod> periods =  modification.getAvailablePeriods();
+            List<AvailablePeriod> periods =  modification.getAvailablePeriods();
             periods.remove(period);
             modification.setAvailablePeriods(periods);
             repository.save(modification);
@@ -128,6 +133,30 @@ public class AccommodationModificationService implements IAccommodationModificat
 
     private Collection<AccommodationModification> getByAccommodationId(Long accommodationId) {
         return repository.findAllByAccommodationId(accommodationId);
+    }
+
+    @Override
+    public AccommodationModification addImage(Long imageId, Long accommodationModificationId) {
+        Image image = imageService.get(imageId);
+        AccommodationModification accommodationModification = get(accommodationModificationId);
+        if(image == null || accommodationModification==null)return null;
+        List<Image> images =  accommodationModification.getImages();
+        images.add(image);
+        accommodationModification.setImages(images);
+        repository.save(accommodationModification);
+        return accommodationModification;
+    }
+
+    @Override
+    public AccommodationModification addPeriod(Long periodId, Long accommodationModificationId) {
+        AvailablePeriod period = periodService.get(periodId);
+        AccommodationModification accommodationModification = get(accommodationModificationId);
+        if(period == null || accommodationModification==null)return null;
+        List<AvailablePeriod> periods =  accommodationModification.getAvailablePeriods();
+        periods.add(period);
+        accommodationModification.setAvailablePeriods(periods);
+        repository.save(accommodationModification);
+        return accommodationModification;
     }
 
 

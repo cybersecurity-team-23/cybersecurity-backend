@@ -32,7 +32,7 @@ public class AccommodationModification {
     private Set<Amenity> amenities;
 
     @OneToMany
-    private Set<AvailablePeriod> availablePeriods;
+    private List<AvailablePeriod> availablePeriods;
 
     private Integer minGuests;
     private Integer maxGuests;
@@ -43,12 +43,14 @@ public class AccommodationModification {
     @OneToMany
     private List<Image> images;
 
-    private Date requestDate;
+    private Date requestDate = new Date();
 
     @Enumerated
     private AccommodationModificationStatus status = AccommodationModificationStatus.Pending;
     @Enumerated
     private AccommodationModificationType requestType;
+
+    private Boolean isBeingEdited = true;
 
     public void Approve(){
         status = AccommodationModificationStatus.Approved;

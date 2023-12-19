@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_modification.AccommodationModificationCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_modification.AccommodationModificationRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation_modification.AccommodationModificationResponse;
@@ -93,5 +94,27 @@ public class AccommodationModificationController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PutMapping("/{accommodationModificationId}/add/{imageId}")
+    public ResponseEntity<AccommodationModificationResponse> addImage(@PathVariable Long imageId, @PathVariable Long accommodationModificationId){
+        AccommodationModification accommodationModification = service.addImage(imageId, accommodationModificationId);
+
+        if (accommodationModification == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodationModification, AccommodationModificationResponse.class), HttpStatus.OK);
+    }
+
+    @PutMapping("/{accommodationModificationId}/addPeriod/{periodId}")
+    public ResponseEntity<AccommodationModificationResponse> addPeriod(@PathVariable Long periodId, @PathVariable Long accommodationModificationId){
+        AccommodationModification accommodationModification = service.addPeriod(periodId, accommodationModificationId);
+
+        if (accommodationModification == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodationModification, AccommodationModificationResponse.class), HttpStatus.OK);
     }
 }
