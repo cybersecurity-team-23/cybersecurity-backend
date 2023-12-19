@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.shared;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Entity
@@ -11,7 +12,11 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "image_id_generator")
     Long id;
+
+    @NotNull
     String path;
+
+    @NotNull
     String fileName;
     @Transient
     byte[] content;

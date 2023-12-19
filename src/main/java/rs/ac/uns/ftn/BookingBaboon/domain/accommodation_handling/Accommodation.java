@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.Image;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
@@ -16,6 +17,8 @@ public class Accommodation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "accommodation_id_generator")
     private Long id;
+
+    @Column(unique = true)
     private String name;
     private String description;
 
@@ -31,9 +34,15 @@ public class Accommodation {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AvailablePeriod> availablePeriods;
 
+    @Min(1)
     private Integer minGuests;
+
+    @Min(1)
     private Integer maxGuests;
+
     private Boolean isPricingPerPerson;
+
+    @Enumerated
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
 

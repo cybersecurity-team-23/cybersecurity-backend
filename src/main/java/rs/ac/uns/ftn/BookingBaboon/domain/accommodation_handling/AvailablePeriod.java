@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
@@ -14,5 +15,7 @@ public class AvailablePeriod {
     private Long id;
     @Embedded
     private TimeSlot timeSlot;
+
+    @Min(1)
     private Float PricePerNight;
 }

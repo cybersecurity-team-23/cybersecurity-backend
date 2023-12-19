@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.domain.reservation;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.Data;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
@@ -26,6 +27,7 @@ public class Reservation {
     @ManyToOne
     private Guest guest;
 
+    @Min(1)
     private Float price;
 
     @Enumerated

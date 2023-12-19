@@ -23,6 +23,8 @@ public class Report implements Serializable {
     private User reportee;
 
     private Date createdOn;
+
+    @Enumerated
     private ReportStatus status;
     private String message;
 }
