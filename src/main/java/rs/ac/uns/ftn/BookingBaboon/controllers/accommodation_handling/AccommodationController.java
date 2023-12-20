@@ -62,7 +62,7 @@ public class AccommodationController {
         return new ResponseEntity<>(mapper.map(result, AccommodationResponse.class), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('HOST')")
+    @PreAuthorize("hasAnyAuthority('HOST', 'ADMIN')")
     @PutMapping
     public ResponseEntity<AccommodationResponse> update(@RequestBody AccommodationRequest accommodation) {
         Accommodation result = service.update(mapper.map(accommodation, Accommodation.class));
