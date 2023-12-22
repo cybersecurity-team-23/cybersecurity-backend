@@ -120,7 +120,7 @@ public class AccommodationReviewService implements IAccommodationReviewService {
             reviewNumber += 1;
         }
     }
-
+    if(reviewNumber == 0) return -1;
     return (float) ratingSum / reviewNumber;
     }
 
