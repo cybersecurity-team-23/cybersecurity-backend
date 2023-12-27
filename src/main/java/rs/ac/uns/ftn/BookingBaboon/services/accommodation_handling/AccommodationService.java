@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
-    private final IReservationService reservationService;
+//    private final IReservationService reservationService;
     private final IAmenityService amenityService;
     private final IAccommodationReviewService accommodationReviewService;
     private final IImageService imageService;
@@ -78,7 +78,7 @@ public class AccommodationService implements IAccommodationService {
             modification.setDescription(accommodation.getDescription());
             modification.setLocation(accommodation.getLocation());
             modification.setType(accommodation.getType());
-            modification.setAutomaticallyAccepted(accommodation.isAutomaticallyAccepted());
+            modification.setIsAutomaticallyAccepted(accommodation.getIsAutomaticallyAccepted());
             modification.setMaxGuests(accommodation.getMaxGuests());
             modification.setMinGuests(accommodation.getMinGuests());
             modification.setPricingPerPerson(accommodation.getIsPricingPerPerson());
@@ -215,6 +215,17 @@ public class AccommodationService implements IAccommodationService {
             return accommodation;
         }
         accommodation.setIsBeingEdited(isBeingEdited);
+        repository.save(accommodation);
+        return accommodation;
+    }
+
+    @Override
+    public Accommodation updateAutoAccept(Long accommodationId, Boolean isAutomaticallyAccepted) {
+        Accommodation accommodation = get(accommodationId);
+        if (accommodation == null) {
+            return accommodation;
+        }
+        accommodation.setIsAutomaticallyAccepted(isAutomaticallyAccepted);
         repository.save(accommodation);
         return accommodation;
     }
@@ -374,7 +385,6 @@ public class AccommodationService implements IAccommodationService {
     public void removeAllByHost(Long hostId) {
         for(Accommodation accommodation : getAllByHost(hostId)) {
             accommodationReviewService.removeFromAccommodation(accommodation.getId());
-            reservationService.removeAllForAccommodation(accommodation.getId());
             modificationService.removeByAccommodationId(accommodation.getId());
             repository.delete(accommodation);
             repository.flush();

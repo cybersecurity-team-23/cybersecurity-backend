@@ -24,7 +24,7 @@ public class AccommodationResponse {
     private Integer maxGuests;
     private Boolean isPricingPerPerson;
     private AccommodationType type;
-    private boolean isAutomaticallyAccepted;
+    private Boolean isAutomaticallyAccepted;
     private Set<ImageReference> images;
     private Boolean isBeingEdited;
 }

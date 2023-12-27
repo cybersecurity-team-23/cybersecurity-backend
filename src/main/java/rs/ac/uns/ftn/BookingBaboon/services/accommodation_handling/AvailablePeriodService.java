@@ -95,6 +95,19 @@ public class AvailablePeriodService implements IAvailablePeriodService {
         repository.flush();
     }
 
+
+    public List<AvailablePeriod> getOverlappingPeriods(TimeSlot desiredTimeSlot, List<AvailablePeriod> allPeriods){
+        List<AvailablePeriod> overlappingPeriods = new ArrayList<>();
+
+        for (AvailablePeriod period: allPeriods){
+            if(period.getTimeSlot().overlaps(desiredTimeSlot)){
+                overlappingPeriods.add(period);
+            }
+        }
+
+        return overlappingPeriods;
+    }
+  
     public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods) {
         List<AvailablePeriod> splitPeriods = new ArrayList<>();
 

@@ -38,6 +38,7 @@ public class AccommodationController {
     @GetMapping("/host/{hostId}")
     public ResponseEntity<Collection<AccommodationResponse>> getAllByHost(@PathVariable Long hostId) {
         Collection<Accommodation> accommodations = service.getAllByHost(hostId);
+        System.out.println(accommodations);
 
         return new ResponseEntity<>(accommodations.stream()
                 .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
@@ -180,6 +181,17 @@ public class AccommodationController {
     @PutMapping("/{accommodationId}/updateEditingStatus/{isBeingEdited}")
     public ResponseEntity<AccommodationResponse> updateEditingStatus(@PathVariable Long accommodationId, @PathVariable boolean isBeingEdited) {
         Accommodation accommodation = service.updateEditingStatus(accommodationId, isBeingEdited);
+
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
+    }
+
+    @PutMapping("/{accommodationId}/update-auto-accept/{isAutomaticallyAccepted}")
+    public ResponseEntity<AccommodationResponse> updateAutoAccept(@PathVariable Long accommodationId, @PathVariable boolean isAutomaticallyAccepted) {
+        Accommodation accommodation = service.updateAutoAccept(accommodationId, isAutomaticallyAccepted);
 
         if (accommodation == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
