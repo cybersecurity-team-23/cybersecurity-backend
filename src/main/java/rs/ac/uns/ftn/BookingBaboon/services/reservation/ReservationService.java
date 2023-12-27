@@ -8,9 +8,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
 import java.util.*;
@@ -101,11 +106,25 @@ public class ReservationService implements IReservationService {
         repository.flush();
     }
     @Override
-    public Reservation cancel(Long reservationId) {
+    public Reservation deny(Long reservationId) {
         Reservation found = get(reservationId);
         found.Cancel();
         update(found);
         return found;
+    }
+
+    @Override
+    public Reservation approveReservation(Long reservationId) {
+        return null;
+    }
+
+    private void denyOverlappingReservations(TimeSlot timeSlot, Long accommodationId) {
+        Collection<Reservation> reservations = repository.findAllByAccommodationId(accommodationId);
+        for(Reservation reservation : reservations) {
+            if (reservation.getTimeSlot().overlaps(timeSlot)) {
+                deny(reservation.getId());
+            }
+        }
     }
 
     @Override
