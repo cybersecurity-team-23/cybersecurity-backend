@@ -18,8 +18,7 @@ public interface IReservationService {
     public Reservation approveReservation(Long reservationId);
     public int getCancellationCountForUser(Long userId);
     public boolean isApproved(Long reservationId);
-
     void removeAllForAccommodation(Long accommodationId);
-
     Collection<Reservation> getAllByAccommodation(Long accommodationId);
+    public Reservation handleAutomaticAcceptance(Reservation reservation);
 }

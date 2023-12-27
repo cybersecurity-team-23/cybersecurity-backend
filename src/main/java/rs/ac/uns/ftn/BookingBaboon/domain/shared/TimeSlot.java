@@ -44,4 +44,9 @@ public class TimeSlot {
         // Return the result
         return Math.max(0, overlappingDays); // Ensure non-negative result
     }
+
+    public void fix(){
+        startDate = startDate.plusDays(1);
+        endDate = endDate.plusDays(1);
+    }
 }

@@ -47,10 +47,6 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation create(Reservation reservation) {
         try {
-            Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
-            if(accommodation.getIsAutomaticallyAccepted()){
-                approveReservation(reservation.getId());
-            }
             repository.save(reservation);
             repository.flush();
             return reservation;
@@ -120,11 +116,6 @@ public class ReservationService implements IReservationService {
         return found;
     }
 
-    @Override
-    public Reservation approveReservation(Long reservationId) {
-        return null;
-    }
-
     private void denyOverlappingReservations(TimeSlot timeSlot, Long accommodationId) {
         Collection<Reservation> reservations = repository.findAllByAccommodationId(accommodationId);
         for(Reservation reservation : reservations) {
@@ -178,12 +169,22 @@ public class ReservationService implements IReservationService {
             availablePeriodService.remove(oldPeriod.getId());
         }
 
-        denyOvelappingReservations(reservation.getTimeSlot(), accommodation.getId());
+        denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId());
 
         update(reservation);
         return reservation;
     }
 
+    @Override
+    public Reservation handleAutomaticAcceptance(Reservation reservation){
+        Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
+        if(accommodation.getIsAutomaticallyAccepted()){
+            Reservation result = approveReservation(reservation.getId());
+            return result;
+        }
 
+        return reservation;
+
+    }
 
 }
