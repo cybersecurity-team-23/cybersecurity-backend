@@ -14,7 +14,8 @@ public interface IReservationService {
     public Reservation remove(Long reservationId);
     public void removeAllForGuest(Long guestId);
     public void removeAll();
-    public Reservation cancel(Long id);
+    public Reservation deny(Long id);
+    public Reservation approveReservation(Long reservationId);
     public int getCancellationCountForUser(Long userId);
     public boolean isApproved(Long reservationId);
 

@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
@@ -112,11 +113,25 @@ public class ReservationService implements IReservationService {
         repository.flush();
     }
     @Override
-    public Reservation cancel(Long reservationId) {
+    public Reservation deny(Long reservationId) {
         Reservation found = get(reservationId);
         found.Cancel();
         update(found);
         return found;
+    }
+
+    @Override
+    public Reservation approveReservation(Long reservationId) {
+        return null;
+    }
+
+    private void denyOverlappingReservations(TimeSlot timeSlot, Long accommodationId) {
+        Collection<Reservation> reservations = repository.findAllByAccommodationId(accommodationId);
+        for(Reservation reservation : reservations) {
+            if (reservation.getTimeSlot().overlaps(timeSlot)) {
+                deny(reservation.getId());
+            }
+        }
     }
 
     @Override
@@ -149,7 +164,7 @@ public class ReservationService implements IReservationService {
         Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
 
         List<AvailablePeriod> overlappingPeriods = availablePeriodService.getOverlappingPeriods(reservation.getTimeSlot(), accommodation.getAvailablePeriods());
-        List<AvailablePeriod> newAvailablePeriods = splitPeriods(reservation.getTimeSlot(), overlappingPeriods);
+        List<AvailablePeriod> newAvailablePeriods = availablePeriodService.splitPeriods(reservation.getTimeSlot(), overlappingPeriods);
 
         //Add new ones
         for(AvailablePeriod newAvailablePeriod: newAvailablePeriods){
@@ -169,11 +184,6 @@ public class ReservationService implements IReservationService {
         return reservation;
     }
 
-    public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods){
-        return new ArrayList<>();
-    }
 
-    public void denyOvelappingReservations(TimeSlot timeSlot, Long accommodationId){
-    }
 
 }

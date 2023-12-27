@@ -72,15 +72,27 @@ public class ReservationController {
         }
     }
 
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id) {
+    @PutMapping("/{id}/deny")
+    public ResponseEntity<ReservationResponse> deny(@PathVariable Long id) {
         Reservation reservation = service.get(id);
 
         if (reservation == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        Reservation result = service.cancel(id);
+        Reservation result = service.deny(id);
+        return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/approve")
+    public ResponseEntity<ReservationResponse> approve(@PathVariable Long id) {
+        Reservation reservation = service.get(id);
+
+        if (reservation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Reservation result = service.approveReservation(id);
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
     }
 

@@ -11,9 +11,11 @@ import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.available_period.AvailablePeriodCreateRequest;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAvailablePeriodRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -93,6 +95,7 @@ public class AvailablePeriodService implements IAvailablePeriodService {
         repository.flush();
     }
 
+
     public List<AvailablePeriod> getOverlappingPeriods(TimeSlot desiredTimeSlot, List<AvailablePeriod> allPeriods){
         List<AvailablePeriod> overlappingPeriods = new ArrayList<>();
 
@@ -103,5 +106,26 @@ public class AvailablePeriodService implements IAvailablePeriodService {
         }
 
         return overlappingPeriods;
+    }
+  
+    public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods) {
+        List<AvailablePeriod> splitPeriods = new ArrayList<>();
+
+        AvailablePeriod firstPeriod = availablePeriods.get(0);
+        AvailablePeriod lastPeriod = availablePeriods.get(availablePeriods.size() - 1);
+
+        LocalDate reservationStartDate = reservationTimeSlot.getStartDate();
+        LocalDate reservationEndDate = reservationTimeSlot.getEndDate();
+        LocalDate availablePeriodStartDate = firstPeriod.getTimeSlot().getStartDate();
+        LocalDate availablePeriodEndDate = lastPeriod.getTimeSlot().getEndDate();
+
+        if (reservationStartDate.isAfter(availablePeriodStartDate) && reservationStartDate.isBefore(availablePeriodEndDate)) {
+            splitPeriods.add(new AvailablePeriod(new TimeSlot(availablePeriodStartDate, reservationStartDate), firstPeriod.getPricePerNight()));
+        }
+
+        if (reservationEndDate.isAfter(availablePeriodStartDate) && reservationEndDate.isBefore(availablePeriodEndDate)) {
+            splitPeriods.add(new AvailablePeriod(new TimeSlot(reservationEndDate, availablePeriodEndDate), lastPeriod.getPricePerNight()));
+        }
+        return splitPeriods;
     }
 }

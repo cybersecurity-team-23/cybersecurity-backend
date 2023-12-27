@@ -159,5 +159,14 @@ public class AccommodationModificationService implements IAccommodationModificat
         return accommodationModification;
     }
 
+    @Override
+    public void removeByAccommodationId(Long accommodationId) {
+        Collection<AccommodationModification> accommodationModifications = getByAccommodationId(accommodationId);
+
+        for(AccommodationModification accommodationModification : accommodationModifications) {
+            remove(accommodationModification.getId());
+        }
+    }
+
 
 }

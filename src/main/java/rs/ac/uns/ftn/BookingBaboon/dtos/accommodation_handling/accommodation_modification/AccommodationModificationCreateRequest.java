@@ -30,6 +30,8 @@ public class AccommodationModificationCreateRequest {
     private Boolean isPricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+/*
     private Set<ImageReference> images;
+*/
     private AccommodationModificationType requestType;
 }

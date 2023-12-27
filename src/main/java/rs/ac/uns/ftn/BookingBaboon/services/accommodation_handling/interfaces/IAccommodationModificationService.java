@@ -22,4 +22,6 @@ public interface IAccommodationModificationService {
     AccommodationModification addImage(Long imageId, Long accommodationModificationId);
 
     AccommodationModification addPeriod(Long periodId, Long accommodationModificationId);
+
+    void removeByAccommodationId(Long accommodationId);
 }

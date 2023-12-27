@@ -13,6 +13,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AccommodationModification;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IAdminRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
@@ -65,8 +66,13 @@ public class AdminService implements IAdminService {
     @Override
     public Admin update(Admin admin) throws ResponseStatusException {
         try {
-            get(admin.getId());
-            repository.save(admin);
+            Admin updatedAdmin = get(admin.getId());
+            updatedAdmin.setFirstName(admin.getFirstName());
+            updatedAdmin.setLastName(admin.getLastName());
+            updatedAdmin.setEmail(admin.getEmail());
+            updatedAdmin.setAddress(admin.getAddress());
+            updatedAdmin.setPhoneNumber(admin.getPhoneNumber());
+            repository.save(updatedAdmin);
             repository.flush();
             return admin;
         } catch (RuntimeException ex) {

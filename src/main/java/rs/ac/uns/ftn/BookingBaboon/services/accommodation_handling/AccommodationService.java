@@ -129,6 +129,7 @@ public class AccommodationService implements IAccommodationService {
     @Override
     public Accommodation remove(Long accommodationId) {
         Accommodation found = get(accommodationId);
+        modificationService.removeByAccommodationId(accommodationId);
         repository.delete(found);
         repository.flush();
         return found;
@@ -384,6 +385,7 @@ public class AccommodationService implements IAccommodationService {
     public void removeAllByHost(Long hostId) {
         for(Accommodation accommodation : getAllByHost(hostId)) {
             accommodationReviewService.removeFromAccommodation(accommodation.getId());
+            modificationService.removeByAccommodationId(accommodation.getId());
             repository.delete(accommodation);
             repository.flush();
         }
