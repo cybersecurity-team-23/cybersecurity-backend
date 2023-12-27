@@ -18,4 +18,13 @@ public class AvailablePeriod {
 
     @Min(1)
     private Float PricePerNight;
+
+    public AvailablePeriod() {
+    }
+
+    // Additional constructor
+    public AvailablePeriod(TimeSlot timeSlot, Float pricePerNight) {
+        this.timeSlot = timeSlot;
+        this.PricePerNight = pricePerNight;
+    }
 }
