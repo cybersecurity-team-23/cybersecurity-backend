@@ -8,9 +8,14 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
 import java.util.*;
@@ -18,6 +23,8 @@ import java.util.*;
 @Service
 public class ReservationService implements IReservationService {
     private final IReservationRepository repository;
+    private final IAccommodationService accommodationService;
+    private final IAvailablePeriodService availablePeriodService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -39,6 +46,10 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation create(Reservation reservation) {
         try {
+            Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
+            if(accommodation.getIsAutomaticallyAccepted()){
+                approveReservation(reservation.getId());
+            }
             repository.save(reservation);
             repository.flush();
             return reservation;
@@ -131,4 +142,38 @@ public class ReservationService implements IReservationService {
     public Collection<Reservation> getAllByAccommodation(Long accommodationId) {
         return repository.findAllByAccommodationId(accommodationId);
     }
+
+    public Reservation approveReservation(Long reservationId){
+        Reservation reservation = get(reservationId);
+        reservation.Approve();
+        Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
+
+        List<AvailablePeriod> overlappingPeriods = availablePeriodService.getOverlappingPeriods(reservation.getTimeSlot(), accommodation.getAvailablePeriods());
+        List<AvailablePeriod> newAvailablePeriods = splitPeriods(reservation.getTimeSlot(), overlappingPeriods);
+
+        //Add new ones
+        for(AvailablePeriod newAvailablePeriod: newAvailablePeriods){
+            AvailablePeriod result = availablePeriodService.create(newAvailablePeriod);
+            accommodationService.addPeriod(result.getId(), accommodation.getId());
+        }
+
+        //Delete the old ones
+        for(AvailablePeriod oldPeriod: overlappingPeriods){
+            accommodationService.removePeriod(oldPeriod.getId(), accommodation.getId());
+            availablePeriodService.remove(oldPeriod.getId());
+        }
+
+        denyOvelappingReservations(reservation.getTimeSlot(), accommodation.getId());
+
+        update(reservation);
+        return reservation;
+    }
+
+    public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods){
+        return new ArrayList<>();
+    }
+
+    public void denyOvelappingReservations(TimeSlot timeSlot, Long accommodationId){
+    }
+
 }

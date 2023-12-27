@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
@@ -131,6 +132,11 @@ public class HostService implements IHostService {
         hostReportService.removeAllForHost(hostId);
         notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);
+
+        for(Accommodation accommodation: accommodationService.getAllByHost(hostId)){
+            reservationService.removeAllForAccommodation(accommodation.getId());
+        }
+
         guestReportService.removeAllByUser(hostId);
         tokenService.delete(found);
         repository.delete(found);

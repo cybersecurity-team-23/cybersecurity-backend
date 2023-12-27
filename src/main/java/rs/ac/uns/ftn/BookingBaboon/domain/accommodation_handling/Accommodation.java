@@ -44,7 +44,7 @@ public class Accommodation {
 
     @Enumerated
     private AccommodationType type;
-    private boolean isAutomaticallyAccepted;
+    private Boolean isAutomaticallyAccepted;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images;

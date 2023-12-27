@@ -46,7 +46,7 @@ public class AccommodationModification {
     @Enumerated
     private AccommodationType type;
 
-    private boolean isAutomaticallyAccepted;
+    private Boolean isAutomaticallyAccepted;
 
     @OneToMany
     private List<Image> images;

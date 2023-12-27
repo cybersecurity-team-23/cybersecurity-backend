@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
+import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAvailablePeriodRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 
@@ -90,5 +91,17 @@ public class AvailablePeriodService implements IAvailablePeriodService {
     public void removeAll() {
         repository.deleteAll();
         repository.flush();
+    }
+
+    public List<AvailablePeriod> getOverlappingPeriods(TimeSlot desiredTimeSlot, List<AvailablePeriod> allPeriods){
+        List<AvailablePeriod> overlappingPeriods = new ArrayList<>();
+
+        for (AvailablePeriod period: allPeriods){
+            if(period.getTimeSlot().overlaps(desiredTimeSlot)){
+                overlappingPeriods.add(period);
+            }
+        }
+
+        return overlappingPeriods;
     }
 }
