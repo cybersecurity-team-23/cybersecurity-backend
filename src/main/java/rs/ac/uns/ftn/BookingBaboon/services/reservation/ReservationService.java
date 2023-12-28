@@ -187,4 +187,9 @@ public class ReservationService implements IReservationService {
 
     }
 
+    @Override
+    public Collection<Reservation> getAllForGuest(Long id) {
+        return repository.findAllByGuest_Id(id);
+    }
+
 }

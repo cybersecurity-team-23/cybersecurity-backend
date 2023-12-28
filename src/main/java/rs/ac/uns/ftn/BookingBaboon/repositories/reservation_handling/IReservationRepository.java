@@ -9,4 +9,5 @@ import java.util.Collection;
 @Repository
 public interface IReservationRepository extends JpaRepository<Reservation, Long> {
     Collection<Reservation> findAllByAccommodationId(Long accommodationId);
+    Collection<Reservation> findAllByGuest_Id(Long guest_id);
 }

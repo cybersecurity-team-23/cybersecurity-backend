@@ -118,4 +118,12 @@ public class ReservationController {
         return new ResponseEntity<>(cancellationCount, HttpStatus.OK);
     }
 
+    @GetMapping("/guest/{id}")
+    public ResponseEntity<Collection<ReservationResponse>> getAllForGuest(@PathVariable Long id) {
+        Collection<Reservation> reservations = service.getAllForGuest(id);
+        return new ResponseEntity<>(reservations.stream()
+                .map(reservation -> mapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
 }
