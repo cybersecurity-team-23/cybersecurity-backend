@@ -50,6 +50,7 @@ public class Accommodation {
     private List<Image> images;
 
     private Boolean isBeingEdited = true;
+    private int cancellationDeadline;
 
     public void AddAmenity(Amenity amenity){
         amenities.add(amenity);

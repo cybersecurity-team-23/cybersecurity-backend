@@ -59,7 +59,7 @@ public class AccommodationModification {
     private AccommodationModificationType requestType;
 
     private Boolean isBeingEdited = true;
-
+    private int cancellationDeadline;
     public void Approve(){
         status = AccommodationModificationStatus.Approved;
     }

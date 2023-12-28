@@ -31,4 +31,5 @@ public class AccommodationModificationResponse {
     private AccommodationModificationStatus status;
     private AccommodationModificationType requestType;
     private Boolean isBeingEdited;
+    private int cancellationDeadline;
 }
