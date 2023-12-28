@@ -146,7 +146,9 @@ public class AccommodationController {
             @RequestParam(name = "checkin", required = true) String checkin,
             @RequestParam(name = "checkout", required = true) String checkout) {
 
-        float totalPrice = service.getTotalPrice(service.get(id), new TimeSlot(service.parseDate(checkin), service.parseDate(checkout)));
+        TimeSlot desiredDate = new TimeSlot(service.parseDate(checkin), service.parseDate(checkout));
+        desiredDate.fix();
+        float totalPrice = service.getTotalPrice(service.get(id),desiredDate);
 
         if (totalPrice == 0) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

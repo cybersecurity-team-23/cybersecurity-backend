@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationCreateRequest;
@@ -46,8 +47,10 @@ public class ReservationController {
     @PreAuthorize("hasAuthority('GUEST')")
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@RequestBody ReservationCreateRequest reservation) {
+        reservation.getTimeSlot().fix();
         Reservation result = service.create(mapper.map(reservation, Reservation.class));
-        return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.CREATED);
+        Reservation finalResult = service.handleAutomaticAcceptance(result);
+        return new ResponseEntity<>(mapper.map(finalResult, ReservationResponse.class), HttpStatus.CREATED);
     }
 
     @PutMapping

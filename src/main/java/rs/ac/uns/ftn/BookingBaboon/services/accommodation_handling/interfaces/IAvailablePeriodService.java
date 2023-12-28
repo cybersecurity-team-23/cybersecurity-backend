@@ -15,4 +15,5 @@ public interface IAvailablePeriodService {
     public AvailablePeriod remove(Long availablePeriodId);
     public void removeAll();
     public List<AvailablePeriod> getOverlappingPeriods(TimeSlot desiredTimeSlot, List<AvailablePeriod> allPeriods);
+    public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods);
 }

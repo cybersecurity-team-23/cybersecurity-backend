@@ -107,7 +107,8 @@ public class AvailablePeriodService implements IAvailablePeriodService {
 
         return overlappingPeriods;
     }
-  
+
+    @Override
     public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods) {
         List<AvailablePeriod> splitPeriods = new ArrayList<>();
 
