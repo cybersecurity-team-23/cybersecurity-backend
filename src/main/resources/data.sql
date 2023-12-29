@@ -208,23 +208,23 @@ ON CONFLICT (id) DO NOTHING;
 
 
 INSERT INTO public.reviews (
-    id, comment, created_on, rating, reviewer_id
+    id, comment, created_on, rating, status, reviewer_id
 ) VALUES
-      (1, 'Great host!', '2023-11-28', 4, 5),
-      (2, 'Excellent experience!', '2023-11-29', 5, 6),
-      (3, 'Could be better.', '2023-11-30', 3, 7),
-      (4, 'Highly recommended!', '2023-12-01', 5, 8),
-      (5, 'Enjoyed my stay.', '2023-12-02', 4, 9),
-    (6, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 5),
-    (7, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 6),
-    (8, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 7),
-    (9, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 8),
-    (10, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 9),
-    (11, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 5),
-    (12, 'Average stay. Nothing exceptional.', NOW(), 3.8, 6),
-    (13, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 7),
-    (14, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 8),
-    (15, 'Terrible experience. Would not recommend.', NOW(), 2.0, 9)
+      (1, 'Great host!', '2023-11-28', 4, 0, 5),
+      (2, 'Excellent experience!', '2023-11-29', 5, 0, 6),
+      (3, 'Could be better.', '2023-11-30', 3, 0, 7),
+      (4, 'Highly recommended!', '2023-12-01', 5, 0, 8),
+      (5, 'Enjoyed my stay.', '2023-12-02', 4, 0, 9),
+    (6, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 0, 5),
+    (7, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 0, 6),
+    (8, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 0, 7),
+    (9, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 0, 8),
+    (10, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 0, 9),
+    (11, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 0, 5),
+    (12, 'Average stay. Nothing exceptional.', NOW(), 3.8, 0, 6),
+    (13, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 0, 7),
+    (14, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 0, 8),
+    (15, 'Terrible experience. Would not recommend.', NOW(), 2.0, 0, 9)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.host_reviews (
