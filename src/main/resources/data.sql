@@ -363,7 +363,7 @@ INSERT INTO public.accommodation_modifications_amenities (accommodation_modifica
      (5, 3), (5, 4), (5, 5)
     ON CONFLICT DO NOTHING;
 
-INSERT INTO public.accommodation_modifications_available_periods (accommodation_modification_id, available_periods_id) VALUES
+/*INSERT INTO public.accommodation_modifications_available_periods (accommodation_modification_id, available_periods_id) VALUES
          (1, 1),
          (1, 2),
          (1, 4),
@@ -379,7 +379,7 @@ INSERT INTO public.accommodation_modifications_available_periods (accommodation_
          (4, 10),
          (5, 8),
          (5, 11)
-        ON CONFLICT DO NOTHING;
+        ON CONFLICT DO NOTHING;*/
 
 INSERT INTO public.accommodation_modifications_images(
     accommodation_modification_id, images_id)
