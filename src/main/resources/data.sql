@@ -193,7 +193,7 @@ INSERT INTO public.accommodations_available_periods (accommodation_id, available
                                                                                                  (20, 41)
     ON CONFLICT DO NOTHING;
 
-INSERT INTO public.reservations (id, price, status, end_date, start_date, accommodation_id, guest_id) VALUES
+INSERT INTO public.reservations (id, price, status, start_date, end_date, accommodation_id, guest_id) VALUES
   (1, 500, 2, '2023-12-05', '2023-12-10', 1, 5),
   (2, 600, 1, '2023-12-15', '2023-12-20', 2, 6),
   (3, 450, 2, '2024-01-05', '2024-01-10', 3, 7),
