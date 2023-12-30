@@ -25,6 +25,6 @@ public class Report implements Serializable {
     private Date createdOn;
 
     @Enumerated
-    private ReportStatus status;
+    private ReportStatus status = ReportStatus.Pending;
     private String message;
 }
