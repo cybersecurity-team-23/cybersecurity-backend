@@ -24,4 +24,6 @@ public interface IAccommodationReviewService {
     void removeAllByUser(Long userId);
 
     List<AccommodationReview> getAccommodationReviews(Long accommodationId);
+
+    List<AccommodationReview> getAccommodationReviewsByGuest(Long guestId);
 }

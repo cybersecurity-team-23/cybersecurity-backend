@@ -12,4 +12,6 @@ import java.util.List;
 public interface IHostReviewRepository extends JpaRepository<HostReview, Long> {
 
     public Collection<HostReview> getHostReviewsByReviewedHostId(Long reviewedHost_id);
+
+    Collection<HostReview> getHostReviewsByReviewerId(Long guestId);
 }
