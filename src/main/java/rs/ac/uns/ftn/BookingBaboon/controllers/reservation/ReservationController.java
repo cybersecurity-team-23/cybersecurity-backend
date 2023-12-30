@@ -128,15 +128,26 @@ public class ReservationController {
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @GetMapping("/cancellation-count/{userId}")
     public ResponseEntity<Integer> getCancellationCountForUser(@PathVariable Long userId) {
         int cancellationCount = service.getCancellationCountForUser(userId);
         return new ResponseEntity<>(cancellationCount, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('GUEST')")
     @GetMapping("/guest/{id}")
     public ResponseEntity<Collection<ReservationResponse>> getAllForGuest(@PathVariable Long id) {
         Collection<Reservation> reservations = service.getAllForGuest(id);
+        return new ResponseEntity<>(reservations.stream()
+                .map(reservation -> mapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('HOST')")
+    @GetMapping("/host/{id}")
+    public ResponseEntity<Collection<ReservationResponse>> getAllForHost(@PathVariable Long id) {
+        Collection<Reservation> reservations = service.getAllForHost(id);
         return new ResponseEntity<>(reservations.stream()
                 .map(reservation -> mapper.map(reservation, ReservationResponse.class))
                 .collect(Collectors.toList()), HttpStatus.OK);

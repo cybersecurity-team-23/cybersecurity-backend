@@ -23,4 +23,5 @@ public interface IReservationService {
     Collection<Reservation> getAllByAccommodation(Long accommodationId);
     public Reservation handleAutomaticAcceptance(Reservation reservation);
     public Collection<Reservation> getAllForGuest(Long id);
+    public Collection<Reservation> getAllForHost(Long id);
 }
