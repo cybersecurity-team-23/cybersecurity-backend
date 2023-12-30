@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface IAccommodationReviewRepository extends JpaRepository<AccommodationReview, Long> {
     public List<AccommodationReview> findAccommodationReviewsByReviewedAccommodation_Id(Long reviewedAccommodation_id);
+
+    List<AccommodationReview> findAccommodationReviewsByReviewerId(Long guestId);
 }
