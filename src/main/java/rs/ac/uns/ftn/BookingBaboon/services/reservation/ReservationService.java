@@ -182,14 +182,19 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation cancel(Long id) {
         Reservation reservation = get(id);
+
         int deadlineDays = reservation.getAccommodation().getCancellationDeadline();
-        if (reservation.getTimeSlot().getStartDate().toEpochDay() - LocalDate.now().toEpochDay() <= deadlineDays) {
+        if (reservation.getTimeSlot().getStartDate().toEpochDay() - LocalDate.now().toEpochDay() <= deadlineDays && reservation.getStatus() == ReservationStatus.Approved) {
             return null;
         }
 
+        if(reservation.getStatus().equals(ReservationStatus.Approved)) {
+            /*AvailablePeriod addedPeriod = availablePeriodService.create(new AvailablePeriod(reservation.getTimeSlot(), getPricePerNight(reservation.getId())));
+            accommodationService.addPeriod(addedPeriod.getId(), reservation.getAccommodation().getId());*/
+            AvailablePeriod addedPeriod = new AvailablePeriod(reservation.getTimeSlot(), getPricePerNight(reservation.getId()));
+            mergeAvailablePeriods(addedPeriod, reservation.getAccommodation().getAvailablePeriods(), reservation.getAccommodation().getId());
+        }
         reservation.Cancel();
-        AvailablePeriod addedPeriod = availablePeriodService.create(new AvailablePeriod(reservation.getTimeSlot(), getPricePerNight(reservation.getId())));
-        accommodationService.addPeriod(addedPeriod.getId(), reservation.getAccommodation().getId());
         repository.save(reservation);
         repository.flush();
         return reservation;
@@ -198,6 +203,36 @@ public class ReservationService implements IReservationService {
     private Float getPricePerNight(Long id) {
         Reservation reservation = get(id);
         return reservation.getPrice() / reservation.getTimeSlot().getNumberOfDays();
+    }
+
+    @Override
+    public void mergeAvailablePeriods(AvailablePeriod addedPeriod, List<AvailablePeriod> availablePeriods, Long accommodationId) {
+        AvailablePeriod mergedPeriod = new AvailablePeriod();
+        mergedPeriod.setTimeSlot(addedPeriod.getTimeSlot());
+        mergedPeriod.setPricePerNight(addedPeriod.getPricePerNight());
+        List<AvailablePeriod> deletedPeriods = new ArrayList<>();
+
+        for (AvailablePeriod period : availablePeriods) {
+            //if start = end and prices are the same -> then merge
+            if (addedPeriod.getTimeSlot().getStartDate().equals(period.getTimeSlot().getEndDate()) && addedPeriod.getPricePerNight().equals(period.getPricePerNight())) {
+                TimeSlot timeSlot = new TimeSlot(period.getTimeSlot().getStartDate(), mergedPeriod.getTimeSlot().getEndDate());
+                mergedPeriod.setTimeSlot(timeSlot);
+                deletedPeriods.add(period);
+            }
+
+            if (addedPeriod.getTimeSlot().getEndDate().equals(period.getTimeSlot().getStartDate()) && addedPeriod.getPricePerNight().equals(period.getPricePerNight())) {
+                TimeSlot timeSlot = new TimeSlot(mergedPeriod.getTimeSlot().getStartDate(), period.getTimeSlot().getEndDate());
+                mergedPeriod.setTimeSlot(timeSlot);
+                deletedPeriods.add(period);
+            }
+        }
+
+        for(AvailablePeriod period : deletedPeriods) {
+            accommodationService.removePeriod(period.getId(), accommodationId);
+        }
+
+        AvailablePeriod savedPeriod = availablePeriodService.create(mergedPeriod);
+        accommodationService.addPeriod(savedPeriod.getId(), accommodationId);
     }
 
     @Override
