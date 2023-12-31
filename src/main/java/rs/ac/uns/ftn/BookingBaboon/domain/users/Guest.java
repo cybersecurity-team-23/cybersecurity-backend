@@ -19,4 +19,12 @@ public class Guest extends User {
 
     @ManyToMany
     private Set<Accommodation> favorites = new HashSet<Accommodation>();
+
+    public void addFavorite(Accommodation accommodation){
+        favorites.add(accommodation);
+    }
+
+    public void removeFavorite(Accommodation accommodation){
+        favorites.remove(accommodation);
+    }
 }

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
@@ -80,9 +81,18 @@ public class GuestController {
         return new ResponseEntity<>(accommodationResponses,HttpStatus.OK);
     }
 
-    @PutMapping({"{guestId}/favorite-accommodations/{accommodationId}"})
-    public ResponseEntity<AccommodationResponse> addFavorite(@PathVariable Long guestId, @PathVariable Long accommodationId){
-        return new ResponseEntity<>(mapper.map(service.addFavorite(guestId,accommodationId),AccommodationResponse.class),HttpStatus.OK);
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @PutMapping({"{guestId}/favorite-accommodations/add/{accommodationId}"})
+    public ResponseEntity<GuestResponse> addFavorite(@PathVariable Long guestId, @PathVariable Long accommodationId){
+        Guest result = service.addFavorite(guestId,accommodationId);
+        return new ResponseEntity<>(mapper.map(result,GuestResponse.class),HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyAuthority('GUEST')")
+    @PutMapping({"{guestId}/favorite-accommodations/remove/{accommodationId}"})
+    public ResponseEntity<GuestResponse> removeFavorite(@PathVariable Long guestId, @PathVariable Long accommodationId){
+        Guest result = service.removeFavorite(guestId,accommodationId);
+        return new ResponseEntity<>(mapper.map(result,GuestResponse.class),HttpStatus.OK);
     }
 
     @PutMapping({"/{guestId}/toggle-notifications/{notificationType}"})
