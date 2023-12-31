@@ -18,6 +18,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IReviewReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
@@ -43,6 +44,7 @@ public class HostService implements IHostService {
     private final INotificationService notificationService;
     private final IGuestReportService guestReportService;
     private final IAccommodationReviewService accommodationReviewService;
+    private final IReviewReportService reviewReportService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -132,6 +134,7 @@ public class HostService implements IHostService {
         hostReportService.removeAllForHost(hostId);
         notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);
+        reviewReportService.removeAllByUser(hostId);
 
         for(Accommodation accommodation: accommodationService.getAllByHost(hostId)){
             reservationService.removeAllForAccommodation(accommodation.getId());
