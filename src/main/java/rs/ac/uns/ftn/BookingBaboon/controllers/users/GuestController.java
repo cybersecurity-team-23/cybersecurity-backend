@@ -70,6 +70,7 @@ public class GuestController {
         return new ResponseEntity<>( mapper.map(guest, GuestProfile.class), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('GUEST')")
     @GetMapping({"{guestId}/favorite-accommodations"})
     public ResponseEntity<Collection<AccommodationResponse>> getFavorites(@PathVariable Long guestId){
         Collection<Accommodation> accommodations = service.getFavorites(guestId);
