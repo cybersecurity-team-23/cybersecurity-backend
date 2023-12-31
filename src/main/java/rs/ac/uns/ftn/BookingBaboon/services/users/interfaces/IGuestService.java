@@ -22,9 +22,12 @@ public interface IGuestService {
 
     Collection<Accommodation> getFavorites(Long guestId);
 
-    Accommodation addFavorite(Long guestId, Long accommodationId);
+    Guest addFavorite(Long guestId, Long accommodationId);
+    Guest removeFavorite(Long guestId, Long accommodationId);
 
     Guest toggleNotifications(Long guestId, NotificationType notificationType);
 
     void removeAll();
+
+
 }
