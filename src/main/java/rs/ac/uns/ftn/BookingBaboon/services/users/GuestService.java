@@ -158,7 +158,8 @@ public class GuestService implements IGuestService {
 
     @Override
     public Collection<Accommodation> getFavorites(Long guestId) {
-        return new ArrayList<Accommodation>();
+        Guest guest = get(guestId);
+        return guest.getFavorites();
     }
 
     @Override
