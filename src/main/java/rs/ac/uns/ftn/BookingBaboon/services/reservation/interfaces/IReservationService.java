@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
+import java.time.Month;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -20,5 +21,6 @@ public interface IReservationService {
     public boolean isApproved(Long reservationId);
     void removeAllForAccommodation(Long accommodationId);
     Collection<Reservation> getAllByAccommodation(Long accommodationId);
+    Collection<Reservation> getAllFinishedByAccommodationAndMonth(Long accommodationId, int year, int month);
     public Reservation handleAutomaticAcceptance(Reservation reservation);
 }
