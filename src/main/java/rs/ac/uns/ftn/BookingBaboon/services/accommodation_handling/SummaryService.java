@@ -29,8 +29,8 @@ public class SummaryService implements ISummaryService {
 
         LocalDate currentDate = LocalDate.now();
         LocalDate dateOneYearAgo = currentDate.minusYears(1);
-
-        Map<Month, MonthlyData> monthlyDataMap = new LinkedHashMap<>();
+        Map<Month, Integer> reservationsData = new LinkedHashMap<>();
+        Map<Month, Double> profitData = new LinkedHashMap<>();
 
         for (LocalDate date = dateOneYearAgo; date.isBefore(currentDate); date = date.plusMonths(1)) {
             int year = date.getYear();
@@ -41,12 +41,14 @@ public class SummaryService implements ISummaryService {
             int reservationsCount = reservations.size();
             double totalProfit = reservations.stream().mapToDouble(Reservation::getPrice).sum();
 
-            monthlyDataMap.put(month, new MonthlyData(reservationsCount, totalProfit));
+            reservationsData.put(month, reservationsCount);
+            profitData.put(month, totalProfit);
         }
 
         summary.setAccommodationId(id);
         summary.setTimeSlot(new TimeSlot(dateOneYearAgo, currentDate));
-        summary.setMonthlyData(monthlyDataMap);
+        summary.setReservationsData(reservationsData);
+        summary.setProfitData(profitData);
         return summary;
     }
 }

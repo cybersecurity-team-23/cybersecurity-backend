@@ -12,9 +12,11 @@ import java.util.Map;
 public class AccommodationMonthlySummary {
     private Long accommodationId;
     private TimeSlot timeSlot;
-    private Map<Month, MonthlyData> monthlyData;
+    Map<Month, Integer> reservationsData;
+    Map<Month, Double> profitData;
     public AccommodationMonthlySummary() {
-        this.monthlyData = new LinkedHashMap<>();
+        reservationsData = new LinkedHashMap<>();
+        profitData = new LinkedHashMap<>();
     }
 
 }
