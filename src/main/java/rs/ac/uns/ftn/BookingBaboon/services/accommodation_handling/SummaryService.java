@@ -15,6 +15,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.ISummaryService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
@@ -32,6 +33,8 @@ public class SummaryService implements ISummaryService {
 
         LocalDate periodStart = parseDate(startDate);
         LocalDate periodEnd = parseDate(endDate);
+        TimeSlot period = new TimeSlot(periodStart,periodEnd);
+        period.fix();
 
         List<AccommodationPeriodData> accommodationsData = new ArrayList<>();
         Set<Accommodation> accommodations = accommodationService.getAllByHost(hostId);
@@ -39,7 +42,7 @@ public class SummaryService implements ISummaryService {
         for(Accommodation accommodation: accommodations){
             AccommodationPeriodData data = new AccommodationPeriodData();
 
-            Collection<Reservation> reservations = reservationService.getAllFinishedByAccommodationAndTimeSlot(accommodation.getId(), new TimeSlot(periodStart, periodEnd));
+            Collection<Reservation> reservations = reservationService.getAllFinishedByAccommodationAndTimeSlot(accommodation.getId(), period);
 
             data.setAccommodationName(accommodation.getName());
             data.setReservationsCount(reservations.size());
@@ -47,7 +50,7 @@ public class SummaryService implements ISummaryService {
             accommodationsData.add(data);
         }
 
-        summary.setPeriod(new TimeSlot(periodStart, periodEnd));
+        summary.setPeriod(period);
         summary.setAccommodationsData(accommodationsData);
         return summary;
     }
