@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 
+import java.time.LocalDate;
 import java.util.Collection;
 
 @Repository
@@ -22,6 +23,17 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             @Param("accommodationId") Long accommodationId,
             @Param("year") int year,
             @Param("month") int month,
+            @Param("status") ReservationStatus status
+    );
+
+    @Query("SELECT r FROM Reservation r " +
+            "WHERE r.accommodation.id = :accommodationId " +
+            "AND r.timeSlot.startDate BETWEEN :startDate AND :endDate " +
+            "AND r.status = :status")
+    Collection<Reservation> findAllByAccommodationIdAndDates(
+            @Param("accommodationId") Long accommodationId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
             @Param("status") ReservationStatus status
     );
 }

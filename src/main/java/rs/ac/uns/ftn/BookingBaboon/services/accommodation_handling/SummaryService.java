@@ -1,26 +1,55 @@
 package rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.AccommodationMonthlySummary;
+import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.AccommodationPeriodData;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.MonthlyData;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.summary.PeriodSummary;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.ISummaryService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class SummaryService implements ISummaryService {
     private final IReservationService reservationService;
+    private final IAccommodationService accommodationService;
     @Override
-    public PeriodSummary getPeriodSummary(String hostId, Date startDate, Date endDate) {
-        return new PeriodSummary();
+    public PeriodSummary getPeriodSummary(Long hostId, String startDate, String endDate) {
+        PeriodSummary summary = new PeriodSummary();
+
+        LocalDate periodStart = parseDate(startDate);
+        LocalDate periodEnd = parseDate(endDate);
+
+        List<AccommodationPeriodData> accommodationsData = new ArrayList<>();
+        Set<Accommodation> accommodations = accommodationService.getAllByHost(hostId);
+
+        for(Accommodation accommodation: accommodations){
+            AccommodationPeriodData data = new AccommodationPeriodData();
+
+            Collection<Reservation> reservations = reservationService.getAllFinishedByAccommodationAndTimeSlot(accommodation.getId(), new TimeSlot(periodStart, periodEnd));
+
+            data.setAccommodationName(accommodation.getName());
+            data.setReservationsCount(reservations.size());
+            data.setTotalProfit(reservations.stream().mapToDouble(Reservation::getPrice).sum());
+            accommodationsData.add(data);
+        }
+
+        summary.setPeriod(new TimeSlot(periodStart, periodEnd));
+        summary.setAccommodationsData(accommodationsData);
+        return summary;
     }
 
     @Override
@@ -50,5 +79,17 @@ public class SummaryService implements ISummaryService {
         summary.setReservationsData(reservationsData);
         summary.setProfitData(profitData);
         return summary;
+    }
+
+    public LocalDate parseDate(String date){
+        DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            if (date != null) {
+                return LocalDate.parse(date, DATE_FORMATTER);
+            }
+        } catch (DateTimeParseException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
+        }
+        return null;
     }
 }

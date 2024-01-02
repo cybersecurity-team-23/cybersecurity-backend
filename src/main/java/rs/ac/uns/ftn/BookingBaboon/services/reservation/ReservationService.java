@@ -154,6 +154,11 @@ public class ReservationService implements IReservationService {
         return repository.findAllByAccommodationIdAndMonth(accommodationId, year, month, ReservationStatus.Finished);
     }
 
+    @Override
+    public Collection<Reservation> getAllFinishedByAccommodationAndTimeSlot(Long accommodationId, TimeSlot timeSlot) {
+        return repository.findAllByAccommodationIdAndDates(accommodationId, timeSlot.getStartDate(), timeSlot.getEndDate(), ReservationStatus.Finished);
+    }
+
     public Reservation approveReservation(Long reservationId){
         Reservation reservation = get(reservationId);
         reservation.Approve();

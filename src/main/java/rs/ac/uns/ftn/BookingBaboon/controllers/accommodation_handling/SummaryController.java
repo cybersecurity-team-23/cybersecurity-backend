@@ -26,9 +26,9 @@ public class SummaryController {
 
     @GetMapping("/period")
     public ResponseEntity<PeriodSummary> getPeriodSummary(
-            @RequestParam(name = "host-id") String hostId,
-            @RequestParam(name = "start-date") Date startDate,
-            @RequestParam(name = "end-date") Date endDate) {
+            @RequestParam(name = "host-id") Long hostId,
+            @RequestParam(name = "start-date") String startDate,
+            @RequestParam(name = "end-date") String endDate) {
         PeriodSummary periodSummary = service.getPeriodSummary(hostId, startDate, endDate);
         return new ResponseEntity<>(periodSummary, HttpStatus.OK);
     }
