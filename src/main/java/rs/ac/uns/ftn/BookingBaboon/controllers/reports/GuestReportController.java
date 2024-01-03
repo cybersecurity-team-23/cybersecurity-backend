@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
@@ -49,6 +50,7 @@ public class GuestReportController {
     }
 
     // Create a new guest report
+    @PreAuthorize("hasAuthority('HOST')")
     @PostMapping({"/"})
     public ResponseEntity<GuestReportResponse> create(@RequestBody GuestReportCreateRequest guestReport) {
 
@@ -63,6 +65,7 @@ public class GuestReportController {
     }
 
     // Delete a guest report by ID
+    @PreAuthorize("hasAuthority('HOST')")
     @DeleteMapping("/{guestReportId}")
     public ResponseEntity<GuestReportResponse> remove(@PathVariable Long guestReportId) {
 

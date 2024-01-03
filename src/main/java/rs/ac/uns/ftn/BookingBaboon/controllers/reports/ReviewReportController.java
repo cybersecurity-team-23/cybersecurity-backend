@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.ReviewReport;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.ReviewReportCreateRequest;
@@ -42,7 +43,7 @@ public class ReviewReportController {
         return new ResponseEntity<>( mapper.map(reviewReport, ReviewReportResponse.class), HttpStatus.OK);
     }
 
-
+    @PreAuthorize("hasAuthority('HOST')")
     @PostMapping({"/"})
     public ResponseEntity<ReviewReportResponse> create(@RequestBody ReviewReportCreateRequest reviewReport) {
 
@@ -55,6 +56,7 @@ public class ReviewReportController {
         return new ResponseEntity<>(mapper.map(service.update(mapper.map(reviewReport, ReviewReport.class)),ReviewReportResponse.class),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('HOST')")
     @DeleteMapping("/{reviewReportId}")
     public ResponseEntity<ReviewReportResponse> remove(@PathVariable Long reviewReportId) {
 

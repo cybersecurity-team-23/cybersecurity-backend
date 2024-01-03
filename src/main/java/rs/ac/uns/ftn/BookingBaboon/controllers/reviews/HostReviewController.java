@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.*;
@@ -46,6 +47,7 @@ public class HostReviewController {
     }
 
     // Create a new host review
+    @PreAuthorize("hasAuthority('GUEST')")
     @PostMapping({"/"})
     public ResponseEntity<HostReviewResponse> create(@RequestBody HostReviewCreateRequest hostReview) {
 
@@ -60,6 +62,7 @@ public class HostReviewController {
     }
 
     // Delete a host review by ID
+    @PreAuthorize("hasAnyAuthority('GUEST', 'ADMIN')")
     @DeleteMapping("/{hostReviewId}")
     public ResponseEntity<HostReviewResponse> remove(@PathVariable Long hostReviewId) {
 
