@@ -26,4 +26,6 @@ public interface IHostReviewService {
 
     void removeAllByUser(Long userId);
     Collection<HostReview> getReviewsByHost(Long hostId);
+
+    Collection<HostReview> getReviewsByGuest(Long guestId);
 }

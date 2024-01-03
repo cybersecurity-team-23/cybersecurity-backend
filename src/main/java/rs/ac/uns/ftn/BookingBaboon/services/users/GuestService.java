@@ -51,6 +51,7 @@ public class GuestService implements IGuestService {
     private final AccommodationReviewService accommodationReviewService;
     private final IHostReviewService hostReviewService;
     private final IReviewReportService reviewReportService;
+    private final IAccommodationService accommodationService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -160,12 +161,26 @@ public class GuestService implements IGuestService {
 
     @Override
     public Collection<Accommodation> getFavorites(Long guestId) {
-        return new ArrayList<Accommodation>();
+        Guest guest = get(guestId);
+        return guest.getFavorites();
     }
 
     @Override
-    public Accommodation addFavorite(Long guestId, Long accommodationId) {
-        return new Accommodation();
+    public Guest addFavorite(Long guestId, Long accommodationId) {
+        Guest guest = get(guestId);
+        Accommodation accommodation = accommodationService.get(accommodationId);
+        guest.addFavorite(accommodation);
+        update(guest);
+        return guest;
+    }
+
+    @Override
+    public Guest removeFavorite(Long guestId, Long accommodationId) {
+        Guest guest = get(guestId);
+        Accommodation accommodation = accommodationService.get(accommodationId);
+        guest.removeFavorite(accommodation);
+        update(guest);
+        return guest;
     }
 
     @Override

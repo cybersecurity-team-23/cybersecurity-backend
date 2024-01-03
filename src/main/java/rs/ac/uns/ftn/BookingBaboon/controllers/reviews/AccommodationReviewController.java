@@ -17,9 +17,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@CrossOrigin
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin
 @RequestMapping("/api/v1/accommodation-reviews")
 public class AccommodationReviewController {
 
@@ -100,6 +100,19 @@ public class AccommodationReviewController {
     @GetMapping({"/accommodation/{accommodationId}"})
     public ResponseEntity<Collection<AccommodationReviewResponse>> getAccommodationReviews(@PathVariable Long accommodationId) {
         List<AccommodationReview> accommodationReviews = service.getAccommodationReviews(accommodationId);
+        if(accommodationReviews==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        Collection<AccommodationReviewResponse> accommodationReviewResponses =  accommodationReviews.stream()
+                .map(accommodationReview -> mapper.map(accommodationReview, AccommodationReviewResponse.class))
+                .collect(Collectors.toList());
+        return new ResponseEntity<Collection<AccommodationReviewResponse>>(accommodationReviewResponses, HttpStatus.OK);
+    }
+
+    @GetMapping({"/guest/{guestId}"})
+    public ResponseEntity<Collection<AccommodationReviewResponse>> getAccommodationReviewsByGuest(@PathVariable Long guestId) {
+        List<AccommodationReview> accommodationReviews = service.getAccommodationReviewsByGuest(guestId);
         if(accommodationReviews==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
