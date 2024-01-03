@@ -105,4 +105,9 @@ public class NotificationService implements INotificationService {
             }
         }
     }
+
+    @Override
+    public Integer getUnreadCountByUserId(Long userId) {
+        return repository.getUnreadCountByUserId(userId);
+    }
 }

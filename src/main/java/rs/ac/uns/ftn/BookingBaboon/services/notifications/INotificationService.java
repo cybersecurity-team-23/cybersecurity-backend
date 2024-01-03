@@ -21,4 +21,5 @@ public interface INotificationService {
     void removeAll();
 
     void removeAllByUser(Long userId);
+    Integer getUnreadCountByUserId(Long userId);
 }
