@@ -4,6 +4,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 
+import java.time.Month;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -24,6 +25,8 @@ public interface IReservationService {
     public boolean isApproved(Long reservationId);
     void removeAllForAccommodation(Long accommodationId);
     Collection<Reservation> getAllByAccommodation(Long accommodationId);
+    Collection<Reservation> getAllFinishedByAccommodationAndMonth(Long accommodationId, int year, int month);
+    Collection<Reservation> getAllFinishedByAccommodationAndTimeSlot(Long accommodationId, TimeSlot timeSlot);
     public Reservation handleAutomaticAcceptance(Reservation reservation);
     public Collection<Reservation> getAllForGuest(Long id);
 }

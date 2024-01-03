@@ -12,7 +12,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 @Entity
 @Data
 @Table(name = "reservations")
-@TableGenerator(name="reservation_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="reservation", initialValue = 10, valueColumnName="value_pk")
+@TableGenerator(name="reservation_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="reservation", initialValue = 22, valueColumnName="value_pk")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "reservation_id_generator")

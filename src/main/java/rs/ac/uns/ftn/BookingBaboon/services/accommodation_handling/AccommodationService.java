@@ -164,7 +164,6 @@ public class AccommodationService implements IAccommodationService {
                     return LocalDate.parse(date, DATE_FORMATTER);
                 }
             } catch (DateTimeParseException e) {
-                // Handle the exception or log it
                 throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE);
             }
             return null;
