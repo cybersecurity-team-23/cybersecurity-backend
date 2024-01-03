@@ -112,20 +112,31 @@ public class AvailablePeriodService implements IAvailablePeriodService {
     public List<AvailablePeriod> splitPeriods(TimeSlot reservationTimeSlot, List<AvailablePeriod> availablePeriods) {
         List<AvailablePeriod> splitPeriods = new ArrayList<>();
 
-        AvailablePeriod firstPeriod = availablePeriods.get(0);
-        AvailablePeriod lastPeriod = availablePeriods.get(availablePeriods.size() - 1);
+        AvailablePeriod firstAvailablePeriod = availablePeriods.get(0);
+        AvailablePeriod lastAvailablePeriod = availablePeriods.get(0);
+
+        // Iterate through the availablePeriods to find the first and last periods
+        for (AvailablePeriod availablePeriod : availablePeriods) {
+            if (availablePeriod.getTimeSlot().getStartDate().isBefore(firstAvailablePeriod.getTimeSlot().getStartDate())) {
+                firstAvailablePeriod = availablePeriod;
+            }
+
+            if (availablePeriod.getTimeSlot().getEndDate().isAfter(lastAvailablePeriod.getTimeSlot().getEndDate())) {
+                lastAvailablePeriod = availablePeriod;
+            }
+        }
 
         LocalDate reservationStartDate = reservationTimeSlot.getStartDate();
         LocalDate reservationEndDate = reservationTimeSlot.getEndDate();
-        LocalDate availablePeriodStartDate = firstPeriod.getTimeSlot().getStartDate();
-        LocalDate availablePeriodEndDate = lastPeriod.getTimeSlot().getEndDate();
+        LocalDate availablePeriodStartDate = firstAvailablePeriod.getTimeSlot().getStartDate();
+        LocalDate availablePeriodEndDate = lastAvailablePeriod.getTimeSlot().getEndDate();
 
         if (reservationStartDate.isAfter(availablePeriodStartDate) && reservationStartDate.isBefore(availablePeriodEndDate)) {
-            splitPeriods.add(new AvailablePeriod(new TimeSlot(availablePeriodStartDate, reservationStartDate), firstPeriod.getPricePerNight()));
+            splitPeriods.add(new AvailablePeriod(new TimeSlot(availablePeriodStartDate, reservationStartDate), firstAvailablePeriod.getPricePerNight()));
         }
 
         if (reservationEndDate.isAfter(availablePeriodStartDate) && reservationEndDate.isBefore(availablePeriodEndDate)) {
-            splitPeriods.add(new AvailablePeriod(new TimeSlot(reservationEndDate, availablePeriodEndDate), lastPeriod.getPricePerNight()));
+            splitPeriods.add(new AvailablePeriod(new TimeSlot(reservationEndDate, availablePeriodEndDate), lastAvailablePeriod.getPricePerNight()));
         }
         return splitPeriods;
     }

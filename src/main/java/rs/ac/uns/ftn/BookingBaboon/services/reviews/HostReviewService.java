@@ -139,4 +139,9 @@ public class HostReviewService implements IHostReviewService {
     public Collection<HostReview> getReviewsByHost(Long hostId) {
         return repository.getHostReviewsByReviewedHostId(hostId);
     }
+
+    @Override
+    public Collection<HostReview> getReviewsByGuest(Long guestId) {
+        return repository.getHostReviewsByReviewerId(guestId);
+    }
 }

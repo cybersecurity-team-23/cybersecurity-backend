@@ -25,4 +25,5 @@ public class AccommodationRequest {
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
     private Boolean isBeingEdited;
+    private int cancellationDeadline;
 }

@@ -104,29 +104,29 @@ INSERT INTO public.available_period (id, price_per_night, start_date, end_date) 
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.accommodations (
-    id, description, is_automatically_accepted, address, city, country,
+    id, cancellation_deadline, description, is_automatically_accepted, address, city, country,
     max_guests, min_guests, name, is_pricing_per_person, type, host_id
 ) VALUES
-      (1, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true, 1, 1),
-      (2, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true, 2, 2),
-      (3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, 3, 3),
-      (4, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, 4, 4),
-      (5, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, 5, 1),
-      (6, 'Spacious Apartment in the city', true, '987 Downtown Avenue', 'Urbanville', 'Countryland', 80, 1, 'City View Apartment', true, 6, 2),
-      (7, 'Cozy House with garden', true, '135 Greenery Lane', 'Suburbia', 'Countryland', 150, 1, 'Green Oasis House', true, 7, 3),
-      (8, 'Private Room with a view', false, '246 Hilltop Street', 'Scenic Hills', 'Countryland', 2, 1, 'Scenic View Room', false, 8, 4),
-      (9, 'Rustic Tent in the woods', true, '579 Forest Trail', 'Natureville', 'Greenland', 4, 1, 'Woodland Retreat Tent', false, 6, 1),
-      (10, 'Modern Hotel with rooftop pool', true, '802 Skyline Avenue', 'Metropolis', 'Countryland', 120, 1, 'Skyline View Hotel', true, 1, 2),
-      (11, 'Historic Hostel in the old town', false, '153 Heritage Lane', 'Oldtown', 'Countryland', 60, 1, 'Heritage Hostel', true, 1, 3),
-      (12, 'Quaint Bed and Breakfast near the river', true, '467 Riverside Road', 'Rivertown', 'Countryland', 18, 1, 'Riverside B&B', false, 2, 4),
-      (13, 'Exclusive Resort with beachfront villas', false, '631 Beach Resort Drive', 'Exotic Beach', 'Tropicaland', 250, 2, 'Beachfront Paradise Resort', true, 3, 1),
-      (14, 'Classic Motel with retro vibes', true, '874 Retro Road', 'Nostalgia Town', 'Countryland', 25, 1, 'Retro Motel', true, 4, 2),
-      (15, 'Downtown Apartment with city views', true, '209 Urban Heights', 'Cityscape', 'Countryland', 90, 1, 'Urban Heights Apartment', true, 5, 3),
-      (16, 'Country Cottage with a serene garden', true, '362 Garden Lane', 'Tranquil Village', 'Countryland', 120, 1, 'Tranquil Garden Cottage', true, 1, 4),
-      (17, 'Cozy Room with fireplace', false, '513 Hearthstone Street', 'Fireside Village', 'Countryland', 2, 1, 'Fireside Retreat Room', false, 1, 1),
-      (18, 'Mountain Retreat Tent with panoramic views', true, '756 Mountain Trail', 'Mountain Haven', 'AlpineLand', 3, 1, 'Mountain Vista Tent', false, 8, 2),
-      (19, 'Luxury Hotel with spa and fine dining', true, '999 Opulence Avenue', 'Grand City', 'Wealthyland', 150, 1, 'Opulent Grand Hotel', true, 5, 3),
-      (20, 'Eco-friendly Hostel in a green neighborhood', false, '244 Green Haven', 'Sustainable City', 'Greenland', 40, 1, 'Green Haven Hostel', true, 2, 4)
+      (1,  7, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true, 1, 1),
+      (2,  3, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true, 2, 2),
+      (3,  3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, 3, 3),
+      (4,  3, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, 4, 4),
+      (5,  3, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, 5, 1),
+      (6,  3, 'Spacious Apartment in the city', true, '987 Downtown Avenue', 'Urbanville', 'Countryland', 80, 1, 'City View Apartment', true, 6, 2),
+      (7,  3, 'Cozy House with garden', true, '135 Greenery Lane', 'Suburbia', 'Countryland', 150, 1, 'Green Oasis House', true, 7, 3),
+      (8,  3, 'Private Room with a view', false, '246 Hilltop Street', 'Scenic Hills', 'Countryland', 2, 1, 'Scenic View Room', false, 8, 4),
+      (9,  3, 'Rustic Tent in the woods', true, '579 Forest Trail', 'Natureville', 'Greenland', 4, 1, 'Woodland Retreat Tent', false, 6, 1),
+      (10, 3,  'Modern Hotel with rooftop pool', true, '802 Skyline Avenue', 'Metropolis', 'Countryland', 120, 1, 'Skyline View Hotel', true, 1, 2),
+      (11, 3,  'Historic Hostel in the old town', false, '153 Heritage Lane', 'Oldtown', 'Countryland', 60, 1, 'Heritage Hostel', true, 1, 3),
+      (12, 3,  'Quaint Bed and Breakfast near the river', true, '467 Riverside Road', 'Rivertown', 'Countryland', 18, 1, 'Riverside B&B', false, 2, 4),
+      (13, 3,  'Exclusive Resort with beachfront villas', false, '631 Beach Resort Drive', 'Exotic Beach', 'Tropicaland', 250, 2, 'Beachfront Paradise Resort', true, 3, 1),
+      (14, 3,  'Classic Motel with retro vibes', true, '874 Retro Road', 'Nostalgia Town', 'Countryland', 25, 1, 'Retro Motel', true, 4, 2),
+      (15, 3,  'Downtown Apartment with city views', true, '209 Urban Heights', 'Cityscape', 'Countryland', 90, 1, 'Urban Heights Apartment', true, 5, 3),
+      (16, 3,  'Country Cottage with a serene garden', true, '362 Garden Lane', 'Tranquil Village', 'Countryland', 120, 1, 'Tranquil Garden Cottage', true, 1, 4),
+      (17, 3,  'Cozy Room with fireplace', false, '513 Hearthstone Street', 'Fireside Village', 'Countryland', 2, 1, 'Fireside Retreat Room', false, 1, 1),
+      (18, 3,  'Mountain Retreat Tent with panoramic views', true, '756 Mountain Trail', 'Mountain Haven', 'AlpineLand', 3, 1, 'Mountain Vista Tent', false, 8, 2),
+      (19, 3,  'Luxury Hotel with spa and fine dining', true, '999 Opulence Avenue', 'Grand City', 'Wealthyland', 150, 1, 'Opulent Grand Hotel', true, 5, 3),
+      (20, 3,  'Eco-friendly Hostel in a green neighborhood', false, '244 Green Haven', 'Sustainable City', 'Greenland', 40, 1, 'Green Haven Hostel', true, 2, 4)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.accommodations_amenities (accommodation_id, amenities_id) VALUES
@@ -193,7 +193,8 @@ INSERT INTO public.accommodations_available_periods (accommodation_id, available
                                                                                                  (20, 41)
     ON CONFLICT DO NOTHING;
 
-INSERT INTO public.reservations (id, price, status,start_date, end_date, accommodation_id, guest_id) VALUES
+
+INSERT INTO public.reservations (id, price, status, start_date, end_date, accommodation_id, guest_id) VALUES
   (1, 500, 2, '2023-12-05', '2023-12-10', 1, 5),
   (2, 600, 1, '2023-12-15', '2023-12-20', 2, 6),
   (3, 450, 2, '2024-01-05', '2024-01-10', 3, 7),
@@ -220,23 +221,23 @@ ON CONFLICT (id) DO NOTHING;
 
 
 INSERT INTO public.reviews (
-    id, comment, created_on, rating, reviewer_id
+    id, comment, created_on, rating, status, reviewer_id
 ) VALUES
-      (1, 'Great host!', '2023-11-28', 4, 5),
-      (2, 'Excellent experience!', '2023-11-29', 5, 6),
-      (3, 'Could be better.', '2023-11-30', 3, 7),
-      (4, 'Highly recommended!', '2023-12-01', 5, 8),
-      (5, 'Enjoyed my stay.', '2023-12-02', 4, 9),
-    (6, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 5),
-    (7, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 6),
-    (8, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 7),
-    (9, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 8),
-    (10, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 9),
-    (11, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 5),
-    (12, 'Average stay. Nothing exceptional.', NOW(), 3.8, 6),
-    (13, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 7),
-    (14, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 8),
-    (15, 'Terrible experience. Would not recommend.', NOW(), 2.0, 9)
+      (1, 'Great host!', '2023-11-28', 4, 0, 5),
+      (2, 'Excellent experience!', '2023-11-29', 5, 0, 6),
+      (3, 'Could be better.', '2023-11-30', 3, 0, 7),
+      (4, 'Highly recommended!', '2023-12-01', 5, 0, 8),
+      (5, 'Enjoyed my stay.', '2023-12-02', 4, 0, 9),
+    (6, 'A wonderful stay! The staff was very friendly.', NOW(), 4.5, 0, 5),
+    (7, 'The room was clean and comfortable. Great experience.', NOW(), 3.0, 0, 6),
+    (8, 'Outstanding service and amenities. Highly recommend!', NOW(), 5.0, 0, 7),
+    (9, 'Good value for the money. Enjoyed my time here.', NOW(), 4.0, 0, 8),
+    (10, 'Disappointing experience. Room was not as expected.', NOW(), 2.5, 0, 9),
+    (11, 'The accommodation exceeded my expectations. Amazing!', NOW(), 4.2, 0, 5),
+    (12, 'Average stay. Nothing exceptional.', NOW(), 3.8, 0, 6),
+    (13, 'Absolutely fantastic! Would definitely come back.', NOW(), 4.7, 0, 7),
+    (14, 'Friendly staff and great location. Enjoyed my stay.', NOW(), 3.5, 0, 8),
+    (15, 'Terrible experience. Would not recommend.', NOW(), 2.0, 0, 9)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.host_reviews (
@@ -359,12 +360,12 @@ VALUES (1, 1),
 
 
 INSERT INTO public.accommodation_modifications(
-    id, description, is_automatically_accepted, address, city, country, max_guests, min_guests, name, pricing_per_person, request_date, request_type, status, type, accommodation_id, host_id)
-VALUES (1, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true,NOW(), 0, 0, 1, 1, 1),
-       (2, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true,NOW(), 0, 0, 2, 2, 2),
-       (3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, NOW(), 0, 0, 3, 3, 3),
-       (4, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, NOW(), 0, 0, 4, 4, 4),
-       (5, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, NOW(), 0, 0, 1, 5, 1)
+    id, cancellation_deadline, description, is_automatically_accepted, address, city, country, max_guests, min_guests, name, pricing_per_person, request_date, request_type, status, type, accommodation_id, host_id)
+VALUES (1, 7, 'Beautiful Hotel near the beach', true, '123 Beachfront Blvd', 'Seaside City', 'Oceanland', 100, 1, 'Oceanfront Paradise Hotel', true,NOW(), 0, 0, 1, 1, 1),
+       (2, 3, 'Cozy Hostel in the city center', false, '456 Downtown Street', 'Urbanville', 'Countryland', 50, 1, 'Downtown Hostel', true,NOW(), 0, 0, 2, 2, 2),
+       (3, 3, 'Charming Bed and Breakfast in the countryside', true, '789 Countryside Lane', 'Rural Town', 'Countryland', 20, 1, 'Countryside B&B', false, NOW(), 0, 0, 3, 3, 3),
+       (4, 3, 'Luxurious Resort with spa and golf course', false, '321 Luxury Resort Dr', 'Luxury City', 'Wealthyland', 200, 2, 'Grand Luxury Resort', true, NOW(), 0, 0, 4, 4, 4),
+       (5, 3, 'Convenient Motel on the highway', true, '654 Highway Road', 'Roadside Town', 'Countryland', 30, 1, 'Highway Motel', true, NOW(), 0, 0, 1, 5, 1)
 ON CONFLICT DO NOTHING;
 
 INSERT INTO public.accommodation_modifications_amenities (accommodation_modification_id, amenities_id) VALUES
@@ -375,7 +376,7 @@ INSERT INTO public.accommodation_modifications_amenities (accommodation_modifica
      (5, 3), (5, 4), (5, 5)
     ON CONFLICT DO NOTHING;
 
-INSERT INTO public.accommodation_modifications_available_periods (accommodation_modification_id, available_periods_id) VALUES
+/*INSERT INTO public.accommodation_modifications_available_periods (accommodation_modification_id, available_periods_id) VALUES
          (1, 1),
          (1, 2),
          (1, 4),
@@ -391,7 +392,7 @@ INSERT INTO public.accommodation_modifications_available_periods (accommodation_
          (4, 10),
          (5, 8),
          (5, 11)
-        ON CONFLICT DO NOTHING;
+        ON CONFLICT DO NOTHING;*/
 
 INSERT INTO public.accommodation_modifications_images(
     accommodation_modification_id, images_id)

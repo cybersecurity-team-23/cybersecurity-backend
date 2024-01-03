@@ -31,7 +31,7 @@ public class Accommodation {
     @ManyToMany
     private List<Amenity> amenities;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<AvailablePeriod> availablePeriods;
 
     @Min(1)
@@ -50,6 +50,7 @@ public class Accommodation {
     private List<Image> images;
 
     private Boolean isBeingEdited = true;
+    private int cancellationDeadline;
 
     public void AddAmenity(Amenity amenity){
         amenities.add(amenity);

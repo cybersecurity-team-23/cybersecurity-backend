@@ -124,9 +124,11 @@ public class AccommodationModificationService implements IAccommodationModificat
         Collection<AccommodationModification> modifications = getByAccommodationId(accommodationId);
         for (AccommodationModification modification: modifications) {
             List<AvailablePeriod> periods =  modification.getAvailablePeriods();
-            periods.remove(period);
-            modification.setAvailablePeriods(periods);
-            repository.save(modification);
+            if (periods.contains(period)) {
+                periods.remove(period);
+                modification.setAvailablePeriods(periods);
+                repository.save(modification);
+            }
         }
 
     }

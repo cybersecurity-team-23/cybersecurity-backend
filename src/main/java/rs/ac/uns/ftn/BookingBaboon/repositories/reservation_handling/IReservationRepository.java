@@ -14,6 +14,9 @@ import java.util.Collection;
 public interface IReservationRepository extends JpaRepository<Reservation, Long> {
     Collection<Reservation> findAllByAccommodationId(Long accommodationId);
 
+    Collection<Reservation> findAllByGuest_Id(Long guest_id);
+
+
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.accommodation.id = :accommodationId " +
             "AND YEAR(r.timeSlot.startDate) = :year " +
@@ -36,4 +39,5 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
             @Param("endDate") LocalDate endDate,
             @Param("status") ReservationStatus status
     );
+
 }

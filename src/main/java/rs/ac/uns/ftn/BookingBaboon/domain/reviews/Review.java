@@ -24,4 +24,7 @@ public class Review implements Serializable {
     private Date createdOn;
     private short rating;
     private String comment;
+
+    @Enumerated
+    private ReviewStatus status = ReviewStatus.Pending;
 }

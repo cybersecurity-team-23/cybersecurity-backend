@@ -27,4 +27,5 @@ public class AccommodationResponse {
     private Boolean isAutomaticallyAccepted;
     private Set<ImageReference> images;
     private Boolean isBeingEdited;
+    private int cancellationDeadline;
 }

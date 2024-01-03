@@ -25,6 +25,10 @@ public class TimeSlot {
         return this.startDate.isBefore(other.endDate) && this.endDate.isAfter(other.startDate);
     }
 
+    public long getNumberOfDays() {
+        return endDate.toEpochDay() - startDate.toEpochDay();
+    }
+
     public boolean isSuccessive(TimeSlot other) {
         // Check if the second time slot starts immediately after the first one ends
         return this.getEndDate().plusDays(1).equals(other.getStartDate());

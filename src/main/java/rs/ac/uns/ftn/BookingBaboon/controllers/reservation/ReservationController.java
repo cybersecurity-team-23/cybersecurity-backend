@@ -99,6 +99,22 @@ public class ReservationController {
         return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
     }
 
+    @PutMapping("/{id}/cancel")
+    public ResponseEntity<ReservationResponse> cancel(@PathVariable Long id) {
+        Reservation reservation = service.get(id);
+
+        if (reservation == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        Reservation result = service.cancel(id);
+        if (result == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        return new ResponseEntity<>(mapper.map(result, ReservationResponse.class), HttpStatus.OK);
+    }
+
     @GetMapping("/filter")
     public ResponseEntity<Collection<ReservationResponse>> search(
             @RequestParam(name = "accommodation-name", required = false) String accommodationName,
@@ -116,6 +132,14 @@ public class ReservationController {
     public ResponseEntity<Integer> getCancellationCountForUser(@PathVariable Long userId) {
         int cancellationCount = service.getCancellationCountForUser(userId);
         return new ResponseEntity<>(cancellationCount, HttpStatus.OK);
+    }
+
+    @GetMapping("/guest/{id}")
+    public ResponseEntity<Collection<ReservationResponse>> getAllForGuest(@PathVariable Long id) {
+        Collection<Reservation> reservations = service.getAllForGuest(id);
+        return new ResponseEntity<>(reservations.stream()
+                .map(reservation -> mapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
 }

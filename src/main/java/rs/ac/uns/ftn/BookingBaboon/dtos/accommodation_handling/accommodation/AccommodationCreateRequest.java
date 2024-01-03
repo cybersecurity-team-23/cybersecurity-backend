@@ -24,4 +24,5 @@ public class AccommodationCreateRequest {
     private Boolean isPricingPerPerson;
     private AccommodationType type;
     private boolean isAutomaticallyAccepted;
+    private int cancellationDeadline;
 }

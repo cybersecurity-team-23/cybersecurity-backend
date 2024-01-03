@@ -4,6 +4,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 
+import java.time.LocalDate;
 import java.util.*;
 @RequiredArgsConstructor
 @Service
@@ -111,15 +113,15 @@ public class ReservationService implements IReservationService {
     @Override
     public Reservation deny(Long reservationId) {
         Reservation found = get(reservationId);
-        found.Cancel();
+        found.Deny();
         update(found);
         return found;
     }
 
-    private void denyOverlappingReservations(TimeSlot timeSlot, Long accommodationId) {
+    private void denyOverlappingReservations(TimeSlot timeSlot, Long accommodationId, Long skipId) {
         Collection<Reservation> reservations = repository.findAllByAccommodationId(accommodationId);
         for(Reservation reservation : reservations) {
-            if (reservation.getTimeSlot().overlaps(timeSlot)) {
+            if (reservation.getTimeSlot().overlaps(timeSlot) && reservation.getId() != skipId) {
                 deny(reservation.getId());
             }
         }
@@ -176,13 +178,71 @@ public class ReservationService implements IReservationService {
         //Delete the old ones
         for(AvailablePeriod oldPeriod: overlappingPeriods){
             accommodationService.removePeriod(oldPeriod.getId(), accommodation.getId());
+/*
             availablePeriodService.remove(oldPeriod.getId());
+*/
         }
 
-        denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId());
+        denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId(), reservation.getId());
 
         update(reservation);
         return reservation;
+    }
+
+    @Override
+    public Reservation cancel(Long id) {
+        Reservation reservation = get(id);
+
+        int deadlineDays = reservation.getAccommodation().getCancellationDeadline();
+        if (reservation.getTimeSlot().getStartDate().toEpochDay() - LocalDate.now().toEpochDay() <= deadlineDays && reservation.getStatus() == ReservationStatus.Approved) {
+            return null;
+        }
+
+        if(reservation.getStatus().equals(ReservationStatus.Approved)) {
+            /*AvailablePeriod addedPeriod = availablePeriodService.create(new AvailablePeriod(reservation.getTimeSlot(), getPricePerNight(reservation.getId())));
+            accommodationService.addPeriod(addedPeriod.getId(), reservation.getAccommodation().getId());*/
+            AvailablePeriod addedPeriod = new AvailablePeriod(reservation.getTimeSlot(), getPricePerNight(reservation.getId()));
+            mergeAvailablePeriods(addedPeriod, reservation.getAccommodation().getAvailablePeriods(), reservation.getAccommodation().getId());
+        }
+        reservation.Cancel();
+        repository.save(reservation);
+        repository.flush();
+        return reservation;
+    }
+
+    private Float getPricePerNight(Long id) {
+        Reservation reservation = get(id);
+        return reservation.getPrice() / reservation.getTimeSlot().getNumberOfDays();
+    }
+
+    @Override
+    public void mergeAvailablePeriods(AvailablePeriod addedPeriod, List<AvailablePeriod> availablePeriods, Long accommodationId) {
+        AvailablePeriod mergedPeriod = new AvailablePeriod();
+        mergedPeriod.setTimeSlot(addedPeriod.getTimeSlot());
+        mergedPeriod.setPricePerNight(addedPeriod.getPricePerNight());
+        List<AvailablePeriod> deletedPeriods = new ArrayList<>();
+
+        for (AvailablePeriod period : availablePeriods) {
+            //if start = end and prices are the same -> then merge
+            if (addedPeriod.getTimeSlot().getStartDate().equals(period.getTimeSlot().getEndDate()) && addedPeriod.getPricePerNight().equals(period.getPricePerNight())) {
+                TimeSlot timeSlot = new TimeSlot(period.getTimeSlot().getStartDate(), mergedPeriod.getTimeSlot().getEndDate());
+                mergedPeriod.setTimeSlot(timeSlot);
+                deletedPeriods.add(period);
+            }
+
+            if (addedPeriod.getTimeSlot().getEndDate().equals(period.getTimeSlot().getStartDate()) && addedPeriod.getPricePerNight().equals(period.getPricePerNight())) {
+                TimeSlot timeSlot = new TimeSlot(mergedPeriod.getTimeSlot().getStartDate(), period.getTimeSlot().getEndDate());
+                mergedPeriod.setTimeSlot(timeSlot);
+                deletedPeriods.add(period);
+            }
+        }
+
+        for(AvailablePeriod period : deletedPeriods) {
+            accommodationService.removePeriod(period.getId(), accommodationId);
+        }
+
+        AvailablePeriod savedPeriod = availablePeriodService.create(mergedPeriod);
+        accommodationService.addPeriod(savedPeriod.getId(), accommodationId);
     }
 
     @Override
@@ -195,6 +255,11 @@ public class ReservationService implements IReservationService {
 
         return reservation;
 
+    }
+
+    @Override
+    public Collection<Reservation> getAllForGuest(Long id) {
+        return repository.findAllByGuest_Id(id);
     }
 
 }
