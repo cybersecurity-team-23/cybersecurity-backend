@@ -110,4 +110,12 @@ public class NotificationService implements INotificationService {
     public Integer getUnreadCountByUserId(Long userId) {
         return repository.getUnreadCountByUserId(userId);
     }
+
+    @Override
+    public Notification read(Long notificationId) {
+        Notification notification = get(notificationId);
+        notification.setRead(true);
+        Notification result = update(notification);
+        return result;
+    }
 }

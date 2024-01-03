@@ -75,4 +75,10 @@ public class NotificationController {
         return new ResponseEntity<>(unread, HttpStatus.OK);
     }
 
+    @PutMapping({"/{notificationId}/read"})
+    public ResponseEntity<NotificationResponse> read(@PathVariable Long notificationId) {
+        Notification result = service.read(notificationId);
+        return new ResponseEntity<>(mapper.map(result, NotificationResponse.class), HttpStatus.OK);
+    }
+
 }
