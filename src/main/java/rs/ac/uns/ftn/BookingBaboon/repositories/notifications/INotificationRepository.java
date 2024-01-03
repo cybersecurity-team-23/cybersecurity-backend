@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
-    @Query("SELECT COUNT(notification) FROM Notification notification WHERE notification.user.id = :userId")
-    Integer getUnreadCountByUserId(@Param("userId") Long userId);
+    Integer countByUserIdAndIsReadFalse(@Param("userId") Long userId);
     Collection<Notification> findAllByUserId(Long userId);
 }
