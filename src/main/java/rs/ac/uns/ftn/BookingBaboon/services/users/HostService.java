@@ -165,7 +165,18 @@ public class HostService implements IHostService {
 
     @Override
     public Host toggleNotificaitons(Long hostId, NotificationType notificationType) {
-        return new Host();
+        Host host = get(hostId);
+        Set<NotificationType> ignoredNotifications = host.getIgnoredNotifications();
+
+        if (ignoredNotifications.contains(notificationType)) {
+            ignoredNotifications.remove(notificationType);
+        } else {
+            ignoredNotifications.add(notificationType);
+        }
+
+        host.setIgnoredNotifications(ignoredNotifications);
+        update(host);
+        return host;
     }
 
     @Override

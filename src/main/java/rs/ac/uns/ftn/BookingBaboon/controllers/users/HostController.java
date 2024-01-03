@@ -79,8 +79,8 @@ public class HostController {
     }
 
     @PutMapping({"/{hostId}/toggle-notifications/{notificationType}"})
-    public ResponseEntity<HostNotificationSettings> toggleNotifications (@PathVariable Long hostId, @PathVariable NotificationType notificationType){
-        return new ResponseEntity<> (mapper.map(service.toggleNotificaitons(hostId, notificationType),HostNotificationSettings.class), HttpStatus.OK);
+    public ResponseEntity<HostNotificationSettings> toggleNotifications (@PathVariable Long hostId, @PathVariable String notificationType){
+        return new ResponseEntity<> (mapper.map(service.toggleNotificaitons(hostId, NotificationType.valueOf(notificationType)),HostNotificationSettings.class), HttpStatus.OK);
     }
 
     @PutMapping({"/reservations/{reservationId}"})

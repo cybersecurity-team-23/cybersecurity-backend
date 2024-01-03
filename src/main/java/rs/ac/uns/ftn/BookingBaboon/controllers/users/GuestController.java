@@ -97,7 +97,7 @@ public class GuestController {
     }
 
     @PutMapping({"/{guestId}/toggle-notifications/{notificationType}"})
-    public ResponseEntity<GuestNotificationSettings> toggleNotifications (@PathVariable Long guestId, @PathVariable NotificationType notificationType){
-        return new ResponseEntity<> (mapper.map(service.toggleNotifications(guestId, notificationType), GuestNotificationSettings.class), HttpStatus.OK);
+    public ResponseEntity<GuestNotificationSettings> toggleNotifications (@PathVariable Long guestId, @PathVariable String notificationType){
+        return new ResponseEntity<> (mapper.map(service.toggleNotifications(guestId, NotificationType.valueOf(notificationType)), GuestNotificationSettings.class), HttpStatus.OK);
     }
 }
