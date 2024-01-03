@@ -13,19 +13,19 @@ INSERT INTO public.users (
       (10, '802 Walnut St', 'helen.martin@example.com', 'Helen', 1, 'Martin', '$2a$10$Kf.ME6kIpdbgWgUXeJCi5O9xE26BJ00m2Ukm9ZikN67UHudNGuEq2', '+3815551230', 3)
     ON CONFLICT (id) DO NOTHING ;
 
-INSERT INTO public.hosts (id) VALUES
-      (1),
-      (2),
-      (3),
-      (4)
+INSERT INTO public.hosts(ignored_notifications, id)
+VALUES (ARRAY[]::smallint[], 1),
+       (ARRAY[]::smallint[], 2),
+       (ARRAY[]::smallint[], 3),
+       (ARRAY[]::smallint[], 4)
     ON CONFLICT (id) DO NOTHING;
 
-INSERT INTO public.guests (id) VALUES
-       (5),
-       (6),
-       (7),
-       (8),
-       (9)
+INSERT INTO public.guests (ignored_notifications, id) VALUES
+        (ARRAY[]::SMALLINT[], 5),
+        (ARRAY[]::SMALLINT[], 6),
+        (ARRAY[]::SMALLINT[], 7),
+        (ARRAY[]::SMALLINT[], 8),
+        (ARRAY[]::SMALLINT[], 9)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.admin (id) VALUES
