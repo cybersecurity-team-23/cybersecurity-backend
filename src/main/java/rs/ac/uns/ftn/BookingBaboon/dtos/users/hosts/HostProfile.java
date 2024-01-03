@@ -1,6 +1,9 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts;
 
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+
+import java.util.Set;
 
 @Data
 public class HostProfile {
@@ -16,4 +19,6 @@ public class HostProfile {
     private String address;
 
     private String phoneNumber;
+
+    private Set<NotificationType> ignoredNotifications;
 }
