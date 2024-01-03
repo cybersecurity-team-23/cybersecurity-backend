@@ -88,7 +88,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Collection<Notification> getByUserId(Long userId) {
-        return new ArrayList<Notification>();
+        return repository.findAllByUserId(userId);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class NotificationService implements INotificationService {
     @Override
     public Notification read(Long notificationId) {
         Notification notification = get(notificationId);
-        notification.setRead(true);
+        notification.setIsRead(true);
         Notification result = update(notification);
         return result;
     }
