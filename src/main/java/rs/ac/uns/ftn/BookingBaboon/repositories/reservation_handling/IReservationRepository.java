@@ -16,6 +16,13 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     Collection<Reservation> findAllByGuest_Id(Long guest_id);
 
+    Collection<Reservation> findAllByAccommodation_Host_Id(Long accommodation_host_id);
+  
+    @Query("SELECT r FROM Reservation r WHERE r.guest.id = :guest_id AND r.status = :status ")
+    Collection<Reservation> findAllByGuest_IdAndStatus( @Param("guest_id") Long guest_id,
+                                                        @Param("status") ReservationStatus status);
+
+
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.accommodation.id = :accommodationId " +

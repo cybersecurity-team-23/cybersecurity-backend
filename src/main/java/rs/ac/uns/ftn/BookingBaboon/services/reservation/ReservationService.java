@@ -129,7 +129,7 @@ public class ReservationService implements IReservationService {
 
     @Override
     public int getCancellationCountForUser(Long userId) {
-        return 0;
+        return repository.findAllByGuest_IdAndStatus(userId, ReservationStatus.Canceled).size();
     }
 
     @Override
@@ -260,6 +260,11 @@ public class ReservationService implements IReservationService {
     @Override
     public Collection<Reservation> getAllForGuest(Long id) {
         return repository.findAllByGuest_Id(id);
+    }
+
+    @Override
+    public Collection<Reservation> getAllForHost(Long id) {
+        return repository.findAllByAccommodation_Host_Id(id);
     }
 
 }

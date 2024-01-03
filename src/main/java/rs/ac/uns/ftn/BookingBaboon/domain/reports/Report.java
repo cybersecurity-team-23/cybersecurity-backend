@@ -11,7 +11,7 @@ import java.util.Date;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @Table(name = "reports")
-@TableGenerator(name="report_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="report", initialValue = 10, valueColumnName="value_pk")
+@TableGenerator(name="report_id_generator", table="primary_keys", pkColumnName="key_pk", pkColumnValue="report", initialValue = 12, valueColumnName="value_pk")
 
 public class Report implements Serializable {
 

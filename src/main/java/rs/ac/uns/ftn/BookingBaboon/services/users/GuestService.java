@@ -24,6 +24,7 @@ import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IA
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IGuestReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IHostReportService;
+import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IReviewReportService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.AccommodationReviewService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
@@ -49,6 +50,7 @@ public class GuestService implements IGuestService {
     private final INotificationService notificationService;
     private final AccommodationReviewService accommodationReviewService;
     private final IHostReviewService hostReviewService;
+    private final IReviewReportService reviewReportService;
     private final IAccommodationService accommodationService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -134,6 +136,7 @@ public class GuestService implements IGuestService {
         notificationService.removeAllByUser(guestId);
         accommodationReviewService.removeAllByUser(guestId);
         hostReviewService.removeAllByUser(guestId);
+        reviewReportService.removeAllForGuest(guestId);
         tokenService.delete(found);
         repository.delete(found);
         repository.flush();

@@ -29,4 +29,5 @@ public interface IReservationService {
     Collection<Reservation> getAllFinishedByAccommodationAndTimeSlot(Long accommodationId, TimeSlot timeSlot);
     public Reservation handleAutomaticAcceptance(Reservation reservation);
     public Collection<Reservation> getAllForGuest(Long id);
+    public Collection<Reservation> getAllForHost(Long id);
 }

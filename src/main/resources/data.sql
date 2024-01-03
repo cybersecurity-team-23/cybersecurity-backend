@@ -278,7 +278,9 @@ INSERT INTO public.reports (
       (7, NOW(), 'Noise disturbance', 0, 2),
       (8, NOW(), 'Unpleasant experience', 0, 3),
       (9, NOW(), 'Disrespectful behavior', 0, 4),
-      (10, NOW(), 'Repeated violation of policies', 0, 1)
+      (10, NOW(), 'Repeated violation of policies', 0, 1),
+      (11, NOW(), 'Disrespectful', 0, 1),
+      (12, NOW(), 'Rude', 0, 2)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.host_reports (
@@ -301,6 +303,13 @@ INSERT INTO public.guest_reports (
       (9, 8),
       (10, 9)
     ON CONFLICT (id) DO NOTHING;
+
+INSERT INTO public.review_reports (
+    id, reported_review_id
+) VALUES
+      (11, 10),
+      (12, 15)
+  ON CONFLICT (id) DO NOTHING;
 
 
 INSERT INTO public.images(
