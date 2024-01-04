@@ -49,6 +49,7 @@ public class SummaryController {
         return new ResponseEntity<>(periodSummary, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAnyAuthority('HOST')")
     @GetMapping("/period/pdf")
     @ResponseBody
     public ResponseEntity<byte[]> getPeriodSummaryPdf(
@@ -58,14 +59,11 @@ public class SummaryController {
 
         PeriodSummary periodSummary = service.getPeriodSummary(hostId, startDate, endDate);
 
-        // Create a new Thymeleaf context and add attributes to it
         Context context = new Context(Locale.getDefault());
         context.setVariable("periodSummary", periodSummary);
 
-        // Generate HTML content using Thymeleaf
         String htmlContent = templateEngine.process("pdfPeriodSummaryTemplate", context);
 
-        // Convert HTML to PDF using iText 7
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
@@ -76,13 +74,12 @@ public class SummaryController {
         return new ResponseEntity<>(outputStream.toByteArray(), HttpStatus.OK);
     }
 
-//    @PreAuthorize("hasAnyAuthority('HOST')")
+    @PreAuthorize("hasAnyAuthority('HOST')")
     @GetMapping("/monthly/{accommodationId}/pdf")
     public ResponseEntity<byte[]> getMonthlySummaryPdf(@PathVariable Long accommodationId) throws IOException {
 
         AccommodationMonthlySummary monthlySummary = service.getMonthlySummary(accommodationId);
 
-        // Create a new Thymeleaf context and add attributes to it
         Context context = new Context(Locale.getDefault());
         context.setVariable("accommodationName", monthlySummary.getAccommodationId());
         context.setVariable("startDate", monthlySummary.getTimeSlot().getStartDate());
@@ -90,10 +87,8 @@ public class SummaryController {
         context.setVariable("reservationsData", monthlySummary.getReservationsData().entrySet());
         context.setVariable("profitData", monthlySummary.getProfitData().entrySet());
 
-        // Generate HTML content using Thymeleaf
         String htmlContent = templateEngine.process("pdfMonthlySummaryTemplate", context);
 
-        // Convert HTML to PDF using iText 7
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         PdfWriter writer = new PdfWriter(outputStream);
         PdfDocument pdf = new PdfDocument(writer);
