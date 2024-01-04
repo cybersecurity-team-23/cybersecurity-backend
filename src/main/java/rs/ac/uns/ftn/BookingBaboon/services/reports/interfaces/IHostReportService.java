@@ -17,4 +17,6 @@ public interface IHostReportService {
     void removeAllForHost(Long hostId);
 
     void removeAllByUser(Long userId);
+
+    Boolean doesReportAlreadyExist(Long hostId, Long reporteeId);
 }

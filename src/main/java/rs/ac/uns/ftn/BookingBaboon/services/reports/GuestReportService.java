@@ -37,6 +37,9 @@ public class GuestReportService implements IGuestReportService {
 
     @Override
     public GuestReport create(GuestReport guestReport) {
+        if(doesReportAlreadyExist(guestReport.getReportedGuest().getId(),guestReport.getReportee().getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Report already exists!");
+        }
         try {
             repository.save(guestReport);
             repository.flush();
@@ -101,5 +104,10 @@ public class GuestReportService implements IGuestReportService {
                 remove(report.getId());
             }
         }
+    }
+
+    @Override
+    public Boolean doesReportAlreadyExist(Long guestId, Long reporteeId) {
+        return repository.existsByReporteeIdAndReportedGuestId(reporteeId, guestId);
     }
 }
