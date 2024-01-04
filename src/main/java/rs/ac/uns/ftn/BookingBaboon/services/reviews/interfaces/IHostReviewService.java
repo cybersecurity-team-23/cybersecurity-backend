@@ -1,11 +1,9 @@
 package rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces;
 
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
-import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 
 import java.util.Collection;
-import java.util.Set;
 
 public interface IHostReviewService {
 
@@ -28,4 +26,6 @@ public interface IHostReviewService {
     Collection<HostReview> getReviewsByHost(Long hostId);
 
     Collection<HostReview> getReviewsByGuest(Long guestId);
+
+    Boolean doesReviewAlreadyExist(Long hostId, Long reviewerId);
 }

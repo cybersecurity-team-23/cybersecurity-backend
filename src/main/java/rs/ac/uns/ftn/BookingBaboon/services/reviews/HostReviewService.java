@@ -40,6 +40,9 @@ public class HostReviewService implements IHostReviewService {
 
     @Override
     public HostReview create(HostReview hostReview) {
+        if(doesReviewAlreadyExist(hostReview.getReviewedHost().getId(),hostReview.getReviewer().getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Host Review already exists!");
+        }
         try {
             repository.save(hostReview);
             repository.flush();
@@ -143,5 +146,10 @@ public class HostReviewService implements IHostReviewService {
     @Override
     public Collection<HostReview> getReviewsByGuest(Long guestId) {
         return repository.getHostReviewsByReviewerId(guestId);
+    }
+
+    @Override
+    public Boolean doesReviewAlreadyExist(Long hostId, Long reviewerId) {
+        return repository.existsByReviewerIdAndReviewedHostId(reviewerId, hostId);
     }
 }
