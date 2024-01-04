@@ -47,6 +47,7 @@ public class GuestService implements IGuestService {
     private final IReservationService reservationService;
     private final IGuestReportService guestReportService;
     private final IHostReportService hostReportService;
+    private final INotificationService notificationService;
     private final AccommodationReviewService accommodationReviewService;
     private final IHostReviewService hostReviewService;
     private final IReviewReportService reviewReportService;
@@ -132,6 +133,7 @@ public class GuestService implements IGuestService {
         reservationService.removeAllForGuest(guestId);
         guestReportService.removeAllForGuest(guestId);
         hostReportService.removeAllByUser(guestId);
+        notificationService.removeAllByUser(guestId);
         accommodationReviewService.removeAllByUser(guestId);
         hostReviewService.removeAllByUser(guestId);
         reviewReportService.removeAllForGuest(guestId);

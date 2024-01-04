@@ -44,6 +44,7 @@ public class HostService implements IHostService {
     private final IGuestReportService guestReportService;
     private final IAccommodationReviewService accommodationReviewService;
     private final IReviewReportService reviewReportService;
+    private final INotificationService notificationService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -131,6 +132,7 @@ public class HostService implements IHostService {
         hostReviewService.removeByHost(hostId);
         accommodationService.removeAllByHost(hostId);
         hostReportService.removeAllForHost(hostId);
+        notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);
         reviewReportService.removeAllByUser(hostId);
 
