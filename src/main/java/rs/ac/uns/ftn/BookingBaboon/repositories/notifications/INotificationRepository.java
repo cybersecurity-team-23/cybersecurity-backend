@@ -10,12 +10,26 @@ import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface INotificationRepository extends JpaRepository<Notification, Long> {
     Integer countByUserIdAndIsReadFalse(@Param("userId") Long userId);
 
-    @Query("SELECT COUNT(n) FROM Notification n WHERE n.id = :userId AND n.isRead = false AND n.type != :type")
-    Integer countUnreadByUserIdAndNotType(@Param("userId") Long userId, @Param("type") NotificationType type);
-    Collection<Notification> findAllByUserIdAndTypeNot(Long userId, NotificationType type);
+/*    @Query("SELECT COUNT(n) FROM Notification n " +
+            "WHERE n.id = :userId " +
+            "AND n.isRead = :false " +
+            "AND n.type NOT IN :ignoredTypes")
+    Integer countUnreadNotifications(
+            @Param("userId") Long userId,
+            @Param("ignoredTypes") Set<NotificationType> ignoredTypes
+    );*/
+
+    Integer countByUserIdAndIsReadFalseAndTypeNotIn(
+            @Param("userId") Long userId,
+            @Param("ignoredTypes") Collection<NotificationType> ignoredTypes
+    );
+    Collection<Notification> findAllByUserIdAndTypeNotIn(Long userId, Collection<NotificationType> ignoredTypes);
+
+    Collection<Notification> findAllByUserId(Long userId);
 }
