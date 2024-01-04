@@ -17,4 +17,6 @@ public interface IReviewReportService {
     void removeAllForGuest(Long guestId);
 
     void removeAllByUser(Long userId);
+
+    Boolean doesReportAlreadyExist(Long reviewId, Long reporteeId);
 }

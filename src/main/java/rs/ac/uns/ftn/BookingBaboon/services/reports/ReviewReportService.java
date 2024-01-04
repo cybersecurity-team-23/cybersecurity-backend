@@ -7,9 +7,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.ReviewReport;
-import rs.ac.uns.ftn.BookingBaboon.repositories.reports.IGuestReportRepository;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reports.IReviewReportRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IReviewReportService;
 
@@ -41,6 +39,9 @@ public class ReviewReportService implements IReviewReportService {
 
     @Override
     public ReviewReport create(ReviewReport reviewReport) {
+        if(doesReportAlreadyExist(reviewReport.getReportedReview().getId(),reviewReport.getReportee().getId())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Report already exists!");
+        }
         try {
             repository.save(reviewReport);
             repository.flush();
@@ -105,5 +106,10 @@ public class ReviewReportService implements IReviewReportService {
                 remove(report.getId());
             }
         }
+    }
+
+    @Override
+    public Boolean doesReportAlreadyExist(Long reviewId, Long reporteeId) {
+        return repository.existsByReporteeIdAndReportedReviewId(reporteeId, reviewId);
     }
 }

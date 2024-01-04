@@ -6,4 +6,5 @@ import rs.ac.uns.ftn.BookingBaboon.domain.reports.GuestReport;
 
 @Repository
 public interface IGuestReportRepository extends JpaRepository<GuestReport, Long> {
+    Boolean existsByReporteeIdAndReportedGuestId(Long reporteeId, Long guestId);
 }
