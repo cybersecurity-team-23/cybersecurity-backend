@@ -41,7 +41,6 @@ public class HostService implements IHostService {
     private final IReservationService reservationService;
     private final IHostReviewService hostReviewService;
     private final IHostReportService hostReportService;
-    private final INotificationService notificationService;
     private final IGuestReportService guestReportService;
     private final IAccommodationReviewService accommodationReviewService;
     private final IReviewReportService reviewReportService;
@@ -132,7 +131,6 @@ public class HostService implements IHostService {
         hostReviewService.removeByHost(hostId);
         accommodationService.removeAllByHost(hostId);
         hostReportService.removeAllForHost(hostId);
-        notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);
         reviewReportService.removeAllByUser(hostId);
 

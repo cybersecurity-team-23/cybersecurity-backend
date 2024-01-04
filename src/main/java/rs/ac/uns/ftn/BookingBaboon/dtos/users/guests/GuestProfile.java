@@ -20,6 +20,5 @@ public class GuestProfile {
 
     private String phoneNumber;
 
-    private Set<NotificationType> ignoredNotifications;
 
 }

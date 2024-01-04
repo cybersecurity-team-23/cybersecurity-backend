@@ -9,7 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Role;
 import rs.ac.uns.ftn.BookingBaboon.repositories.notifications.INotificationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.*;
 
@@ -88,7 +95,7 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Collection<Notification> getByUserId(Long userId) {
-        return repository.findAllByUserId(userId);
+        return repository.findAllByUserIdAndTypeNot(userId, NotificationType.ReservationCancelled);
     }
 
     @Override
@@ -108,7 +115,8 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Integer getUnreadCountByUserId(Long userId) {
-        return repository.countByUserIdAndIsReadFalse(userId);
+        return repository.countUnreadByUserIdAndNotType(userId, NotificationType.ReservationCancelled);
+
     }
 
     @Override

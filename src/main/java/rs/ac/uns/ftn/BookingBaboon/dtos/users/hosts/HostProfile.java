@@ -19,6 +19,4 @@ public class HostProfile {
     private String address;
 
     private String phoneNumber;
-
-    private Set<NotificationType> ignoredNotifications;
 }
