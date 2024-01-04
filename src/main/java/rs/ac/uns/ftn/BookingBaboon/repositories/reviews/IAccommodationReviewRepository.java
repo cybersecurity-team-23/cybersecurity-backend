@@ -11,4 +11,6 @@ public interface IAccommodationReviewRepository extends JpaRepository<Accommodat
     public List<AccommodationReview> findAccommodationReviewsByReviewedAccommodation_Id(Long reviewedAccommodation_id);
 
     List<AccommodationReview> findAccommodationReviewsByReviewerId(Long guestId);
+
+    Boolean existsByReviewerIdAndReviewedAccommodationId(Long reviewerId, Long accommodationId);
 }

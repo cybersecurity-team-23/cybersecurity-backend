@@ -26,4 +26,6 @@ public interface IAccommodationReviewService {
     List<AccommodationReview> getAccommodationReviews(Long accommodationId);
 
     List<AccommodationReview> getAccommodationReviewsByGuest(Long guestId);
+
+    Boolean doesReviewAlreadyExist(Long accommodationId, Long reviewerId);
 }
