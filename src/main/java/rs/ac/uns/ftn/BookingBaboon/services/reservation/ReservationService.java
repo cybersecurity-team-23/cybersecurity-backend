@@ -11,15 +11,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -29,6 +33,8 @@ public class ReservationService implements IReservationService {
     private final IReservationRepository repository;
     private final IAccommodationService accommodationService;
     private final IAvailablePeriodService availablePeriodService;
+    private final INotificationService notificationService;
+    private final IUserService userService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -52,6 +58,8 @@ public class ReservationService implements IReservationService {
         try {
             repository.save(reservation);
             repository.flush();
+            Host host = accommodationService.get(reservation.getAccommodation().getId()).getHost();
+            notificationService.create(new Notification("A reservation request for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been created", NotificationType.ReservationCreated, new Date(), userService.get(host.getId())));
             return reservation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -116,6 +124,7 @@ public class ReservationService implements IReservationService {
         Reservation found = get(reservationId);
         found.Deny();
         update(found);
+        notificationService.create(new Notification("Your reservation for " + found.getAccommodation().getName() + " from " + found.getTimeSlot().getStartDate() + " to " + found.getTimeSlot().getEndDate() + " has been denied", NotificationType.ReservationRequestResponse, new Date(), userService.get(found.getGuest().getId())));
         return found;
     }
 
@@ -185,6 +194,7 @@ public class ReservationService implements IReservationService {
         }
 
         denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId(), reservation.getId());
+        notificationService.create(new Notification("Your reservation for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been approved", NotificationType.ReservationRequestResponse, new Date(), userService.get(reservation.getGuest().getId())));
 
         update(reservation);
         return reservation;
@@ -206,6 +216,7 @@ public class ReservationService implements IReservationService {
             mergeAvailablePeriods(addedPeriod, reservation.getAccommodation().getAvailablePeriods(), reservation.getAccommodation().getId());
         }
         reservation.Cancel();
+        notificationService.create(new Notification("Reservation for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been cancelled", NotificationType.ReservationCancelled, new Date(), userService.get(reservation.getAccommodation().getHost().getId())));
         repository.save(reservation);
         repository.flush();
         return reservation;
