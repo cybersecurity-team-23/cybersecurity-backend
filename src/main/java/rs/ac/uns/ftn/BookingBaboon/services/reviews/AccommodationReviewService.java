@@ -7,10 +7,17 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.AccommodationReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
+import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reviews.IAccommodationReviewRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
+import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IAccommodationReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.*;
 
@@ -19,6 +26,9 @@ import java.util.*;
 public class AccommodationReviewService implements IAccommodationReviewService {
 
     private final IAccommodationReviewRepository repository;
+    private final INotificationService notificationService;
+    private final IUserService userService;
+    private final IAccommodationRepository accommodationRepository;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
     @Override
@@ -44,6 +54,8 @@ public class AccommodationReviewService implements IAccommodationReviewService {
         try {
             repository.save(accommodationReview);
             repository.flush();
+            Accommodation accommodation = accommodationRepository.findById(accommodationReview.getReviewedAccommodation().getId()).get();
+            notificationService.create(new Notification("Your accommodation " + accommodation.getName() + " has been reviewed by "+ userService.get(accommodationReview.getReviewer().getId()).getEmail(), NotificationType.AccommodationReview, new Date(), accommodation.getHost()));
             return accommodationReview;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();

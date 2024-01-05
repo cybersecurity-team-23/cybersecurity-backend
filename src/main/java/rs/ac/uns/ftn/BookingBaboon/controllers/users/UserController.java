@@ -16,9 +16,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.Collection;
@@ -151,6 +153,11 @@ public class UserController {
         } else {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
+    }
+
+    @PutMapping({"/{userId}/toggle-notifications/{notificationType}"})
+    public ResponseEntity<UserProfile> toggleNotifications (@PathVariable Long userId, @PathVariable String notificationType){
+        return new ResponseEntity<> (mapper.map(service.toggleNotifications(userId, NotificationType.valueOf(notificationType)), UserProfile.class), HttpStatus.OK);
     }
 
 }

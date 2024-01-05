@@ -41,10 +41,10 @@ public class HostService implements IHostService {
     private final IReservationService reservationService;
     private final IHostReviewService hostReviewService;
     private final IHostReportService hostReportService;
-    private final INotificationService notificationService;
     private final IGuestReportService guestReportService;
     private final IAccommodationReviewService accommodationReviewService;
     private final IReviewReportService reviewReportService;
+    private final INotificationService notificationService;
 
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
@@ -165,7 +165,18 @@ public class HostService implements IHostService {
 
     @Override
     public Host toggleNotificaitons(Long hostId, NotificationType notificationType) {
-        return new Host();
+        Host host = get(hostId);
+        Set<NotificationType> ignoredNotifications = host.getIgnoredNotifications();
+
+        if (ignoredNotifications.contains(notificationType)) {
+            ignoredNotifications.remove(notificationType);
+        } else {
+            ignoredNotifications.add(notificationType);
+        }
+
+        host.setIgnoredNotifications(ignoredNotifications);
+        update(host);
+        return host;
     }
 
     @Override

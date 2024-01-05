@@ -3,6 +3,10 @@ package rs.ac.uns.ftn.BookingBaboon.domain.users;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Entity
@@ -37,6 +41,8 @@ public class User{
 
     @Transient
     private String jwt;
+
+    private Set<NotificationType> ignoredNotifications = new HashSet<NotificationType>();
 
     public void activate() {
         this.status = UserStatus.Active;

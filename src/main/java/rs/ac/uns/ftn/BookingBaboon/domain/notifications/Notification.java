@@ -21,7 +21,16 @@ public class Notification {
 
     private Date timeCreated;
 
-    private boolean isRead = false;
+    private Boolean isRead = false;
+
+    public Notification(String message, NotificationType type, Date timeCreated, User user) {
+        this.message = message;
+        this.type = type;
+        this.timeCreated = timeCreated;
+        this.user = user;
+    }
+
+    public Notification() {}
 
     @ManyToOne
     private User user;

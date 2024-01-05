@@ -13,5 +13,5 @@ import java.util.Set;
 @Data
 @Table(name = "hosts")
 public class Host extends User {
-    private Set<NotificationType> ignoredNotifications = new HashSet<NotificationType>();
+
 }

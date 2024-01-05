@@ -185,7 +185,18 @@ public class GuestService implements IGuestService {
 
     @Override
     public Guest toggleNotifications(Long guestId, NotificationType notificationType) {
-        return new Guest();
+        Guest guest = get(guestId);
+        Set<NotificationType> ignoredNotifications = guest.getIgnoredNotifications();
+
+        if (ignoredNotifications.contains(notificationType)) {
+            ignoredNotifications.remove(notificationType);
+        } else {
+            ignoredNotifications.add(notificationType);
+        }
+
+        guest.setIgnoredNotifications(ignoredNotifications);
+        update(guest);
+        return guest;
     }
 
 

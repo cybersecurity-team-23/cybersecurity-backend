@@ -1,6 +1,10 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.users;
 
 import lombok.Data;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 public class UserProfile {
@@ -16,4 +20,5 @@ public class UserProfile {
     private String address;
 
     private String phoneNumber;
+    private Set<NotificationType> ignoredNotifications = new HashSet<NotificationType>();
 }

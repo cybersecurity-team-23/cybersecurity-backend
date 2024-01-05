@@ -12,6 +12,5 @@ public class HostNotificationSettings {
 
     private String email;
 
-    private Set<NotificationType> ignoredNotifications;
 
 }

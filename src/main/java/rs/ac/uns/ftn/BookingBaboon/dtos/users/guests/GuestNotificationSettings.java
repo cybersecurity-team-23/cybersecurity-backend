@@ -9,6 +9,5 @@ import java.util.Set;
 public class GuestNotificationSettings {
     private Long id;
     private String email;
-    private Set<NotificationType> ignoredNotifications;
 
 }

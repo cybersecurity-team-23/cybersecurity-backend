@@ -69,4 +69,16 @@ public class NotificationController {
         return new ResponseEntity<>(notificationResponses, HttpStatus.OK);
     }
 
+    @GetMapping({"/user/{userId}/unread-count"})
+    public ResponseEntity<Integer> getUnreadCountByUserId(@PathVariable Long userId){
+        Integer unread = service.getUnreadCountByUserId(userId);
+        return new ResponseEntity<>(unread, HttpStatus.OK);
+    }
+
+    @PutMapping({"/{notificationId}/read"})
+    public ResponseEntity<NotificationResponse> read(@PathVariable Long notificationId) {
+        Notification result = service.read(notificationId);
+        return new ResponseEntity<>(mapper.map(result, NotificationResponse.class), HttpStatus.OK);
+    }
+
 }

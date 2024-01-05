@@ -9,7 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Role;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.notifications.INotificationRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.users.UserService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.*;
 
@@ -18,6 +27,7 @@ import java.util.*;
 public class NotificationService implements INotificationService {
 
     private final INotificationRepository repository;
+    private final UserService userService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -88,7 +98,11 @@ public class NotificationService implements INotificationService {
 
     @Override
     public Collection<Notification> getByUserId(Long userId) {
-        return new ArrayList<Notification>();
+        User user = userService.get(userId);
+        if (user.getIgnoredNotifications().size() == 0) {
+            return repository.findAllByUserId(userId);
+        }
+        return repository.findAllByUserIdAndTypeNotIn(userId, new ArrayList<>(user.getIgnoredNotifications()));
     }
 
     @Override
@@ -104,5 +118,22 @@ public class NotificationService implements INotificationService {
                 remove(notification.getId());
             }
         }
+    }
+
+    @Override
+    public Integer getUnreadCountByUserId(Long userId) {
+        User user = userService.get(userId);
+        if (user.getIgnoredNotifications().size() == 0) {
+            return repository.countByUserIdAndIsReadFalse(userId);
+        }
+        return repository.countByUserIdAndIsReadFalseAndTypeNotIn(userId, new ArrayList<>(user.getIgnoredNotifications()));
+    }
+
+    @Override
+    public Notification read(Long notificationId) {
+        Notification notification = get(notificationId);
+        notification.setIsRead(true);
+        Notification result = update(notification);
+        return result;
     }
 }

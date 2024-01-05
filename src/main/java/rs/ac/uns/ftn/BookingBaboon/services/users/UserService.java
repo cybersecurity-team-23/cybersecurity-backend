@@ -12,7 +12,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.tokens.EmailVerificationToken;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.PasswordChangeRequest;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
@@ -172,6 +174,22 @@ public class UserService implements IUserService, UserDetailsService {
         }
 
         throw new UsernameNotFoundException("User not found with this username: " + username);
+    }
+
+    @Override
+    public Object toggleNotifications(Long userId, NotificationType notificationType) {
+        User user = get(userId);
+        Set<NotificationType> ignoredNotifications = user.getIgnoredNotifications();
+
+        if (ignoredNotifications.contains(notificationType)) {
+            ignoredNotifications.remove(notificationType);
+        } else {
+            ignoredNotifications.add(notificationType);
+        }
+
+        user.setIgnoredNotifications(ignoredNotifications);
+        update(user);
+        return user;
     }
 
 }

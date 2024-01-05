@@ -7,11 +7,15 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
+import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.HostReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reviews.IHostReviewRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.notifications.INotificationService;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IHostReviewService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.*;
 
@@ -20,6 +24,8 @@ import java.util.*;
 public class HostReviewService implements IHostReviewService {
 
     private final IHostReviewRepository repository;
+    private final INotificationService notificationService;
+    private final IUserService userService;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
     @Override
@@ -46,6 +52,7 @@ public class HostReviewService implements IHostReviewService {
         try {
             repository.save(hostReview);
             repository.flush();
+            notificationService.create(new Notification("You have been review by "+ userService.get(hostReview.getReviewer().getId()).getEmail(), NotificationType.HostReview, new Date(), hostReview.getReviewedHost()));
             return hostReview;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();

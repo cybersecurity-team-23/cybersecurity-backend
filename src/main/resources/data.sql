@@ -1,31 +1,31 @@
 INSERT INTO public.users (
-    id, address, email, first_name, status, last_name, password, phone_number, role
+    id, address, email, first_name, ignored_notifications, status, last_name, password, phone_number, role
 ) VALUES
-      (1, '123 Main St', 'john.doe@example.com', 'John', 1, 'Doe', '$2a$10$d0pOPqh3G6WQQZtKxIUeTeeI/hht25FPJX5wpF.PnE38Dt9enc.0a', '+3815551234', 2),
-      (2, '456 Oak St', 'jane.smith@example.com', 'Jane', 1, 'Smith', '$2a$10$nDwh6./ScO6y3IquLk4ut.2Ci5PTAN3rTf/0yz1GyF62dfS45KjX2', '+3815555678', 2),
-      (3, '789 Pine St', 'bob.johnson@example.com', 'Bob', 1, 'Johnson', '$2a$10$TZ5gfQSX6n8EiFgZVtdUe.CzLMPCQ6CCRt6ieKZTnFw00c0FYCTSK', '+3815559876', 2),
-      (4, '321 Elm St', 'alice.williams@example.com', 'Alice', 1, 'Williams', '$2a$10$4nYTZ9xl8DnOebwZ4Op1/eqcKqmXsMHsi1HNHBG8P30nJhqApV0QO', '+3815554321', 2),
-      (5, '654 Birch St', 'charlie.brown@example.com', 'Charlie', 1, 'Brown', '$2a$10$UKDUbeV3Pj132r.S1ZAuoec9vYpzwURvUXL1YPnjaGWBQeDbgQns6', '+3815558765', 1),
-      (6, '987 Cedar St', 'eva.miller@example.com', 'Eva', 1, 'Miller', '$2a$10$Ax47ATx9iK3afXnhxvNJheD5nkl1jhMw7FL0CoBAq6bIonM/W6tHa', '+3815552109', 1 ),
-      (7, '135 Maple St', 'david.davis@example.com', 'David', 1, 'Davis', '$2a$10$3umvo5Gd8.RPbUooFdGdx.4klOb9vCHj4pAP4t8.sXcOL6mbG3mAa', '+3815553456', 1),
-      (8, '246 Pine St', 'grace.jones@example.com', 'Grace', 1, 'Jones', '$2a$10$Dnm26vmvm.IEdplKvEiVeORQEOHtbB2moQzXHvqTtyCwkqVmBfU6S', '+3815557890', 1),
-      (9, '579 Oak St', 'frank.white@example.com', 'Frank', 1, 'White', '$2a$10$21i9qDk5BDGYMyTJSXsb0u2nvUTvM9K9LrXiYLyNiq4cpbDX6czMi', '+3815559034', 1),
-      (10, '802 Walnut St', 'helen.martin@example.com', 'Helen', 1, 'Martin', '$2a$10$Kf.ME6kIpdbgWgUXeJCi5O9xE26BJ00m2Ukm9ZikN67UHudNGuEq2', '+3815551230', 3)
+      (1, '123 Main St', 'john.doe@example.com', 'John', ARRAY[]::smallint[], 1, 'Doe', '$2a$10$d0pOPqh3G6WQQZtKxIUeTeeI/hht25FPJX5wpF.PnE38Dt9enc.0a', '+3815551234', 2),
+      (2, '456 Oak St', 'jane.smith@example.com', 'Jane', ARRAY[]::smallint[], 1, 'Smith', '$2a$10$nDwh6./ScO6y3IquLk4ut.2Ci5PTAN3rTf/0yz1GyF62dfS45KjX2', '+3815555678', 2),
+      (3, '789 Pine St', 'bob.johnson@example.com', 'Bob', ARRAY[]::smallint[], 1, 'Johnson', '$2a$10$TZ5gfQSX6n8EiFgZVtdUe.CzLMPCQ6CCRt6ieKZTnFw00c0FYCTSK', '+3815559876', 2),
+      (4, '321 Elm St', 'alice.williams@example.com', 'Alice', ARRAY[]::smallint[], 1, 'Williams', '$2a$10$4nYTZ9xl8DnOebwZ4Op1/eqcKqmXsMHsi1HNHBG8P30nJhqApV0QO', '+3815554321', 2),
+      (5, '654 Birch St', 'charlie.brown@example.com', 'Charlie', ARRAY[]::smallint[], 1, 'Brown', '$2a$10$UKDUbeV3Pj132r.S1ZAuoec9vYpzwURvUXL1YPnjaGWBQeDbgQns6', '+3815558765', 1),
+      (6, '987 Cedar St', 'eva.miller@example.com', 'Eva', ARRAY[]::smallint[], 1, 'Miller', '$2a$10$Ax47ATx9iK3afXnhxvNJheD5nkl1jhMw7FL0CoBAq6bIonM/W6tHa', '+3815552109', 1 ),
+      (7, '135 Maple St', 'david.davis@example.com', 'David', ARRAY[]::smallint[], 1, 'Davis', '$2a$10$3umvo5Gd8.RPbUooFdGdx.4klOb9vCHj4pAP4t8.sXcOL6mbG3mAa', '+3815553456', 1),
+      (8, '246 Pine St', 'grace.jones@example.com', 'Grace', ARRAY[]::smallint[], 1, 'Jones', '$2a$10$Dnm26vmvm.IEdplKvEiVeORQEOHtbB2moQzXHvqTtyCwkqVmBfU6S', '+3815557890', 1),
+      (9, '579 Oak St', 'frank.white@example.com', 'Frank', ARRAY[]::smallint[], 1, 'White', '$2a$10$21i9qDk5BDGYMyTJSXsb0u2nvUTvM9K9LrXiYLyNiq4cpbDX6czMi', '+3815559034', 1),
+      (10, '802 Walnut St', 'helen.martin@example.com', 'Helen', ARRAY[]::smallint[], 1, 'Martin', '$2a$10$Kf.ME6kIpdbgWgUXeJCi5O9xE26BJ00m2Ukm9ZikN67UHudNGuEq2', '+3815551230', 3)
     ON CONFLICT (id) DO NOTHING ;
 
-INSERT INTO public.hosts (id) VALUES
-      (1),
-      (2),
-      (3),
-      (4)
+INSERT INTO public.hosts(id)
+VALUES  (1),
+        (2),
+        (3),
+        (4)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.guests (id) VALUES
-       (5),
-       (6),
-       (7),
-       (8),
-       (9)
+        (5),
+        (6),
+        (7),
+        (8),
+        (9)
     ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO public.admin (id) VALUES
