@@ -27,4 +27,10 @@ public class AvailablePeriod {
         this.timeSlot = timeSlot;
         this.PricePerNight = pricePerNight;
     }
+
+    public AvailablePeriod(long id, TimeSlot timeSlot, Float pricePerNight) {
+        this.id = id;
+        this.timeSlot = timeSlot;
+        this.PricePerNight = pricePerNight;
+    }
 }
