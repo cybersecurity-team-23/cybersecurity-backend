@@ -6,11 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import rs.ac.uns.ftn.BookingBaboon.domain.reviews.AccommodationReview;
 import rs.ac.uns.ftn.BookingBaboon.domain.reviews.Review;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.AccommodationReviewResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.ReviewReferenceRequest;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reviews.ReviewResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.reviews.interfaces.IReviewService;
 
 import java.util.Collection;
