@@ -94,21 +94,21 @@ public class AccommodationServiceTest {
         accommodation.setId(1L);
 
         TimeSlot desiredPeriod = new TimeSlot(
-                LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 5)
+                LocalDate.of(2024, 1, 2),
+                LocalDate.of(2024, 1, 8)
         );
 
         List<AvailablePeriod> availablePeriods = Arrays.asList(
-                new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 2)), 50F),
-                new AvailablePeriod(2L, new TimeSlot(LocalDate.of(2024, 1, 2), LocalDate.of(2024, 1, 4)), 60F),
-                new AvailablePeriod(3L, new TimeSlot(LocalDate.of(2024, 1, 4), LocalDate.of(2024, 1, 5)), 70F)
+                new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 3)), 50F),
+                new AvailablePeriod(2L, new TimeSlot(LocalDate.of(2024, 1, 4), LocalDate.of(2024, 1, 6)), 60F),
+                new AvailablePeriod(3L, new TimeSlot(LocalDate.of(2024, 1, 7), LocalDate.of(2024, 1, 10)), 70F)
         );
 
         when(accommodationRepository.findAvailablePeriodsSortedByStartDate(accommodation.getId())).thenReturn(availablePeriods);
 
         float totalPrice = accommodationService.getTotalPrice(accommodation, desiredPeriod);
 
-        assertEquals(320, totalPrice);
+        assertEquals(350, totalPrice);
 
         verify(accommodationRepository, times(1)).findAvailablePeriodsSortedByStartDate(accommodation.getId());
     }
