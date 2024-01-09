@@ -7,13 +7,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.reports.Report;
-import rs.ac.uns.ftn.BookingBaboon.domain.reports.UserReport;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.*;
 import rs.ac.uns.ftn.BookingBaboon.services.reports.interfaces.IUserReportService;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RequiredArgsConstructor
@@ -24,6 +22,7 @@ public class UserReportController {
     private final IUserReportService service;
     private final ModelMapper mapper;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
 
     @GetMapping
     public ResponseEntity<Collection<Report>> getUserReports() {
