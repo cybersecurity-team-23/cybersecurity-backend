@@ -141,7 +141,7 @@ public class NotificationService implements INotificationService {
     }
 
     private void sendNotification(Notification notification) {
-        simpMessagingTemplate.convertAndSend("/notification-publisher/" + notification.getUser().getId().toString(), notification);
+        simpMessagingTemplate.convertAndSend("/notification-publisher/" + notification.getUser().getId(), notification);
     }
 
 }

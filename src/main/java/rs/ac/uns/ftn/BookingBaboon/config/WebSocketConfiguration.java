@@ -14,8 +14,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/notifications-socket") // Definisemo endpoint koji ce klijenti koristiti da se povezu sa serverom.
                 // U ovom slucaju, URL za konekciju ce biti http://localhost:8080/socket/
-                .setAllowedOrigins("*")
-                .withSockJS();
+                .setAllowedOrigins("*");
     }
     /*
      * Metoda konfigurise opcije message brokera. U ovom slucaju klijenti koji hoce da koriste web socket broker
