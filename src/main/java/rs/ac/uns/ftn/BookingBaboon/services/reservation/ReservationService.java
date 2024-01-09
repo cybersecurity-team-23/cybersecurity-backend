@@ -58,8 +58,9 @@ public class ReservationService implements IReservationService {
         try {
             repository.save(reservation);
             repository.flush();
-            Host host = accommodationService.get(reservation.getAccommodation().getId()).getHost();
-            notificationService.create(new Notification("A reservation request for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been created", NotificationType.ReservationCreated, new Date(), userService.get(host.getId())));
+            Accommodation accommodation = accommodationService.get(reservation.getAccommodation().getId());
+            Host host = accommodation.getHost();
+            notificationService.create(new Notification("A reservation request for " + accommodation.getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been created", NotificationType.ReservationCreated, new Date(), userService.get(host.getId())));
             return reservation;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
