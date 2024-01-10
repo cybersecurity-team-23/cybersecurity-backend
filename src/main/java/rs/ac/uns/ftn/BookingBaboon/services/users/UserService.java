@@ -3,6 +3,7 @@ package rs.ac.uns.ftn.BookingBaboon.services.users;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,6 +28,7 @@ import java.util.*;
 
 @RequiredArgsConstructor
 @Service
+@Primary
 public class UserService implements IUserService, UserDetailsService {
 
     private final IUserRepository repository;
