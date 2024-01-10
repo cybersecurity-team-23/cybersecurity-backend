@@ -5,4 +5,9 @@ import lombok.Data;
 @Data
 public class AccommodationReference {
     private Long id;
+
+    public AccommodationReference(){}
+    public AccommodationReference(long id) {
+        this.id = id;
+    }
 }

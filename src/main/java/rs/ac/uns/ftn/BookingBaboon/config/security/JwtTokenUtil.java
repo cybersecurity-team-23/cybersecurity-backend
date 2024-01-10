@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.Collections;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -52,6 +53,14 @@ public class JwtTokenUtil implements Serializable {
         Map<String, Object> claims = new HashMap<>();
         claims.put("sub", userDetails.getUsername());
         claims.put("role", userDetails.getAuthorities());
+        claims.put("id", id);
+        return doGenerateToken(claims);
+    }
+
+    public String generateTokenForGuest(Long id, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", email);
+        claims.put("role", Collections.singleton("GUEST"));  // Add the GUEST role
         claims.put("id", id);
         return doGenerateToken(claims);
     }
