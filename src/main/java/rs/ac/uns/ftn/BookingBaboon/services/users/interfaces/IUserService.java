@@ -36,4 +36,6 @@ public interface IUserService{
     User toggleNotifications(Long userId, NotificationType notificationType);
 
     User blockUser(Long userId);
+
+    User unblockUser(Long userId);
 }

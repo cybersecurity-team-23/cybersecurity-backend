@@ -200,4 +200,12 @@ public class UserService implements IUserService, UserDetailsService {
         return user;
     }
 
+    @Override
+    public User unblockUser(Long userId) {
+        User user = get(userId);
+        user.unblock();
+        update(user);
+        return user;
+    }
+
 }

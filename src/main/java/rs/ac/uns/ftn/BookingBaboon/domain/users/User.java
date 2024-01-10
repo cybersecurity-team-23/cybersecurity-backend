@@ -54,4 +54,8 @@ public class User{
     public boolean isActive() {
         return this.status == UserStatus.Active;
     }
+
+    public void unblock() {
+        this.status = UserStatus.Active;
+    }
 }

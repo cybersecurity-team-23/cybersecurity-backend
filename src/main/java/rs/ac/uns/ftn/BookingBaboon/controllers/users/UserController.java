@@ -167,4 +167,9 @@ public class UserController {
         return new ResponseEntity<> (mapper.map(service.blockUser(userId), UserResponse.class), HttpStatus.OK);
     }
 
+    @PutMapping({"/{userId}/unblock"})
+    public ResponseEntity<UserResponse> unblockUser (@PathVariable Long userId){
+        return new ResponseEntity<> (mapper.map(service.unblockUser(userId), UserResponse.class), HttpStatus.OK);
+    }
+
 }
