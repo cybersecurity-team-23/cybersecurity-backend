@@ -17,7 +17,6 @@ import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.ReservationStatus;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
-import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationResponse;
 import rs.ac.uns.ftn.BookingBaboon.repositories.reservation_handling.IReservationRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;

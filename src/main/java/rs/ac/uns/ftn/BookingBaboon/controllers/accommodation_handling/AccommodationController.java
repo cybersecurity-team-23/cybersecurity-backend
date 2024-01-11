@@ -50,7 +50,7 @@ public class AccommodationController {
         Accommodation accommodation = service.get(id);
 
         if (accommodation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
@@ -96,27 +96,6 @@ public class AccommodationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-//    @GetMapping("/filter")
-//    public ResponseEntity<Collection<AccommodationResponse>> search(
-//            @RequestParam(name = "city", required = false) String city,
-//            @RequestParam(name = "checkin", required = false) String checkin,
-//            @RequestParam(name = "checkout", required = false) String checkout,
-//            @RequestParam(name = "guest-num", required = false) Integer guestNum,
-//            @RequestParam(name = "min-price", required = false) Double minPrice,
-//            @RequestParam(name = "max-price", required = false) Double maxPrice,
-//            @RequestParam(name = "amenity", required = false) String amenity,
-//            @RequestParam(name = "property-type", required = false) String propertyType,
-//            @RequestParam(name = "min-rating", required = false) Integer minRating) {
-//
-//        AccommodationFilter filter = new AccommodationFilter();
-//
-//        Collection<Accommodation> accommodations = service.getAll();
-//
-//        return new ResponseEntity<>(accommodations.stream()
-//                .map(accommodation -> mapper.map(accommodation, AccommodationResponse.class))
-//                .collect(Collectors.toList()), HttpStatus.OK);
-//    }
 
     @GetMapping("/filter")
     public ResponseEntity<Collection<AccommodationResponse>> search(

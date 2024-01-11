@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.dtos.reservation;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
@@ -18,5 +19,7 @@ public class ReservationResponse {
     private TimeSlot timeSlot;
     private Guest guest;
     private Float price;
-    private ReservationStatus status;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private String  status;
 }

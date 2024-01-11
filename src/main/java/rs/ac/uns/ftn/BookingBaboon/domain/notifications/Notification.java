@@ -17,6 +17,7 @@ public class Notification {
 
     private String message;
 
+    @Enumerated
     private NotificationType type;
 
     private Date timeCreated;

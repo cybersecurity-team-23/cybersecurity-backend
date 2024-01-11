@@ -34,12 +34,12 @@ import java.util.stream.Collectors;
 @Service
 public class AccommodationService implements IAccommodationService {
     private final IAccommodationRepository repository;
-//    private final IReservationService reservationService;
     private final IAmenityService amenityService;
     private final IAccommodationReviewService accommodationReviewService;
     private final IImageService imageService;
     private final IAvailablePeriodService periodService;
     private final IAccommodationModificationService modificationService;
+
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 

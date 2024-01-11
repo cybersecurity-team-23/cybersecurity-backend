@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.Collections;
 
 @Component
 public class JwtTokenUtil implements Serializable {
@@ -56,6 +57,14 @@ public class JwtTokenUtil implements Serializable {
         return doGenerateToken(claims);
     }
 
+    public String generateTokenForGuest(Long id, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", email);
+        claims.put("role", Collections.singleton("GUEST"));  // Add the GUEST role
+        claims.put("id", id);
+        return doGenerateToken(claims);
+    }
+
     // while creating the token -
     // 1. Define claims of the token, like Issuer, Expiration, Subject, and the ID
     // 2. Sign the JWT using the HS512 algorithm and secret key.
@@ -72,5 +81,13 @@ public class JwtTokenUtil implements Serializable {
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+
+    public String generateTokenForHost(long id, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", email);
+        claims.put("role", Collections.singleton("HOST"));
+        claims.put("id", id);
+        return doGenerateToken(claims);
     }
 }

@@ -11,4 +11,11 @@ public class ReservationCreateRequest {
     private TimeSlot timeSlot;
     private GuestReference guest;
     private Float price;
+
+    public ReservationCreateRequest(AccommodationReference accommodationReference, TimeSlot timeSlot, GuestReference guestReference, Float price) {
+        this.accommodation = accommodationReference;
+        this.timeSlot = timeSlot;
+        this.guest = guestReference;
+        this.price = price;
+    }
 }
