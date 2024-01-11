@@ -19,6 +19,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.PasswordChangeRequest;
 import rs.ac.uns.ftn.BookingBaboon.repositories.users.IUserRepository;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.tokens.ITokenService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IEmailService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
@@ -34,7 +35,6 @@ public class UserService implements IUserService, UserDetailsService {
     private final IUserRepository repository;
 
     private final ITokenService tokenService;
-
     private final PasswordEncoder encoder = new BCryptPasswordEncoder();
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
@@ -179,7 +179,7 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
-    public Object toggleNotifications(Long userId, NotificationType notificationType) {
+    public User toggleNotifications(Long userId, NotificationType notificationType) {
         User user = get(userId);
         Set<NotificationType> ignoredNotifications = user.getIgnoredNotifications();
 
@@ -190,6 +190,22 @@ public class UserService implements IUserService, UserDetailsService {
         }
 
         user.setIgnoredNotifications(ignoredNotifications);
+        update(user);
+        return user;
+    }
+
+    @Override
+    public User blockUser(Long userId) {
+        User user = get(userId);
+        user.block();
+        update(user);
+        return user;
+    }
+
+    @Override
+    public User unblockUser(Long userId) {
+        User user = get(userId);
+        user.unblock();
         update(user);
         return user;
     }

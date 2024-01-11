@@ -33,5 +33,9 @@ public interface IUserService{
 
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
 
-    Object toggleNotifications(Long userId, NotificationType notificationType);
+    User toggleNotifications(Long userId, NotificationType notificationType);
+
+    User blockUser(Long userId);
+
+    User unblockUser(Long userId);
 }

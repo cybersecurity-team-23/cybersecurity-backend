@@ -203,6 +203,11 @@ public class ReservationService implements IReservationService {
     public Reservation cancel(Long id) {
         Reservation reservation = get(id);
 
+        if(reservation.getStatus().equals(ReservationStatus.Canceled) ||
+        reservation.getStatus().equals(ReservationStatus.Finished)) {
+            return null;
+        }
+
         int deadlineDays = reservation.getAccommodation().getCancellationDeadline();
         if (reservation.getTimeSlot().getStartDate().toEpochDay() - LocalDate.now().toEpochDay() <= deadlineDays && reservation.getStatus() == ReservationStatus.Approved) {
             return null;
@@ -276,6 +281,15 @@ public class ReservationService implements IReservationService {
     @Override
     public Collection<Reservation> getAllForHost(Long id) {
         return repository.findAllByAccommodation_Host_Id(id);
+    }
+
+    @Override
+    public Collection<Reservation> cancelAllForGuest(Long guestId) {
+        Collection<Reservation> reservations = repository.findAllByGuest_Id(guestId);
+        for(Reservation reservation : reservations) {
+            cancel(reservation.getId());
+        }
+        return reservations;
     }
 
 }

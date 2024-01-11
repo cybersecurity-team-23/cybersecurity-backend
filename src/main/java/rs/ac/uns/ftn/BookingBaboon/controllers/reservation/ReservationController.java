@@ -152,5 +152,13 @@ public class ReservationController {
                 .map(reservation -> mapper.map(reservation, ReservationResponse.class))
                 .collect(Collectors.toList()), HttpStatus.OK);
     }
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/cancelAllForGuest/{guestId}")
+    public ResponseEntity<Collection<ReservationResponse>> cancelAllForGuest(@PathVariable Long guestId) {
+        Collection<Reservation> reservations = service.cancelAllForGuest(guestId);
+        return new ResponseEntity<>(reservations.stream()
+                .map(reservation -> mapper.map(reservation, ReservationResponse.class))
+                .collect(Collectors.toList()), HttpStatus.OK);
+    }
 
 }

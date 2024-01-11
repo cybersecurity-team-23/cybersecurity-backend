@@ -21,6 +21,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
+import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.Collection;
@@ -33,6 +34,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final IUserService service;
+    private final IReservationService reservationService;
     private final ModelMapper mapper;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
@@ -158,6 +160,16 @@ public class UserController {
     @PutMapping({"/{userId}/toggle-notifications/{notificationType}"})
     public ResponseEntity<UserProfile> toggleNotifications (@PathVariable Long userId, @PathVariable String notificationType){
         return new ResponseEntity<> (mapper.map(service.toggleNotifications(userId, NotificationType.valueOf(notificationType)), UserProfile.class), HttpStatus.OK);
+    }
+
+    @PutMapping({"/{userId}/block"})
+    public ResponseEntity<UserResponse> blockUser (@PathVariable Long userId){
+        return new ResponseEntity<> (mapper.map(service.blockUser(userId), UserResponse.class), HttpStatus.OK);
+    }
+
+    @PutMapping({"/{userId}/unblock"})
+    public ResponseEntity<UserResponse> unblockUser (@PathVariable Long userId){
+        return new ResponseEntity<> (mapper.map(service.unblockUser(userId), UserResponse.class), HttpStatus.OK);
     }
 
 }
