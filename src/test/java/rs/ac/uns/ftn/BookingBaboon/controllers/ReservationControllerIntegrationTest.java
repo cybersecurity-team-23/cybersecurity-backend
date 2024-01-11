@@ -38,7 +38,6 @@ public class ReservationControllerIntegrationTest {
     @Test
     @DisplayName("Should Create Reservation When making POST request to /api/v1/reservations")
     public void shouldCreateReservation() {
-        // Create a ReservationCreateRequest object with the necessary data
         ReservationCreateRequest reservationCreateRequest = new ReservationCreateRequest(
                 new AccommodationReference(1L),
                 new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),

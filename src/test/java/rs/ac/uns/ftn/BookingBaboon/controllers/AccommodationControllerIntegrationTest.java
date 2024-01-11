@@ -52,6 +52,23 @@ public class AccommodationControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("Should Get NotFound status for accommodation with invalid ID When making GET request to /api/v1/accommodations/{id}")
+    public void shouldNotRetrieveAccommodationByInvalidId() {
+        Long invalidAccommodationId = -1L;
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + invalidAccommodationId,
+                HttpMethod.GET,
+                null,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+
+        AccommodationResponse accommodation = responseEntity.getBody();
+        assertNull(accommodation.getId());
+    }
+
+    @Test
     @DisplayName("Should Get Total Price When making GET request to /api/v1/accommodations/{id}/total-price")
     public void shouldRetrieveTotalPrice() {
         Long accommodationId = 1L;

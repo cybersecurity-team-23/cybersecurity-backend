@@ -50,7 +50,7 @@ public class AccommodationController {
         Accommodation accommodation = service.get(id);
 
         if (accommodation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
