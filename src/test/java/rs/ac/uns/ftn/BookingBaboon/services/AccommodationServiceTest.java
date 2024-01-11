@@ -5,26 +5,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.AvailablePeriod;
 import rs.ac.uns.ftn.BookingBaboon.domain.shared.TimeSlot;
+import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationModificationRepository;
 import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAccommodationRepository;
+import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAvailablePeriodRepository;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.AccommodationService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAccommodationService;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -36,6 +34,12 @@ public class AccommodationServiceTest {
 
     @MockBean
     private IAccommodationRepository accommodationRepository;
+
+    @MockBean
+    private IAccommodationModificationRepository accommodationModificationRepository;
+
+    @MockBean
+    private IAvailablePeriodRepository availablePeriodRepository;
 
     @MockBean
     private ResourceBundle bundle;
@@ -111,5 +115,80 @@ public class AccommodationServiceTest {
         assertEquals(350, totalPrice);
 
         verify(accommodationRepository, times(1)).findAvailablePeriodsSortedByStartDate(accommodation.getId());
+    }
+
+    @Test
+    public void testAddValidAvailablePeriod(){
+        AvailablePeriod availablePeriod = new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),10F);
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.of(availablePeriod));
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        assertEquals(accommodationService.addPeriod(1L,1L).getAvailablePeriods().get(0),availablePeriod);
+        verify(accommodationRepository, times(1)).save(accommodation);
+    }
+
+    @Test
+    public void testAddNotFoundAvailablePeriod(){
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.empty());
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> accommodationService.addPeriod(1L,1L));
+        assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
+        verify(accommodationRepository, never()).save(accommodation);
+    }
+
+    @Test
+    public void testAddAvailablePeriodNotFoundAccommodation(){
+        AvailablePeriod availablePeriod = new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),10F);
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.of(availablePeriod));
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.empty());
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> accommodationService.addPeriod(1L,1L));
+        assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
+        verify(accommodationRepository, never()).save(accommodation);
+    }
+
+    @Test
+    public void testRemoveValidAvailablePeriod(){
+        AvailablePeriod availablePeriod = new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),10F);
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.of(availablePeriod));
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        assertEquals(accommodationService.removePeriod(1L,1L).getAvailablePeriods().size(),0);
+        verify(accommodationRepository, times(1)).save(accommodation);
+    }
+
+    @Test
+    public void testRemoveNotFoundAvailablePeriod(){
+        AvailablePeriod availablePeriod = new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),10F);
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.empty());
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> accommodationService.addPeriod(1L,1L));
+        assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
+        verify(accommodationRepository, never()).save(accommodation);
+    }
+
+    @Test
+    public void testRemoveAvailablePeriodNotFoundAccommodation(){
+        AvailablePeriod availablePeriod = new AvailablePeriod(1L, new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),10F);
+        when(availablePeriodRepository.findById(1L)).thenReturn(Optional.of(availablePeriod));
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        accommodation.setAvailablePeriods(new ArrayList<>());
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.empty());
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> accommodationService.addPeriod(1L,1L));
+        assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
+        verify(accommodationRepository, never()).save(accommodation);
     }
 }
