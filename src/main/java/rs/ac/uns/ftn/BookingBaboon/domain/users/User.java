@@ -47,8 +47,15 @@ public class User{
     public void activate() {
         this.status = UserStatus.Active;
     }
+    public void block() {
+        this.status = UserStatus.Blocked;
+    }
 
     public boolean isActive() {
         return this.status == UserStatus.Active;
+    }
+
+    public void unblock() {
+        this.status = UserStatus.Active;
     }
 }

@@ -30,4 +30,6 @@ public interface IReservationService {
     public Reservation handleAutomaticAcceptance(Reservation reservation);
     public Collection<Reservation> getAllForGuest(Long id);
     public Collection<Reservation> getAllForHost(Long id);
+
+    Collection<Reservation> cancelAllForGuest(Long guestId);
 }
