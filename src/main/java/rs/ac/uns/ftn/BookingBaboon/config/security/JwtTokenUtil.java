@@ -82,4 +82,12 @@ public class JwtTokenUtil implements Serializable {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
+
+    public String generateTokenForHost(long id, String email) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("sub", email);
+        claims.put("role", Collections.singleton("HOST"));
+        claims.put("id", id);
+        return doGenerateToken(claims);
+    }
 }

@@ -8,4 +8,10 @@ public class AvailablePeriodRequest {
     private Long id;
     private TimeSlot timeSlot;
     private Float PricePerNight;
+
+    public AvailablePeriodRequest(long id, TimeSlot timeSlot, float pricePerNight) {
+        this.id = id;
+        this.timeSlot = timeSlot;
+        this.PricePerNight = pricePerNight;
+    }
 }

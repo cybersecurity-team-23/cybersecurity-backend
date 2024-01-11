@@ -7,18 +7,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.reservation.ReservationCreateRequest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 //@TestPropertySource(
@@ -30,6 +29,9 @@ public class AccommodationControllerIntegrationTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Test
     @DisplayName("Should Get Accommodation by ID When making GET request to /api/v1/accommodations/{id}")
@@ -72,4 +74,57 @@ public class AccommodationControllerIntegrationTest {
         assertEquals(totalPrice, 320L);
     }
 
+    @Test
+    @DisplayName("Should add Available Period to Accommodation When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldAddAvailablePeriodToAccommodation() {
+        Long accommodationId = 1L;
+        Long periodId = 45L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/addPeriod/" + periodId,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        AccommodationResponse accommodation = responseEntity.getBody();
+        assertNotNull(accommodation);
+        assertEquals(accommodation.getId(), accommodationId);
+        assertTrue(accommodation.getAvailablePeriods().stream().anyMatch(availablePeriodResponse -> availablePeriodResponse.getId().equals(periodId)));
+    }
+
+    @Test
+    @DisplayName("Should remove Available Period from Accommodation When making DELETE request to /api/v1/accommodations/{accommodationId}/available/{periodId}")
+    public void shouldRemoveAvailablePeriodFromAccommodation() {
+        Long accommodationId = 1L;
+        Long periodId = 44L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/available-periods/" + periodId,
+                HttpMethod.DELETE,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        AccommodationResponse accommodation = responseEntity.getBody();
+        assertNotNull(accommodation);
+        assertEquals(accommodation.getId(), accommodationId);
+        assertTrue(accommodation.getAvailablePeriods().stream().noneMatch(availablePeriodResponse -> availablePeriodResponse.getId().equals(periodId)));
+    }
 }
