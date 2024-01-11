@@ -134,7 +134,6 @@ INSERT INTO public.accommodations_available_periods (accommodation_id, available
                                                                                                  (1, 42),
                                                                                                  (1, 43),
                                                                                                  (1, 44),
-                                                                                                 (1, 45),
                                                                                                  (2, 2),
                                                                                                  (2, 5),
                                                                                                  (3, 3),
