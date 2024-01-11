@@ -88,11 +88,10 @@ public class AccommodationController {
 
 
     @DeleteMapping("{accommodationId}/available-periods/{periodId}")
-    public ResponseEntity<Void> remove(@PathVariable Long accommodationId, @PathVariable Long periodId) {
+    public ResponseEntity<AccommodationResponse> remove(@PathVariable Long accommodationId, @PathVariable Long periodId) {
         Accommodation accommodation = service.removePeriod(periodId, accommodationId);
         if (accommodation != null) {
-            service.remove(accommodationId);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
