@@ -10,6 +10,7 @@ import java.util.List;
 
 public class SearchAndFilterAccommodationsTest extends TestBase{
     static final String City = "Suburbia";
+    static final String NonExistentCity = "aaaaaa";
     static final String Checkin = "April 3, 2024";
     static final String Checkout = "April 6, 2024";
     static final Integer GuestNum = 2;
@@ -20,7 +21,7 @@ public class SearchAndFilterAccommodationsTest extends TestBase{
     static final List<String> AccommodationTypes = new ArrayList<>(List.of("Room"));
 
     @Test
-    public void applyAsDeveloper() throws InterruptedException {
+    public void SearchAndFilterAccommodations() {
         HomePage home = new HomePage(driver);
         Assert.assertTrue(home.isPageOpened());
 
@@ -34,5 +35,31 @@ public class SearchAndFilterAccommodationsTest extends TestBase{
         home.enterAccommodationTypes(AccommodationTypes);
         home.enterAmenities(Amenities);
         home.applyFilter();
+        Assert.assertTrue(home.verifyResultsCity(City));
+        Assert.assertTrue(home.verifyResultsRating(MinRating));
+    }
+
+    @Test
+    public void SearchAccommodations() {
+        HomePage home = new HomePage(driver);
+        Assert.assertTrue(home.isPageOpened());
+
+        home.enterCity(City);
+        home.enterPeriod(Checkin, Checkout);
+        home.enterGuestNum(GuestNum);
+        home.pressSearch();
+        Assert.assertTrue(home.verifyResultsCity(City));
+    }
+
+    @Test
+    public void SearchAccommodationsWithNoResults() {
+        HomePage home = new HomePage(driver);
+        Assert.assertTrue(home.isPageOpened());
+
+        home.enterCity(NonExistentCity);
+        home.enterPeriod(Checkin, Checkout);
+        home.enterGuestNum(GuestNum);
+        home.pressSearch();
+        Assert.assertFalse(home.accommodationsExist());
     }
 }

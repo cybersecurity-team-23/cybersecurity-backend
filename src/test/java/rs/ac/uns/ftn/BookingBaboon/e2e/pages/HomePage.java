@@ -58,6 +58,12 @@ public class HomePage {
     @FindBy(css = "#apply-button")
     WebElement applyFilterButton;
 
+    @FindBy(css = "#accommodationList")
+    WebElement accommodationListContainer;
+
+    @FindBy(css = "button[type='submit']")
+    WebElement searchButton;
+
 
 
     public HomePage(WebDriver driver){
@@ -79,6 +85,7 @@ public class HomePage {
         cityField.sendKeys(city);
     }
 
+
     public void enterPeriod(String checkin, String checkout){
         openCalendarButton.click();
 
@@ -93,8 +100,8 @@ public class HomePage {
     }
 
     public void enterGuestNum(Integer guestNum){
-        cityField.clear();
-        cityField.sendKeys(String.valueOf(guestNum));
+        guestNumField.clear();
+        guestNumField.sendKeys(String.valueOf(guestNum));
     }
 
     public void openFiltersBox(){
@@ -132,14 +139,49 @@ public class HomePage {
         }
     }
 
+    public void pressSearch(){
+        searchButton.click();
+    }
+
     public void applyFilter(){
         applyFilterButton.click();
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         wait.until(ExpectedConditions.invisibilityOf(filterBox));
     }
 
-//    public void clickOnFreelancerApplyButton(){
-//        (new WebDriverWait(driver, 10))
-//                .until(ExpectedConditions.elementToBeClickable(freelancerApplyButton)).click();
-//    }
+    public List<WebElement> getResultAccommodations(){
+        return accommodationListContainer.findElements(By.cssSelector("app-accommodation-card"));
+    }
+
+    public boolean verifyResultsCity(String value){
+        List<WebElement> accommodationCards = getResultAccommodations();
+        boolean isCorrect = true;
+        for(WebElement accommodationCard: accommodationCards){
+            String location = accommodationCard.findElement(new By.ByCssSelector("p.location")).getText();
+            String city = location.split(", ")[1];
+            if(!city.equals(value)){
+                isCorrect = false;
+                break;
+            }
+        }
+        return isCorrect;
+    }
+
+    public boolean verifyResultsRating(Integer value){
+        List<WebElement> accommodationCards = getResultAccommodations();
+        boolean isCorrect = true;
+        for(WebElement accommodationCard: accommodationCards){
+            String rating = accommodationCard.findElement(new By.ByCssSelector("p.rating")).getText();
+            if(Float.parseFloat(rating) < value){
+                isCorrect = false;
+                break;
+            }
+        }
+        return isCorrect;
+    }
+
+    public boolean accommodationsExist(){
+        return !getResultAccommodations().isEmpty();
+    }
+
 }
