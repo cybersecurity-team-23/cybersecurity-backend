@@ -43,4 +43,6 @@ public interface IAccommodationService {
     Accommodation updateEditingStatus(Long accommodationId, boolean isBeingEdited);
 
     Accommodation updateAutoAccept(Long accommodationId, Boolean isAutomaticallyAccepted);
+
+    Accommodation updateCancellationDeadline(Long accommodationId, int value);
 }

@@ -229,6 +229,17 @@ public class AccommodationService implements IAccommodationService {
         return accommodation;
     }
 
+    @Override
+    public Accommodation updateCancellationDeadline(Long accommodationId, int value) {
+        Accommodation accommodation = get(accommodationId);
+        if (accommodation == null || value < 0) {
+            return null;
+        }
+        accommodation.setCancellationDeadline(value);
+        repository.save(accommodation);
+        return accommodation;
+    }
+
     //Amenity form => /filter?amenity=Wi-Fi,Swimming%20Pool,Parking
     private List<String> parseAmenities(String amenityString) {
         if (amenityString == null || amenityString.isEmpty()) {

@@ -179,4 +179,15 @@ public class AccommodationController {
 
         return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
     }
+
+    @PutMapping("/{accommodationId}/cancellation-deadline/{value}")
+    public ResponseEntity<AccommodationResponse> updateCancellationDeadline(@PathVariable Long accommodationId, @PathVariable int value) {
+        Accommodation accommodation = service.updateCancellationDeadline(accommodationId, value);
+
+        if (accommodation == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(mapper.map(accommodation, AccommodationResponse.class), HttpStatus.OK);
+    }
 }
