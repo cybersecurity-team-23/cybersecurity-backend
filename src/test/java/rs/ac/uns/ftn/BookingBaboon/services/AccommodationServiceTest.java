@@ -191,4 +191,37 @@ public class AccommodationServiceTest {
         assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
         verify(accommodationRepository, never()).save(accommodation);
     }
+
+    @Test
+    public void testUpdateValidCancellationDeadline(){
+        int deadline = 8;
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        Accommodation updatedAccommodation = accommodationService.updateCancellationDeadline(1L,8);
+        assertEquals(updatedAccommodation.getCancellationDeadline(),deadline);
+        verify(accommodationRepository, times(1)).save(accommodation);
+    }
+
+    @Test
+    public void testUpdateValidCancellationDeadlineNotFoundAccommodation(){
+        int deadline = 8;
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.empty());
+        ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> accommodationService.updateCancellationDeadline(1L,deadline));
+        assertEquals(HttpStatus.NOT_FOUND.value(), exception.getStatusCode().value());
+        verify(accommodationRepository, never()).save(accommodation);
+    }
+
+    @Test
+    public void testUpdateInvalidCancellationDeadline(){
+        int deadline = -1;
+        Accommodation accommodation = new Accommodation();
+        accommodation.setId(1L);
+        when(accommodationRepository.findById(accommodation.getId())).thenReturn(Optional.of(accommodation));
+        Accommodation updatedAccommodation = accommodationService.updateCancellationDeadline(1L,deadline);
+        assertNull(updatedAccommodation);
+        verify(accommodationRepository, never()).save(accommodation);
+    }
 }

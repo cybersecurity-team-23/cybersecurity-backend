@@ -119,6 +119,72 @@ public class AccommodationControllerIntegrationTest {
     }
 
     @Test
+    @DisplayName("Should return NOT ACCEPTABLE when trying to add overlapping Available Period to Accommodation When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldNotAddOverlappingAvailablePeriodToAccommodation() {
+        Long accommodationId = 1L;
+        Long periodId = 1L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/addPeriod/" + periodId,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_ACCEPTABLE, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to add Available Period with invalid id to Accommodation When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldNotAddInvalidAvailablePeriodToAccommodation() {
+        Long accommodationId = 1L;
+        Long periodId = 777L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/addPeriod/" + periodId,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to add Available Period to Accommodation with invalid id When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldNotAddAvailablePeriodToInvalidAccommodation() {
+        Long accommodationId = 777L;
+        Long periodId = 45L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/addPeriod/" + periodId,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
     @DisplayName("Should remove Available Period from Accommodation When making DELETE request to /api/v1/accommodations/{accommodationId}/available/{periodId}")
     public void shouldRemoveAvailablePeriodFromAccommodation() {
         Long accommodationId = 1L;
@@ -143,5 +209,120 @@ public class AccommodationControllerIntegrationTest {
         assertNotNull(accommodation);
         assertEquals(accommodation.getId(), accommodationId);
         assertTrue(accommodation.getAvailablePeriods().stream().noneMatch(availablePeriodResponse -> availablePeriodResponse.getId().equals(periodId)));
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to remove Available Period with invalid id from Accommodation When making DELETE request to /api/v1/accommodations/{accommodationId}/available/{periodId}")
+    public void shouldNotRemoveInvalidAvailablePeriodFromAccommodation() {
+        Long accommodationId = 1L;
+        Long periodId = 777L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/available-periods/" + periodId,
+                HttpMethod.DELETE,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to remove Available Period from Accommodation with invalid id When making DELETE request to /api/v1/accommodations/{accommodationId}/available/{periodId}")
+    public void shouldNotRemoveAvailablePeriodFromInvalidAccommodation() {
+        Long accommodationId = 777L;
+        Long periodId = 44L;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/available-periods/" + periodId,
+                HttpMethod.DELETE,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should update Cancellation Deadline for Accommodation When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldUpdateCancellationDeadlineToAccommodation() {
+        Long accommodationId = 1L;
+        int cancellationDeadline = 4;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/cancellation-deadline/" + cancellationDeadline,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        AccommodationResponse accommodation = responseEntity.getBody();
+        assertNotNull(accommodation);
+        assertEquals(accommodation.getId(), accommodationId);
+        assertEquals(accommodation.getCancellationDeadline(),cancellationDeadline);
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to update Cancellation Deadline for Accommodation with invalid id When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldNotUpdateCancellationDeadlineToInvalidAccommodation() {
+        Long accommodationId = 777L;
+        int cancellationDeadline = 4;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/cancellation-deadline/" + cancellationDeadline,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to update Cancellation Deadline with invalid value for Accommodation When making PUT request to /api/v1/accommodations/{accommodationId}/addPeriod/{periodId}")
+    public void shouldNotUpdateInvalidCancellationDeadlineToAccommodation() {
+        Long accommodationId = 1L;
+        int cancellationDeadline = -4;
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<AccommodationResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/accommodations/" + accommodationId + "/cancellation-deadline/" + cancellationDeadline,
+                HttpMethod.PUT,
+                requestEntity,
+                AccommodationResponse.class);
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
     }
 }
