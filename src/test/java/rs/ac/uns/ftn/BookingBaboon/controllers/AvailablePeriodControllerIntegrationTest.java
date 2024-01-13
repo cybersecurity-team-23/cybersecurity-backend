@@ -87,4 +87,28 @@ public class AvailablePeriodControllerIntegrationTest {
         assertEquals(request.getPricePerNight(),response.getPricePerNight());
         assertEquals(request.getTimeSlot(),response.getTimeSlot());
     }
+
+    @Test
+    @DisplayName("Should return NOT FOUND when trying to update invalid Available Period When making PUT request to /api/v1/available-periods")
+    public void shouldNotUpdateInvalidAvailablePeriod() {
+        AvailablePeriodRequest request = new AvailablePeriodRequest(777L,
+                new TimeSlot(LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 5)),
+                100F
+        );
+
+        String token = jwtTokenUtil.generateTokenForHost(1L, "john.doe@example.com");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(token);
+
+        HttpEntity<AvailablePeriodRequest> requestEntity = new HttpEntity<>(request,headers);
+
+        ResponseEntity<AvailablePeriodResponse> responseEntity = restTemplate.exchange(
+                "http://localhost:" + port + "/api/v1/available-periods",
+                HttpMethod.PUT,
+                requestEntity,
+                AvailablePeriodResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
 }

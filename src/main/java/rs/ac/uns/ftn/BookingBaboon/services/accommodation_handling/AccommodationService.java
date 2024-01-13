@@ -187,6 +187,7 @@ public class AccommodationService implements IAccommodationService {
         Accommodation accommodation = get(accommodationId);
         if(period == null || accommodation==null)return null;
         List<AvailablePeriod> periods =  accommodation.getAvailablePeriods();
+        if(findFirstOverlappingPeriodIndex(periods,period.getTimeSlot())!=-1)throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Period overlaps with already present periods");;
         periods.add(period);
         accommodation.setAvailablePeriods(periods);
         repository.save(accommodation);
