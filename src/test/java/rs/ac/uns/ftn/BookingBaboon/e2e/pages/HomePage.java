@@ -64,6 +64,14 @@ public class HomePage {
     @FindBy(css = "button[type='submit']")
     WebElement searchButton;
 
+    @FindBy(css = "button[ng-reflect-router-link='/login']")
+    WebElement logInButton;
+
+    @FindBy(css = "#right-section>button[color='warn']")
+    WebElement logOutButton;
+
+    @FindBy(css = "button[ng-reflect-router-link='/host/accommodations']")
+    WebElement hostAccommodationsButton;
 
 
     public HomePage(WebDriver driver){
@@ -184,4 +192,24 @@ public class HomePage {
         return !getResultAccommodations().isEmpty();
     }
 
+    public void goToLogin(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(logInButton)).click();
+    }
+
+    public boolean isLoggedIn(){
+        try{
+            return (new WebDriverWait(driver, Duration.ofSeconds(1)))
+                    .until(ExpectedConditions.textToBePresentInElement(logOutButton,"Log Out"));
+        }catch(Exception e){
+            return false;
+        }
+
+
+    }
+
+    public void goToHostAccommodations(){
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.elementToBeClickable(hostAccommodationsButton)).click();
+    }
 }
