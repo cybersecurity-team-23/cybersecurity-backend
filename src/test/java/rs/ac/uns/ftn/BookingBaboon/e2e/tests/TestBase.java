@@ -2,12 +2,13 @@ package rs.ac.uns.ftn.BookingBaboon.e2e.tests;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import java.util.concurrent.TimeUnit;
 
-public class TestBase {
+public class TestBase extends AbstractTestNGSpringContextTests {
     public static WebDriver driver;
 
     @BeforeSuite

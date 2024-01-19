@@ -2,6 +2,10 @@ package rs.ac.uns.ftn.BookingBaboon.e2e.tests;
 
 
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
@@ -22,12 +26,15 @@ import rs.ac.uns.ftn.BookingBaboon.repositories.accommodation_handling.IAvailabl
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.AvailablePeriodService;
 import rs.ac.uns.ftn.BookingBaboon.services.accommodation_handling.interfaces.IAvailablePeriodService;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.Date;
-
+import java.util.stream.Collectors;
 
 @SpringBootTest
-@ComponentScan(basePackages = "rs.ac.uns.ftn.BookingBaboon")
+@Transactional
 public class ChangeAccommodationAvailabilityTest extends TestBase{
 
     private final String hostUsername = "john.doe@example.com";
@@ -56,8 +63,14 @@ public class ChangeAccommodationAvailabilityTest extends TestBase{
     private final float validEditPrice = 6.0F;
     private final int cancellationDeadline = 5;
 
-    @Autowired
-    private IAvailablePeriodService service;
+    @PersistenceContext
+    EntityManager entityManager;
+
+    public void rollbackDatabase(){
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("rollback.sql");
+        String rollbackScript = new BufferedReader(new InputStreamReader(inputStream)).lines().collect(Collectors.joining("\n"));
+        entityManager.createNativeQuery(rollbackScript).executeUpdate();
+    }
 
     private void loginAsHost() {
         HomePage homePage = new HomePage(driver);
@@ -127,13 +140,8 @@ public class ChangeAccommodationAvailabilityTest extends TestBase{
         changeAvailabilityPage.submitChanges();
 
 
-        revertChanges();
+        rollbackDatabase();
     }
 
-    private void revertChanges() {
-        service.remove(46L);
-        service.update(new AvailablePeriod(15L, new TimeSlot(LocalDate.of(2024, 4, 21), LocalDate.of(2024, 4, 30)),90F));
-        service.update(new AvailablePeriod(18, new TimeSlot(LocalDate.of(2024, 5, 21), LocalDate.of(2024, 5, 31)),75F));
-    }
 
 }
