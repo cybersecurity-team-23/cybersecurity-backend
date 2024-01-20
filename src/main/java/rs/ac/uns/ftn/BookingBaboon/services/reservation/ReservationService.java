@@ -178,18 +178,18 @@ public class ReservationService implements IReservationService {
         List<AvailablePeriod> overlappingPeriods = availablePeriodService.getOverlappingPeriods(reservation.getTimeSlot(), accommodation.getAvailablePeriods());
         List<AvailablePeriod> newAvailablePeriods = availablePeriodService.splitPeriods(reservation.getTimeSlot(), overlappingPeriods);
 
-        //Add new ones
-        for(AvailablePeriod newAvailablePeriod: newAvailablePeriods){
-            AvailablePeriod result = availablePeriodService.create(newAvailablePeriod);
-            accommodationService.addPeriod(result.getId(), accommodation.getId());
-        }
-
         //Delete the old ones
         for(AvailablePeriod oldPeriod: overlappingPeriods){
             accommodationService.removePeriod(oldPeriod.getId(), accommodation.getId());
 /*
             availablePeriodService.remove(oldPeriod.getId());
 */
+        }
+
+        //Add new ones
+        for(AvailablePeriod newAvailablePeriod: newAvailablePeriods){
+            AvailablePeriod result = availablePeriodService.create(newAvailablePeriod);
+            accommodationService.addPeriod(result.getId(), accommodation.getId());
         }
 
         denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId(), reservation.getId());
@@ -204,7 +204,8 @@ public class ReservationService implements IReservationService {
         Reservation reservation = get(id);
 
         if(reservation.getStatus().equals(ReservationStatus.Canceled) ||
-        reservation.getStatus().equals(ReservationStatus.Finished)) {
+                reservation.getStatus().equals(ReservationStatus.Finished) ||
+                reservation.getStatus().equals(ReservationStatus.Denied)) {
             return null;
         }
 
