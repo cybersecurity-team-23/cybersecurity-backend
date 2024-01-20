@@ -46,6 +46,10 @@ public class ChangeAccommodationAvailabilityTest extends TestBase{
 
     private final String validEndDate = "January 31, 2024";
 
+    private final String invalidStartDate = "January 1, 2024";
+
+    private final String invalidEndDate = "January 2, 2024";
+
     private final String validEditStartDate = "May 24, 2024";
 
     private final String validEditEndDate = "May 25, 2024";
@@ -58,10 +62,30 @@ public class ChangeAccommodationAvailabilityTest extends TestBase{
 
     private final String validRemovePeriodText = "Apr 21, 2024 - Apr 30, 2024 | Price: €90.00";
 
+    private final String invalidDateText = "Jan 1, 2024 - Jan 2, 2024";
+
+    private final String invalidPriceText = "Price: €-8.00";
+
     private final float validPrice = 8.0F;
 
+    private final float invalidPrice = -1.0F;
+
     private final float validEditPrice = 6.0F;
-    private final int cancellationDeadline = 5;
+    private final int cancellationDeadline = 6;
+
+    private final int invalidCancellationDeadline = -1;
+
+    private final String validYear = "2024";
+
+    private final String validMonth = "May";
+
+    private final String invalidYear = "2023";
+
+    private final String invalidMonth = "October";
+
+    private final String invalidEditStartDate = "October 1, 2023";
+
+    private final String invalidEditEndDate = "October 2, 2023";
 
     @PersistenceContext
     EntityManager entityManager;
@@ -138,10 +162,77 @@ public class ChangeAccommodationAvailabilityTest extends TestBase{
         Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(validRemovePeriodText));
         changeAvailabilityPage.enterCancellationDeadline(cancellationDeadline);
         changeAvailabilityPage.submitChanges();
-
-
+        ChangeAvailabilityPage changeAvailabilityPage1 = navigateToChangeAccommodationAvailability();
+        Assert.assertTrue(changeAvailabilityPage.isPeriodAdded(validPeriodText));
+        Assert.assertTrue(changeAvailabilityPage1.isPeriodAdded(validEditedPeriodText));
+        Assert.assertFalse(changeAvailabilityPage1.isPeriodAdded(validRemovePeriodText));
+        Assert.assertTrue(changeAvailabilityPage.isCancellationDeadlineChanged(cancellationDeadline));
         rollbackDatabase();
     }
 
+    @Test
+    public void addInvalidAvailablePeriodTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.enterDates(invalidStartDate, invalidEndDate);
+        changeAvailabilityPage.enterPrice(validPrice);
+        changeAvailabilityPage.addPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(invalidDateText));
+    }
+
+    @Test
+    public void addInvalidPriceTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.enterDates(validStartDate, validEndDate);
+        changeAvailabilityPage.enterPrice(invalidPrice);
+        changeAvailabilityPage.addPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(invalidDateText));
+    }
+
+    @Test
+    public void addInvalidPeriodTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.enterDates(invalidStartDate, invalidEndDate);
+        changeAvailabilityPage.enterPrice(invalidPrice);
+        changeAvailabilityPage.addPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(invalidDateText));
+    }
+
+    @Test
+    public void editInvalidDateTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.selectEditPeriod(validEditPeriodText);
+        changeAvailabilityPage.enterInvalidPeriod(invalidYear, invalidMonth ,invalidEditStartDate, invalidEditEndDate);
+        changeAvailabilityPage.enterEditPrice(validEditPrice);
+        changeAvailabilityPage.editPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(validEditedPeriodText));
+    }
+
+    @Test
+    public void editInvalidPriceTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.selectEditPeriod(validEditPeriodText);
+        changeAvailabilityPage.enterInvalidPeriod(validYear, validMonth ,validEditStartDate, validEditEndDate);
+        changeAvailabilityPage.enterEditPrice(invalidPrice);
+        changeAvailabilityPage.editPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(validEditedPeriodText));
+    }
+
+    @Test
+    public void editInvalidPeriodTest(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.selectEditPeriod(validEditPeriodText);
+        changeAvailabilityPage.enterInvalidPeriod(invalidYear, invalidMonth ,invalidEditStartDate, invalidEditEndDate);
+        changeAvailabilityPage.enterEditPrice(invalidPrice);
+        changeAvailabilityPage.editPeriod();
+        Assert.assertFalse(changeAvailabilityPage.isPeriodAdded(validEditedPeriodText));
+    }
+
+    @Test
+    public void editInvalidCancellationDate(){
+        ChangeAvailabilityPage changeAvailabilityPage = navigateToChangeAccommodationAvailability();
+        changeAvailabilityPage.enterCancellationDeadline(invalidCancellationDeadline);
+        Assert.assertFalse(changeAvailabilityPage.isCancellationDeadlineValid());
+
+    }
 
 }

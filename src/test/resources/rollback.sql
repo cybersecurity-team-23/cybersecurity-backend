@@ -12,6 +12,10 @@ WHERE id=18;
 DELETE FROM public.accommodations_available_periods where available_periods_id > 45 and accommodation_id=9;
 DELETE FROM public.available_period where id > 45 and price_per_night=8;
 
-INSERT INTO public.accommodations_available_periods (accommodation_id,available_periods_id) VALUES (9,15);
+INSERT INTO public.accommodations_available_periods (accommodation_id,available_periods_id) VALUES (9,15) ;
+
+UPDATE public.accommodations
+SET cancellation_deadline=5
+WHERE id=9;
 
 COMMIT;

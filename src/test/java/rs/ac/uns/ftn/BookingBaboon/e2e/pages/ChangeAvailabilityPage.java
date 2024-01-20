@@ -1,6 +1,7 @@
 package rs.ac.uns.ftn.BookingBaboon.e2e.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -8,6 +9,7 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.Console;
 import java.time.Duration;
 import java.util.List;
 
@@ -50,6 +52,11 @@ public class ChangeAvailabilityPage {
 
     @FindBy(id = "submit")
     WebElement submitButton;
+
+    @FindBy(css = "button.mat-calendar-period-button")
+    WebElement periodButton;
+
+
 
     public ChangeAvailabilityPage(WebDriver driver, Long id){
         this.driver=driver;
@@ -136,12 +143,45 @@ public class ChangeAvailabilityPage {
     }
 
     public void enterCancellationDeadline(int days){
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOf(cancelDeadlineInput)).clear();
+        //new WebDriverWait(driver, Duration.ofSeconds(10))
+        //      .until(ExpectedConditions.visibilityOf(cancelDeadlineInput)).click();
+        cancelDeadlineInput.sendKeys(Keys.CONTROL + "a");
+        cancelDeadlineInput.sendKeys(Keys.DELETE);
         cancelDeadlineInput.sendKeys(Integer.toString(days));
     }
 
     public void submitChanges(){
         submitButton.click();
     }
+
+    public void enterInvalidPeriod(String year, String month, String startDate, String endDate){
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(periodButton)).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(editCalendar.findElement(new By.ByCssSelector("[aria-label='"+year+"']")))).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(editCalendar.findElement(new By.ByCssSelector("[aria-label='"+month+" "+year+ "']")))).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(editCalendar.findElement(new By.ByCssSelector("[aria-label='"+startDate+"']")))).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(editCalendar.findElement(new By.ByCssSelector("[aria-label='"+endDate+"']")))).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.invisibilityOf(editCalendar));
+    }
+
+    public void refreshPage(Long id) {
+        pricePerNightInput.sendKeys(Keys.F5);
+    }
+
+    public boolean isCancellationDeadlineChanged(int days) {
+        String cancellationDeadline = new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(cancelDeadlineInput)).getAttribute("value");
+        return cancellationDeadline.equals(Integer.toString(days));
+    }
+
+    public boolean isCancellationDeadlineValid() {
+        heading.click();
+        return driver.findElements(new By.ByCssSelector("#cancelDeadline>.mdc-text-field--invalid")).isEmpty();
+    }
+
 }
