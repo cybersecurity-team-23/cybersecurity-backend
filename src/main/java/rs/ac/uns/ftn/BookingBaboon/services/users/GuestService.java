@@ -127,16 +127,16 @@ public class GuestService implements IGuestService {
         Guest found = get(guestId);
         for(Reservation reservation : reservationService.getAll()) {
             if (reservation.getGuest().getId().equals(guestId) && reservationService.isApproved(reservation.getId())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Guest has active reservations");
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Guest has active reservations");
             }
         }
+        reviewReportService.removeAllForGuest(guestId);
         reservationService.removeAllForGuest(guestId);
         guestReportService.removeAllForGuest(guestId);
         hostReportService.removeAllByUser(guestId);
         notificationService.removeAllByUser(guestId);
         accommodationReviewService.removeAllByUser(guestId);
         hostReviewService.removeAllByUser(guestId);
-        reviewReportService.removeAllForGuest(guestId);
         tokenService.delete(found);
         repository.delete(found);
         repository.flush();
