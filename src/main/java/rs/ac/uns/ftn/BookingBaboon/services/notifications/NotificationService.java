@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Not;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.Notification;
@@ -28,6 +29,7 @@ public class NotificationService implements INotificationService {
 
     private final INotificationRepository repository;
     private final UserService userService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     ResourceBundle bundle = ResourceBundle.getBundle("ValidationMessages", LocaleContextHolder.getLocale());
 
@@ -51,6 +53,7 @@ public class NotificationService implements INotificationService {
         try {
             repository.save(notification);
             repository.flush();
+            sendNotification(notification);
             return notification;
         } catch (ConstraintViolationException ex) {
             Set<ConstraintViolation<?>> errors = ex.getConstraintViolations();
@@ -136,4 +139,9 @@ public class NotificationService implements INotificationService {
         Notification result = update(notification);
         return result;
     }
+
+    private void sendNotification(Notification notification) {
+        simpMessagingTemplate.convertAndSend("/notification-publisher/" + notification.getUser().getId(), notification);
+    }
+
 }
