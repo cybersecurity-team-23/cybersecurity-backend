@@ -129,7 +129,7 @@ public class ReservationServiceTest {
         assertNotNull(result);
         assertEquals(ReservationStatus.Approved, result.getStatus());
 
-        verify(accommodationService, times(2)).get(reservation.getAccommodation().getId());
+        verify(accommodationService, times(3)).get(reservation.getAccommodation().getId());
         verify(reservationRepository, times(2)).findById(reservation.getId());
     }
 
