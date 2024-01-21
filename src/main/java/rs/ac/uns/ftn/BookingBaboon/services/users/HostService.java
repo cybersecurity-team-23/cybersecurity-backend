@@ -125,16 +125,17 @@ public class HostService implements IHostService {
         for(Reservation reservation : reservationService.getAll()) {
             if (accommodationService.getAllByHost(hostId).contains(reservation.getAccommodation()) &&
                     reservationService.isApproved(reservation.getId())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Host has accommodations with active reservations");
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "Host has accommodations with active reservations");
             }
         }
         //if no active reservations in any of the host's accommodations
+        reviewReportService.removeAllByUser(hostId);
         hostReviewService.removeByHost(hostId);
+        removeReservationsForAccommodations(hostId);
         accommodationService.removeAllByHost(hostId);
         hostReportService.removeAllForHost(hostId);
         notificationService.removeAllByUser(hostId);
         accommodationReviewService.removeAllByUser(hostId);
-        reviewReportService.removeAllByUser(hostId);
 
         for(Accommodation accommodation: accommodationService.getAllByHost(hostId)){
             reservationService.removeAllForAccommodation(accommodation.getId());
@@ -145,6 +146,12 @@ public class HostService implements IHostService {
         repository.delete(found);
         repository.flush();
         return found;
+    }
+
+    private void removeReservationsForAccommodations(Long hostId) {
+        for(Accommodation accommodation : accommodationService.getAllByHost(hostId)) {
+            reservationService.removeAllForAccommodation(accommodation.getId());
+        }
     }
 
     @Override
