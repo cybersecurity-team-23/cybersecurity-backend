@@ -125,7 +125,7 @@ public class ReservationService implements IReservationService {
         Reservation found = get(reservationId);
         found.Deny();
         update(found);
-        notificationService.create(new Notification("Your reservation for " + found.getAccommodation().getName() + " from " + found.getTimeSlot().getStartDate() + " to " + found.getTimeSlot().getEndDate() + " has been denied", NotificationType.ReservationRequestResponse, new Date(), userService.get(found.getGuest().getId())));
+        notificationService.create(new Notification("Your reservation for " + accommodationService.get(found.getAccommodation().getId()).getName() + " from " + found.getTimeSlot().getStartDate() + " to " + found.getTimeSlot().getEndDate() + " has been denied", NotificationType.ReservationRequestResponse, new Date(), userService.get(found.getGuest().getId())));
         return found;
     }
 
@@ -195,7 +195,7 @@ public class ReservationService implements IReservationService {
         }
 
         denyOverlappingReservations(reservation.getTimeSlot(), accommodation.getId(), reservation.getId());
-        notificationService.create(new Notification("Your reservation for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been approved", NotificationType.ReservationRequestResponse, new Date(), userService.get(reservation.getGuest().getId())));
+        notificationService.create(new Notification("Your reservation for " + accommodationService.get(reservation.getAccommodation().getId()).getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been approved", NotificationType.ReservationRequestResponse, new Date(), userService.get(reservation.getGuest().getId())));
 
         update(reservation);
         return reservation;
@@ -217,7 +217,7 @@ public class ReservationService implements IReservationService {
             mergeAvailablePeriods(addedPeriod, reservation.getAccommodation().getAvailablePeriods(), reservation.getAccommodation().getId());
         }
         reservation.Cancel();
-        notificationService.create(new Notification("Reservation for " + reservation.getAccommodation().getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been cancelled", NotificationType.ReservationCancelled, new Date(), userService.get(reservation.getAccommodation().getHost().getId())));
+        notificationService.create(new Notification("Reservation for " + accommodationService.get(reservation.getAccommodation().getId()).getName() + " from " + reservation.getTimeSlot().getStartDate() + " to " + reservation.getTimeSlot().getEndDate() + " has been cancelled", NotificationType.ReservationCancelled, new Date(), userService.get(reservation.getAccommodation().getHost().getId())));
         repository.save(reservation);
         repository.flush();
         return reservation;
