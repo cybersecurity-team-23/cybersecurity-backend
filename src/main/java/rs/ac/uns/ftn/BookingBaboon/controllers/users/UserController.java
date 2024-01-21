@@ -79,11 +79,22 @@ public class UserController {
         return new ResponseEntity<>( mapper.map(user,UserResponse.class), HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
+/*    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
     @GetMapping({"/profile/{userEmail}"})
     public ResponseEntity<UserProfile> getProfile(@PathVariable String userEmail) {
 
         User user = service.getByEmail(userEmail);
+        if(user==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>( mapper.map(user, UserProfile.class), HttpStatus.OK);
+    }*/
+
+    @PreAuthorize("hasAnyAuthority('GUEST', 'HOST', 'ADMIN')")
+    @GetMapping({"/profile/{userId}"})
+    public ResponseEntity<UserProfile> getProfile(@PathVariable Long userId) {
+
+        User user = service.get(userId);
         if(user==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -153,7 +164,7 @@ public class UserController {
             UserResponse userResponse = mapper.map(user, UserResponse.class);
             return new ResponseEntity<>(userResponse, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 
