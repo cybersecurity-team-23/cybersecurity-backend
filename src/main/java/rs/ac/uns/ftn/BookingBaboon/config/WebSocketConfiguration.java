@@ -15,7 +15,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/notifications-socket") // Definisemo endpoint koji ce klijenti koristiti da se povezu sa serverom.
-                // U ovom slucaju, URL za konekciju ce biti http://localhost:8080/socket/
+                // U ovom slucaju, URL za konekciju ce biti http://localhost:8081/socket/
                 .setAllowedOrigins("http://localhost:4200")
                 .withSockJS();
     }
@@ -28,7 +28,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.setApplicationDestinationPrefixes("/notification-subscriber")
                 // Prefiks koji koji se koristi za mapiranje svih poruka.
                 // Klijenti moraju da ga navedu kada salju poruku serveru.
-                // Svaki URL bi pocinjao ovako: http://localhost:8080/socket-subscriber/…/…
+                // Svaki URL bi pocinjao ovako: http://localhost:8081/socket-subscriber/…/…
                 .enableSimpleBroker("/notification-publisher"); // Definisanje topic-a (ruta) na koje klijenti mogu da se pretplate.
         // SimpleBroker cuva poruke u memoriji i salje ih klijentima na definisane topic-e.
         // Server kada salje poruke, salje ih na rute koje su ovde definisane, a klijenti cekaju na poruke.
