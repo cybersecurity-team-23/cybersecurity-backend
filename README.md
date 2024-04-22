@@ -31,3 +31,7 @@ Login credentials for test data:
 ## Contributors
 - SV47/2021, Dragoslav Tamindžija
 - SV50/2021, Darko Svilar
+
+## Login credentials for cybersecurity extension:
+- Superadmin:
+  - email: super.admin@example.com, password: superadmin123
