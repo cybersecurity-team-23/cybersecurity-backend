@@ -22,6 +22,7 @@ import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
+import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
@@ -62,6 +63,10 @@ public class UserController {
 
     @PostMapping({"/"})
     public ResponseEntity<UserResponse> create(@RequestBody UserCreateRequest user) {
+        // check password validity
+        // TODO: error message?
+        if (!PasswordHelper.isValid(user.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
         // run the password against HIBP
         try {
             // TODO: error message?
