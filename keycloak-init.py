@@ -41,6 +41,25 @@ def create_realm(realm_name, token):
     else:
         print(f"Failed to create realm. Status code: {response.status_code}, Error: {response.text}")
 
+def create_client(realm_name, client_name, client_id, token, redirect_uri):
+    url = f"{KEYCLOAK_BASE_URL}/admin/realms/{realm_name}/clients"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    data = {
+        "protocol": "openid-connect",
+        "clientId": client_id,
+        "name": client_name,
+        "enabled": True,
+        "secret": token,
+        "redirectUris": redirect_uri
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    if response.status_code == 201:
+        print(f"Client '{client_name}' created successfully.")
+    else:
+        print(f"Failed to create client. Status code: {response.status_code}, Error: {response.text}")
 
 # NOTE: code not tested
 # def create_user(realm_name, username, password, roles=[]):
@@ -80,6 +99,7 @@ def create_realm(realm_name, token):
 if __name__ == "__main__":
     token = get_jwt()
     create_realm("bookingrealm", token)
+    create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["http://localhost:4200/"])
 
     # TODO: roles, user
     # create_role("example_realm", "example_role")
