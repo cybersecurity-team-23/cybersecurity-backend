@@ -29,8 +29,9 @@ Login credentials for test data:
   - email: helen.martin@example.com , password: helenspass
 # Cybersecurity extension
 ## Contributors
-- SV47/2021, Dragoslav Tamindžija
-- SV50/2021, Darko Svilar
+- Dragoslav Tamindžija, SV47/2021
+- Darko Svilar, SV50/2021
+- Teodor Đurić, SV67/2021
 
 ## Login credentials for cybersecurity extension:
 - Superadmin:
