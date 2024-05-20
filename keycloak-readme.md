@@ -11,10 +11,11 @@
         Bind credentials: admin  
         Test authentication  
         Edit mode: WRITEABLE  
-        Users DN: ou=users,dc=users,dc=local  
+        Users DN: ou=users,dc=test,dc=local  
         Username LDAP attribute: uid  
         RDN LDAP attribute: uid  
         UUID LDAP attribute: uid  
+        User object classes: inetOrgPerson,organizationalPerson,person,top
         Enable periodic full sync  
         Save  
 4. Creating users directory in ldap  
