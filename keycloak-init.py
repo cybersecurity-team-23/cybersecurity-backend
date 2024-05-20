@@ -99,7 +99,7 @@ def create_client(realm_name, client_name, client_id, token, redirect_uri):
 if __name__ == "__main__":
     token = get_jwt()
     create_realm("bookingrealm", token)
-    create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["http://localhost:4200/"])
+    create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["*"])
 
     # TODO: roles, user
     # create_role("example_realm", "example_role")
