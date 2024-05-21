@@ -1,8 +1,11 @@
 package rs.ac.uns.ftn.BookingBaboon.services.users;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -11,6 +14,7 @@ import java.util.Map;
 
 @Service
 public class RecaptchaService {
+
     @Value("${recaptcha.secret.key}")
     private String secretKey;
 
@@ -19,11 +23,16 @@ public class RecaptchaService {
     public boolean verifyCaptcha(String token) {
         RestTemplate restTemplate = new RestTemplate();
 
-        Map<String, String> params = new HashMap<>();
-        params.put("secret", secretKey);
-        params.put("response", token);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        Map<String, Object> verificationResult = restTemplate.postForObject(RECAPTCHA_VERIFY_URL, params, Map.class);
+        String requestBody = "secret=" + secretKey + "&response=" + token;
+
+        HttpEntity<String> entity = new HttpEntity<>(requestBody, headers);
+
+        ResponseEntity<Map> response = restTemplate.exchange(RECAPTCHA_VERIFY_URL, HttpMethod.POST, entity, Map.class);
+
+        Map<String, Object> verificationResult = response.getBody();
 
         return (Boolean) verificationResult.get("success");
     }
