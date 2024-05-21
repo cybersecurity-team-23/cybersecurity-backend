@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,7 @@ import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.reservation.Reservation;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.*;
+import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.HostResponse;
 
@@ -22,6 +24,9 @@ import java.util.stream.Collectors;
 public class HostController {
     private final IHostService service;
     private final ModelMapper mapper;
+
+    @Autowired
+    private RecaptchaService recaptchaService;
 
     @GetMapping
     public ResponseEntity<Collection<HostResponse>> getHosts() {
@@ -43,6 +48,16 @@ public class HostController {
 
     @PostMapping({"/"})
     public ResponseEntity<HostResponse> create(@RequestBody HostCreateRequest host) {
+        String token = host.getRecaptchaToken();
+
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!recaptchaService.verifyCaptcha(token)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(host, Host.class)),HostResponse.class), HttpStatus.CREATED);
     }
 
