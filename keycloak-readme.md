@@ -38,6 +38,10 @@
         last name:sn  
         phone number:telephoneNumber  
         username:cn  
+6. TOTP always required
+    1. Authenticaiton (leftbar)
+    2. Flows>browser
+    3. At the bottom 'Browser - Conditional OTP' - change to 'required'
 
 
 Login url:

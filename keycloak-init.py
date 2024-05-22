@@ -81,6 +81,26 @@ def disable_password_expiration(token):
     else:
         print(f"Failed to disable password expiration. Status code: {response.status_code}, Error: {response.text}")
 
+def force_totp(token):
+    url = f'{KEYCLOAK_BASE_URL}/admin/realms/bookingrealm/authentication/required-actions/CONFIGURE_TOTP'
+    body = {}
+    body['alias'] = 'CONFIGURE_TOTP'
+    body['config'] = {}
+    body['defaultAction'] = True
+    body['enabled'] = True
+    body['name'] = 'Configure OTP'
+    body['priority'] = 30
+    body['providerId'] = 'CONFIGURE_TOTP'
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    response = requests.put(url, headers=headers, data=json.dumps(body))
+    if response.status_code == 204:
+        print(f"TOTP enabled.")
+    else:
+        print(f"Failed to enable TOTP. Status code: {response.status_code}, Error: {response.text}")
+
 # NOTE: code not tested
 # def create_user(realm_name, username, password, roles=[]):
 #     url = f"{KEYCLOAK_BASE_URL}{realm_name}/users"
@@ -121,6 +141,7 @@ if __name__ == "__main__":
     create_realm("bookingrealm", token)
     create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["*"])
     disable_password_expiration(token)
+    force_totp(token)
 
     # TODO: roles, user
     # create_role("example_realm", "example_role")
