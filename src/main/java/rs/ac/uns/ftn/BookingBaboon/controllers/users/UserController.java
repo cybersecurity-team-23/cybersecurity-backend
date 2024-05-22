@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -24,6 +25,7 @@ import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
 import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.Collection;
@@ -41,6 +43,9 @@ public class UserController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final SecurityContext sc = SecurityContextHolder.getContext();
+
+    @Autowired
+    private RecaptchaService recaptchaService;
 
 
     @GetMapping
@@ -73,6 +78,18 @@ public class UserController {
             if (HIBP.isPasswordBlacklisted(user.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        String token = user.getRecaptchaToken();
+
+        if (token == null) {
+            System.out.println("Recaptcha token missing");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!recaptchaService.verifyCaptcha(token)) {
+            System.out.println("Recaptcha token invalid");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(user, User.class)),UserResponse.class), HttpStatus.CREATED);

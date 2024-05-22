@@ -18,4 +18,6 @@ public class AdminCreateRequest {
     private String phoneNumber;
 
     private Role role;
+
+    private String recaptchaToken;
 }
