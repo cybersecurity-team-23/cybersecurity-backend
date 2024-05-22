@@ -149,7 +149,7 @@ if __name__ == "__main__":
     create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["*"])
     disable_password_expiration(token)
     force_totp(token)
-    create_user(token)
+    # create_user(token)
 
     # TODO: roles, user
     # create_role("example_realm", "example_role")
