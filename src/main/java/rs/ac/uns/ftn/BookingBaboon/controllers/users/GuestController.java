@@ -11,7 +11,9 @@ import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserCreationKeycloak;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.*;
+import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
 
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class GuestController {
     private final IGuestService service;
     private final ModelMapper mapper;
+    private final KeycloakService keycloakService;
 
     @Autowired
     private RecaptchaService recaptchaService;
@@ -49,7 +52,6 @@ public class GuestController {
 
     @PostMapping({"/"})
     public ResponseEntity<GuestResponse> create(@RequestBody GuestCreateRequest guest) {
-
         String token = guest.getRecaptchaToken();
 
         if (token == null) {
@@ -62,7 +64,22 @@ public class GuestController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<>(mapper.map(service.create(mapper.map(guest, Guest.class)),GuestResponse.class), HttpStatus.CREATED);
+        String accessToken = "";
+        try {
+            accessToken = keycloakService.obtainAccessToken();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        boolean res;
+        try {
+            res = keycloakService.registerUser(UserCreationKeycloak.fromGuestCreateRequest(guest), accessToken);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(mapper.map(guest, GuestResponse.class), HttpStatus.OK);
     }
 
     @PutMapping({"/"})

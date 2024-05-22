@@ -24,6 +24,7 @@ import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
 import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
 import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
+import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final IUserService service;
+    private final KeycloakService keycloakService;
     private final IReservationService reservationService;
     private final ModelMapper mapper;
     private final AuthenticationManager authenticationManager;
@@ -92,7 +94,22 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
 
-        return new ResponseEntity<>(mapper.map(service.create(mapper.map(user, User.class)),UserResponse.class), HttpStatus.CREATED);
+        String accessToken = "";
+        try {
+            accessToken = keycloakService.obtainAccessToken();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        boolean res;
+        try {
+            res = keycloakService.registerUser(UserCreationKeycloak.fromUserCreateRequest(user), accessToken);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
     @PutMapping({"/"})

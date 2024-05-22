@@ -12,11 +12,12 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.reports.GuestReportResponse;
+import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserCreationKeycloak;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
-import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
+import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
 import java.util.Collection;
@@ -29,6 +30,7 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final IAdminService service;
     private final ModelMapper mapper;
+    private final KeycloakService keycloakService;
 
     @Autowired
     private RecaptchaService recaptchaService;
@@ -53,20 +55,22 @@ public class AdminController {
 
     @PostMapping({"/"})
     public ResponseEntity<AdminResponse> create(@RequestBody AdminCreateRequest admin) {
-
-        String token = admin.getRecaptchaToken();
-
-        if (token == null) {
-            System.out.println("Recaptcha token missing");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        String accessToken = "";
+        try {
+            accessToken = keycloakService.obtainAccessToken();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        if (!recaptchaService.verifyCaptcha(token)) {
-            System.out.println("Recaptcha token invalid");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        boolean res;
+        try {
+            res = keycloakService.registerUser(UserCreationKeycloak.fromAdminCreateRequest(admin), accessToken);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(mapper.map(service.create(mapper.map(admin, Admin.class)),AdminResponse.class), HttpStatus.CREATED);
+        return new ResponseEntity<>(mapper.map(admin, AdminResponse.class), HttpStatus.OK);
     }
 
     @PutMapping({"/"})
