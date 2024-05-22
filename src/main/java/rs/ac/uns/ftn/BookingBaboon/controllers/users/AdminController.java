@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminRequest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
+import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
 import java.util.Collection;
@@ -27,6 +29,9 @@ import java.util.stream.Collectors;
 public class AdminController {
     private final IAdminService service;
     private final ModelMapper mapper;
+
+    @Autowired
+    private RecaptchaService recaptchaService;
 
     @GetMapping
     public ResponseEntity<Collection<AdminResponse>> getAdmins() {
@@ -48,6 +53,19 @@ public class AdminController {
 
     @PostMapping({"/"})
     public ResponseEntity<AdminResponse> create(@RequestBody AdminCreateRequest admin) {
+
+        String token = admin.getRecaptchaToken();
+
+        if (token == null) {
+            System.out.println("Recaptcha token missing");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!recaptchaService.verifyCaptcha(token)) {
+            System.out.println("Recaptcha token invalid");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         return new ResponseEntity<>(mapper.map(service.create(mapper.map(admin, Admin.class)),AdminResponse.class), HttpStatus.CREATED);
     }
 

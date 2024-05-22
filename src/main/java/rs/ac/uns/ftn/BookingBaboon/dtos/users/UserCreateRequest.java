@@ -19,4 +19,6 @@ public class UserCreateRequest {
     private String phoneNumber;
 
     private Role role;
+
+    private String recaptchaToken;
 }
