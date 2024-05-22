@@ -13,6 +13,8 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserCreationKeycloak;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.*;
+import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
+import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
 import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IGuestService;
@@ -52,8 +54,18 @@ public class GuestController {
 
     @PostMapping({"/"})
     public ResponseEntity<GuestResponse> create(@RequestBody GuestCreateRequest guest) {
-        String token = guest.getRecaptchaToken();
+        // check password validity
+        if (!PasswordHelper.isValid(guest.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        // run the password against HIBP
+        try {
+            // TODO: error message?
+            if (HIBP.isPasswordBlacklisted(guest.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        String token = guest.getRecaptchaToken();
         if (token == null) {
             System.out.println("Recaptcha token missing");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

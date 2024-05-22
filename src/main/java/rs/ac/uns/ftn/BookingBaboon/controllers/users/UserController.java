@@ -71,7 +71,6 @@ public class UserController {
     @PostMapping({"/"})
     public ResponseEntity<UserResponse> create(@RequestBody UserCreateRequest user) {
         // check password validity
-        // TODO: error message?
         if (!PasswordHelper.isValid(user.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         // run the password against HIBP

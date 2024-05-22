@@ -17,6 +17,8 @@ import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.UserBlockResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.admins.AdminResponse;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
+import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
+import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
 import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IAdminService;
 
@@ -55,6 +57,17 @@ public class AdminController {
 
     @PostMapping({"/"})
     public ResponseEntity<AdminResponse> create(@RequestBody AdminCreateRequest admin) {
+        // check password validity
+        if (!PasswordHelper.isValid(admin.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // run the password against HIBP
+        try {
+            // TODO: error message?
+            if (HIBP.isPasswordBlacklisted(admin.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
         String accessToken = "";
         try {
             accessToken = keycloakService.obtainAccessToken();

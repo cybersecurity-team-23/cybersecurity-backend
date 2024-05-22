@@ -12,6 +12,8 @@ import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserCreationKeycloak;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.hosts.*;
+import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
+import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
 import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IHostService;
@@ -52,8 +54,18 @@ public class HostController {
 
     @PostMapping({"/"})
     public ResponseEntity<HostResponse> create(@RequestBody HostCreateRequest host) {
-        String token = host.getRecaptchaToken();
+        // check password validity
+        if (!PasswordHelper.isValid(host.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        // run the password against HIBP
+        try {
+            // TODO: error message?
+            if (HIBP.isPasswordBlacklisted(host.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        String token = host.getRecaptchaToken();
         if (token == null) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
