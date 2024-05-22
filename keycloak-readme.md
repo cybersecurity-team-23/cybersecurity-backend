@@ -38,3 +38,7 @@
         last name:sn  
         phone number:telephoneNumber  
         username:cn  
+
+
+Login url:
+http://localhost:8090/realms/bookingrealm/protocol/openid-connect/auth?client_id=booking-login-app&redirect_uri=http://localhost:4200&response_mode=fragment&response_type=code

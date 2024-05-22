@@ -8,7 +8,7 @@ services:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KEYCLOAK_LOGLEVEL: DEBUG
-    command: start-dev
+    command: -v start-dev
 
   openldap:
     image: osixia/openldap:1.5.0
