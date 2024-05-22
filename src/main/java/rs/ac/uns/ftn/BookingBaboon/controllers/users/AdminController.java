@@ -68,6 +68,18 @@ public class AdminController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        String token = admin.getRecaptchaToken();
+
+        if (token == null) {
+            System.out.println("Recaptcha token missing");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!recaptchaService.verifyCaptcha(token)) {
+            System.out.println("Recaptcha token invalid");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
         String accessToken = "";
         try {
             accessToken = keycloakService.obtainAccessToken();
