@@ -4,6 +4,7 @@
     1. Admin console: http://localhost:8090/admin admin:admin
     2. Switch to bookingrealm realm
     3. User federation (sidebar) > Add Ldap Providers  
+        Vendor: **Other**
         UI display name: OpenLDAP  
         Connection url: ldap://localhost_of_the_**host**_machine:389 (ldap://192.168.whatever:389)  
         Test connection  
