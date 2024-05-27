@@ -101,26 +101,33 @@ def force_totp(token):
     else:
         print(f"Failed to enable TOTP. Status code: {response.status_code}, Error: {response.text}")
 
-# NOTE: code not tested
-# def create_user(realm_name, username, password, roles=[]):
-#     url = f"{KEYCLOAK_BASE_URL}{realm_name}/users"
-#     headers = {
-#         'Content-Type': 'application/json'
-#     }
-#     data = {
-#         "username": username,
-#         "enabled": True,
-#         "credentials": [{
-#             "type": "password",
-#             "value": password
-#         }],
-#         "realmRoles": roles
-#     }
-#     response = requests.post(url, headers=headers, data=json.dumps(data), auth=(KEYCLOAK_ADMIN_USERNAME, KEYCLOAK_ADMIN_PASSWORD))
-#     if response.status_code == 201:
-#         print(f"User '{username}' created successfully.")
-#     else:
-#         print(f"Failed to create user. Status code: {response.status_code}, Error: {response.text}")
+def create_user(token):
+    url = f"{KEYCLOAK_BASE_URL}/admin/realms/bookingrealm/users"
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': f'Bearer {token}'
+    }
+    data = {
+        "username": 'drago',
+        'email': 'drago@test.com',
+        'firstName': 'dragofirstName',
+        'lastName': 'dragolastName',
+        'attributes': {
+            'title': ['ADMIN'],
+            'phoneNumber': ['phoneNumberTEst'],
+            'address': ['addressTest'],
+        },
+        "credentials": [{
+            "type": "password",
+            "value": 'drago'
+        }],
+        "enabled": True,
+    }
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    if response.status_code == 201:
+        print(f"User drago created successfully.")
+    else:
+        print(f"Failed to create user. Status code: {response.status_code}, Error: {response.text}")
 
 # def create_role(realm_name, role_name):
 #     url = f"{KEYCLOAK_BASE_URL}{realm_name}/roles"
@@ -142,6 +149,7 @@ if __name__ == "__main__":
     create_client("bookingrealm", "booking-login-app", "booking-login-app", token, ["*"])
     disable_password_expiration(token)
     force_totp(token)
+    # create_user(token)
 
     # TODO: roles, user
     # create_role("example_realm", "example_role")

@@ -4,6 +4,7 @@
     1. Admin console: http://localhost:8090/admin admin:admin
     2. Switch to bookingrealm realm
     3. User federation (sidebar) > Add Ldap Providers  
+        Vendor: **Other**
         UI display name: OpenLDAP  
         Connection url: ldap://localhost_of_the_**host**_machine:389 (ldap://192.168.whatever:389)  
         Test connection  
@@ -39,10 +40,12 @@
         phone number:telephoneNumber  
         username:cn  
 6. TOTP always required
-    1. Authenticaiton (leftbar)
+    1. Authentication (sidebar)
     2. Flows>browser
     3. At the bottom 'Browser - Conditional OTP' - change to 'required'
-
+7. Unmanaged attributes
+    1. Realm settings (sidebar)
+    2. Unamanaged Attributes - **Enabled**
 
 Login url:
 http://localhost:8090/realms/bookingrealm/protocol/openid-connect/auth?client_id=booking-login-app&redirect_uri=http://localhost:4200&response_mode=fragment&response_type=code
