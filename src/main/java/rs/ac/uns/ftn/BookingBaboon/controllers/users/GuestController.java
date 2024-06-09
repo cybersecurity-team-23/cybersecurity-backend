@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.domain.accommodation_handling.Accommodation;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Admin;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.Guest;
 import rs.ac.uns.ftn.BookingBaboon.dtos.accommodation_handling.accommodation.AccommodationResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserCreationKeycloak;
@@ -91,6 +92,7 @@ public class GuestController {
         }
         if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        this.service.create(mapper.map(guest, Guest.class));
         return new ResponseEntity<>(mapper.map(guest, GuestResponse.class), HttpStatus.OK);
     }
 

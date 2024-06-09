@@ -89,6 +89,7 @@ public class HostController {
         }
         if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        this.service.create(mapper.map(host, Host.class));
         return new ResponseEntity<>(mapper.map(host, HostResponse.class), HttpStatus.OK);
     }
 

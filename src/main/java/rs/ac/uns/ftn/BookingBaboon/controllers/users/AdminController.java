@@ -95,6 +95,7 @@ public class AdminController {
         }
         if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        this.service.create(mapper.map(admin, Admin.class));
         return new ResponseEntity<>(mapper.map(admin, AdminResponse.class), HttpStatus.OK);
     }
 

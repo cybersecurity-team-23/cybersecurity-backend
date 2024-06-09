@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
@@ -108,6 +109,7 @@ public class UserController {
         }
         if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+        this.service.create(mapper.map(user, User.class));
         return new ResponseEntity<>(mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
