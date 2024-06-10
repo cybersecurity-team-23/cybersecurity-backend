@@ -29,16 +29,18 @@
     7. Finish   
 5. Map keycloak attributes to ldap
     1. User federation > OpenLDAP > Mappers
-    2. there should be email, address, first name, last name, phone number and username (everything else leave as is)  
-        ones that dont exist create  
+    2. there should be email, address, first name, last name, phone number, username and title (everything else leave as
+is)  
+        ones that don't exist create  
         all should have "Always Read Value From LDAP" ticked and should be "user-attribute-ldap-mapper"   
         ldap attribute mapping to ldap attribute:   
         email:mail  
         address:postalAddress  
         first name:givenName  
         last name:sn  
-        phone number:telephoneNumber  
+        phoneNumber:telephoneNumber  
         username:cn  
+        title:title  
 6. TOTP always required
     1. Authentication (sidebar)
     2. Flows>browser
