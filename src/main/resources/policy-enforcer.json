@@ -1,0 +1,9 @@
+{
+  "realm": "bookingrealm",
+  "auth-server-url": "http://localhost:8081",
+  "resource": "booking-login-app",
+  "credentials": {
+    "secret": "rxsf5sMa8JBwJWuyK7wGUwDmo2mbux2f"
+  },
+  "http-method-as-scope": true
+}
