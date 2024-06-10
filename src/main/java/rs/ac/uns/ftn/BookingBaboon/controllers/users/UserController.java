@@ -2,6 +2,7 @@ package rs.ac.uns.ftn.BookingBaboon.controllers.users;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -17,11 +18,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import rs.ac.uns.ftn.BookingBaboon.config.security.JwtTokenUtil;
 import rs.ac.uns.ftn.BookingBaboon.domain.notifications.NotificationType;
+import rs.ac.uns.ftn.BookingBaboon.domain.users.Host;
 import rs.ac.uns.ftn.BookingBaboon.domain.users.User;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.*;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.UserResponse;
 import rs.ac.uns.ftn.BookingBaboon.dtos.users.guests.GuestNotificationSettings;
+import rs.ac.uns.ftn.BookingBaboon.helpers.HIBP;
+import rs.ac.uns.ftn.BookingBaboon.helpers.PasswordHelper;
+import rs.ac.uns.ftn.BookingBaboon.services.KeycloakService;
 import rs.ac.uns.ftn.BookingBaboon.services.reservation.interfaces.IReservationService;
+import rs.ac.uns.ftn.BookingBaboon.services.users.RecaptchaService;
 import rs.ac.uns.ftn.BookingBaboon.services.users.interfaces.IUserService;
 
 import java.util.Collection;
@@ -34,11 +40,15 @@ import java.util.stream.Collectors;
 public class UserController {
 
     private final IUserService service;
+    private final KeycloakService keycloakService;
     private final IReservationService reservationService;
     private final ModelMapper mapper;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final SecurityContext sc = SecurityContextHolder.getContext();
+
+    @Autowired
+    private RecaptchaService recaptchaService;
 
 
     @GetMapping
@@ -61,7 +71,46 @@ public class UserController {
 
     @PostMapping({"/"})
     public ResponseEntity<UserResponse> create(@RequestBody UserCreateRequest user) {
-        return new ResponseEntity<>(mapper.map(service.create(mapper.map(user, User.class)),UserResponse.class), HttpStatus.CREATED);
+        // check password validity
+        if (!PasswordHelper.isValid(user.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        // run the password against HIBP
+        try {
+            // TODO: error message?
+            if (HIBP.isPasswordBlacklisted(user.getPassword())) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        String token = user.getRecaptchaToken();
+
+        if (token == null) {
+            System.out.println("Recaptcha token missing");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        if (!recaptchaService.verifyCaptcha(token)) {
+            System.out.println("Recaptcha token invalid");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+        String accessToken = "";
+        try {
+            accessToken = keycloakService.obtainAccessToken();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        boolean res;
+        try {
+            res = keycloakService.registerUser(UserCreationKeycloak.fromUserCreateRequest(user), accessToken);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        if (!res) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        this.service.create(mapper.map(user, User.class));
+        return new ResponseEntity<>(mapper.map(user, UserResponse.class), HttpStatus.OK);
     }
 
     @PutMapping({"/"})
